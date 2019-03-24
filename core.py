@@ -1,6 +1,6 @@
 # Runs the whole simulation
 
-# Specify database
+# Requirement : I need to add more tables, without running the basic simulation again. The thing is that sampling size and network size might need to be adjusted.  
 
 def init_network(config):
     network size
