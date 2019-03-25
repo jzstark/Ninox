@@ -1,11 +1,15 @@
 # To start a simulation with given configuration
 
+import simulator
 
-def start(config):
-    network = init(conf1)
-    result = run(network, conf2)
+def simulate(db_config, config):
+    simulator.execute(conf)
 
-    exp1(result)
-    exp2(result)
+def main():
+    config = [(x) for x in range(2) ]
+    map(simulate, config)
+    exp1(db, name="xxx"+string(config))
+    exp2(db, name="xxx"+string(config))
 
-start(network_size ) for ns in [...]
+if __name__ == "__main__":
+    main()

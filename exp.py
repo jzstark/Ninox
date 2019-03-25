@@ -8,6 +8,9 @@ Experiment 1: Distribution of final iteration progress.
 # - Adjust straggler percentage. Redo evalulation. Process mean/std line vs percentage.
 # - Adjust straggler scale. Redo evaluation. Process mean/std line vs percentage.
 
+def exp_iteration(db):
+    pass
+
 """
 Experiment 2: "Accuracy"
 """
