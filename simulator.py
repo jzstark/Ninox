@@ -7,26 +7,42 @@
 import barrier
 import database as db
 
+"""
+Fixed test value
+"""
+
+base_exec_time = 5
+base_trans_time = 1
+stop_time = 120
+exec_randomness=0.01
+trans_randomness=0.01
+
+
+def randomized_base_speed(speed, straggler_perc, straggleness):
+    return speed
+
+def randomized_speed(base_speed, randomness):
+    return base_speed
+
+
 class Node:
-    def __init__(self, config):
-        self.exec_time  = exec_time
-        self.randomness_exec = randomness
-        self.randomness_trans = randomness
+    def __init__(self, exec_time):
         self.iteration = 0
         self.clock = 0.
 
     def calc_time():
-        t = f(exec_time, randomness1)
+        t = randomized_speed(exec_time, exec_randomness)
         self.clock += t
         return t
 
     def trans_time():
-        t = g(trans_time, randomness2)
+        t = randomized_speed(trans_time, trans_randomness)
         self.clock += t
         return t
 
     def increase_iter():
         self.iteration += 1
+
 
     def get_iteration(self):
         return self.iteration
@@ -35,14 +51,14 @@ class Node:
 class Network:
 
     def __init__(self, config):
-        self.stop_time = config.stop_time
-
         nodes = []
-        for i in range(config.size):
-            exec_time = f(config.exec_time, config.straggler_perc,
-                config.straggleness)
-            node = Node(exec_time, config.randomness1,
-                config.randomness2)
+        for i in range(config[size]):
+            base_speed = randomized_base_speed(
+                base_exec_time, 
+                config[straggler_perc],
+                config[straggleness]
+                )
+            node = Node(base_speed)
             nodes.append(node)
         self.nodes = nodes
 
@@ -84,11 +100,8 @@ def postprocess_db(dbconfig):
     pp_wait_time(dbconfig)
 
 
+# Entry point
 def run(config):
-    config_set = set()
-    if config not in config_set:
-        config_set.add(config)
-        network = Network(config)
-        network.execute()
-
-    postprocess_db(config.dbconfig)
+    network = Network(config)
+    network.execute()
+    postprocess_db(db.dbconfig)
