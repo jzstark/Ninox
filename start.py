@@ -2,16 +2,30 @@
 
 import simulator
 import exp
+import database
 
-def simulate(db_config, config):
-    simulator.execute(conf)
+db_config = "mongodb://localhost:27017/"
+
+
+"""
+Definition of config;
+"""
+def config_to_string(config):
+    return "tb_pssp_s10_p1"
+
+configs = [
+    {}, #config 1
+    {}  #config 2
+]
 
 def main():
-    db =
-    config = [(x) for x in range(2) ]
-    map(simulate, config)
-    exp.exp1(db, name="xxx"+string(config))
-    exp.exp2(db, name="xxx"+string(config))
+    database.init_db()
+
+    config = [...]
+    map(simulator.execute, config)
+
+    exp.exp1(dbconfig, name=config_to_string(config))
+    exp.exp2(dbconfig, name=config_to_string(config))
 
 if __name__ == "__main__":
     main()
