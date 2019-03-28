@@ -1,11 +1,6 @@
-# Runs the whole simulation
-
-# Requirement : I need to add more tables, without running the basic simulation again. The thing is that sampling size and network size might need to be adjusted.
-
-# All the considered barriers: ASP, BSP, pBSP-1/2/3/4.., SSP-2/3/5/10, pSSP-[2/3/5/10]-[1/2/3/4/...]
-
 import barrier
 import database as db
+import numpy as np
 
 """
 Fixed test value
@@ -20,66 +15,62 @@ trans_randomness=0.01
 
 # Utils
 
-def randomized_base_speed(speed, straggler_perc, straggleness):
-    return speed
-
 def randomized_speed(base_speed, randomness):
     return base_speed
+
+def random_task_time(straggler_perc, straggleness):
+    t = np.random.exponential(1)
+    if numpy.random.uniform() < straggler_perc:
+        t = t * straggleness
+    return t
 
 # Data strucutres: node and network
 
 class Node:
     def __init__(self, exec_time):
-        self.iteration = 0
-        self.clock = 0.
-
-    def calc_time():
-        t = randomized_speed(exec_time, exec_randomness)
-        self.clock += t
-        return t
-
-    def trans_time():
-        t = randomized_speed(trans_time, trans_randomness)
-        self.clock += t
-        return t
-
-    def increase_iter():
-        self.iteration += 1
-
-
-    def get_iteration(self):
-        return self.iteration
-
+        self.step   = 0
+        self.t_wait = 0.
+        self.t_exec = 0.
 
 class Network:
 
     def __init__(self, config):
         nodes = []
         for i in range(config[size]):
-            base_speed = randomized_base_speed(
-                base_exec_time,
-                config[straggler_perc],
-                config[straggleness]
-                )
-            node = Node(base_speed)
+            node = Node()
             nodes.append(node)
         self.nodes = nodes
+        self.clock = 0.
+
+
+    def update_nodes_time(self):
+        for n in self.nodes:
+            if self.clock < n.t_exec or not self.barrier(x, n): continue
+            # do some log
+            exec_time = random_task_time(
+                config[straggler_perc]，config[straggleness])
+            n.t_wait = self.clock
+            n.t_exec = n.t_wait + exec_time
+            n.step += 1
+
+
+    def next_event_at(self):
+        t = math.inf
+        for n in self.nodes:
+            if (n.t_exec > self.clock and n.t_exec < t):
+                t = n.t_wait
+        return t
 
 
     def execute(self):
-        # This is a relaxed stop condition
         while(node.clock < self.stop_time):
-            for node in self.nodes:
-                t_calc  = node.calc_time()
-                t_trans = node.trans_time()
-                node.increase_iter()
-
-                db.write(t_run, db, table1)
-                db.write(t_wait, db, table2)
+            update_nodes_time()
+            t = next_event_at()
+            self.clock = t
 
 """
 A series of postprocessings to add new tables in the db
-"""
+
 
 def pp_wait_time(dbconfig):
     db.connect(dbconfig)
@@ -91,20 +82,12 @@ def pp_wait_time(dbconfig):
             wait_time = h(tr, tt, b, some global knowledge)
             write to each barrier tables
 
-
-def pp_whole_time(): pass
-
-def pp_count_to_time(): pass
-
-def pp_sequence(): pass
-
-
 def postprocess_db(dbconfig):
     pp_wait_time(dbconfig)
-
+"""
 
 # Entry point
 def run(config):
-    network = Network(config)
-    network.execute()
-    postprocess_db(db.dbconfig)
+    for b in config[barriers]:
+        network = Network(config)
+        network.execute()

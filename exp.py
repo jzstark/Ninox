@@ -1,6 +1,9 @@
 import simulator
 from barrier import *
 
+# Considered barriers: ASP, BSP, pBSP-1/2/3/4.., SSP-2/3/5/10, pSSP-[2/3/5/10]-[1/2/3/4/...]
+
+
 """
 Experiment 1: Distribution of final iteration progress.
 """
@@ -11,6 +14,7 @@ Experiment 1: Distribution of final iteration progress.
 
 def exp_iteration(result_dir):
     barriers = [asp, bsp, ssp(10), ssp(1), pssp(1, 1), pssp(1, 2)]
+    # logtype = []
     configs = [
         {size=1000, straggler_perc=1, straggleness=0.5, barriers=barriers}
     ]
