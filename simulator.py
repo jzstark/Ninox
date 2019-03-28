@@ -18,12 +18,15 @@ exec_randomness=0.01
 trans_randomness=0.01
 
 
+# Utils
+
 def randomized_base_speed(speed, straggler_perc, straggleness):
     return speed
 
 def randomized_speed(base_speed, randomness):
     return base_speed
 
+# Data strucutres: node and network
 
 class Node:
     def __init__(self, exec_time):
@@ -54,7 +57,7 @@ class Network:
         nodes = []
         for i in range(config[size]):
             base_speed = randomized_base_speed(
-                base_exec_time, 
+                base_exec_time,
                 config[straggler_perc],
                 config[straggleness]
                 )

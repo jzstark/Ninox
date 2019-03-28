@@ -1,4 +1,5 @@
-# Send request to database, get data, and plot.
+import simulator
+from barrier import *
 
 """
 Experiment 1: Distribution of final iteration progress.
@@ -8,8 +9,15 @@ Experiment 1: Distribution of final iteration progress.
 # - Adjust straggler percentage. Redo evalulation. Process mean/std line vs percentage.
 # - Adjust straggler scale. Redo evaluation. Process mean/std line vs percentage.
 
-def exp_iteration(db):
-    pass
+def exp_iteration(result_dir):
+    barriers = [asp, bsp, ssp(10), ssp(1), pssp(1, 1), pssp(1, 2)]
+    configs = [
+        {size=1000, straggler_perc=1, straggleness=0.5, barriers=barriers}
+    ]
+    map(simulator.run, configs)
+    # get table from result_dir
+    # plot
+
 
 """
 Experiment 2: "Accuracy"
