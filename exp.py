@@ -1,5 +1,4 @@
 import simulator
-from barrier import *
 
 # Considered barriers: ASP, BSP, pBSP-1/2/3/4.., SSP-2/3/5/10, pSSP-[2/3/5/10]-[1/2/3/4/...]
 
@@ -13,10 +12,11 @@ Experiment 1: Distribution of final iteration progress.
 # - Adjust straggler scale. Redo evaluation. Process mean/std line vs percentage.
 
 def exp_iteration(result_dir):
-    barriers = [asp, bsp, ssp(10), ssp(1), pssp(1, 1), pssp(1, 2)]
+    # barriers = [asp, bsp, ssp(10), ssp(1), pssp(1, 1), pssp(1, 2)]
+    barriers = [asp]
     # logtype = []
     configs = [
-        {size=1000, straggler_perc=1, straggleness=0.5, barriers=barriers}
+        {size=100, straggler_perc=0., straggleness=0., barriers=barriers}
     ]
     map(simulator.run, configs)
     # get table from result_dir
