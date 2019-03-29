@@ -8,6 +8,10 @@ import os
 stop_time = 50
 randomness=0.01
 
+"""
+straggler_perc: int, 0 ~ 100
+straggleness: int, >= 1.
+"""
 
 # Utils
 
@@ -17,7 +21,7 @@ def randomized_speed(base_speed, randomness):
 def random_task_time(straggler_perc, straggleness):
     t = np.random.exponential(1)
     if np.random.uniform() < (straggler_perc / 100.):
-        t += t * (straggleness / 100.)
+        t = t * straggleness
     return t
 
 # Barriers
@@ -120,8 +124,9 @@ class Network:
 
 
     def execute(self):
+        print("Executing: %ss" % self.db_basename)
         while(self.clock < self.stop_time):
-            print("Time: %.2f\n" % (self.clock))
+            # print("Time: %.2f\n" % (self.clock))
             self.update_nodes_time()
             t = self.next_event_at()
             self.clock = t

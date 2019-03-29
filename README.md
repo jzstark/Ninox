@@ -22,3 +22,9 @@ What can be further derived from the previous tables:
 - No node drop out or added in.
 - There is one, and only one, central server. It never dies.
 - The only transmission in the network is sending update to central server.
+
+
+
+## Naming Scheme
+
+The data files: `root_path`/`exp_path`/(`config_prefix` + `barrier_name` + `observation`.csv) 
