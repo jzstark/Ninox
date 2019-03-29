@@ -2,7 +2,7 @@
 import csv
 import os
 
-dir = "data"
+default_dir = "~/Tmp/Ninox/data"
 
 def init_db(dir):
     try:

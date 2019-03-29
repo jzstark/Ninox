@@ -2,13 +2,13 @@ import os
 import exp
 import database as db
 
-default_dir = '~/Tmp/Ninox'
-
 # Simulation entrypoint. Need to specify what to do with
-def main(root_path):
-    root_path = os.path.abspath(root_path)
-    db.init_db(root_path)
-    exp.exp_iteration(os.path.join(root_path, db.dir, "exp1"))
+def main(db_path):
+    db_path = os.path.expanduser(db_path)
+    db_path = os.path.abspath(db_path)
+    db.init_db(db_path)
+    exp.exp_step(os.path.join(db_path, "exp_step"))
+
 #if __name__ == "__main__":
     #main(sys.argv[0])
-main(default_dir)
+main(db.default_dir)

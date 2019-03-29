@@ -14,9 +14,9 @@ Experiment 1: Distribution of final iteration progress.
 def exp_iteration(result_dir):
     # barriers = [asp, bsp, ssp(10), ssp(1), pssp(1, 1), pssp(1, 2)]
     barriers = [simulator.asp]
-    # logtype = []
+    observe_points = ['ob_finalstep']
     configs = [
-        {'size':100, 'straggler_perc':0., 'straggleness':0., 'barriers':barriers}
+        {'size':100, 'straggler_perc':0., 'straggleness':0., 'barriers':barriers, 'path':result_dir}
     ]
     map(simulator.run, configs)
     # get table from result_dir

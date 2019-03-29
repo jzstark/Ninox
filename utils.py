@@ -1,3 +1,4 @@
+import os
 
 """
 Definition of config:
@@ -9,5 +10,7 @@ Basic config: e.g. exec_time = 5, trans_time = 1
 We can only tune the straggler and randomness parameters, not these basic speed.
 """
 
-def config_to_string(config):
-    return "tb_pssp_s10_p1"
+def config_to_string(config, barrier_str):
+    file = ('tbl_%d_st%d_stp%d_' + barrier_str) % \
+        (config['size'], config['straggleness'], config['straggler_perc'])
+    return os.path.join(config['path'], file)

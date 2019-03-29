@@ -1,9 +1,16 @@
-import database as db
 import numpy as np
 import math
+import database as db
+import utils
+import csv
 
-stop_time = 100
+stop_time = 50
 randomness=0.01
+
+"""
+observation point:
+- "step" : final step of all nodes
+"""
 
 # Utils
 
@@ -12,8 +19,8 @@ def randomized_speed(base_speed, randomness):
 
 def random_task_time(straggler_perc, straggleness):
     t = np.random.exponential(1)
-    if np.random.uniform() < straggler_perc:
-        t = t * straggleness
+    if np.random.uniform() < (straggler_perc / 100.):
+        t += t * (straggleness / 100.)
     return t
 
 # Barriers
@@ -78,20 +85,21 @@ class Node:
 class Network:
 
     def __init__(self, config, barrier):
+        self.barrier = barrier[0]
+        self.observe_points = config['observe_points']
+        self.db_basename = utils.config_to_string(config, barrier[1])
+
         nodes = []
         for i in range(config['size']):
             node = Node()
             nodes.append(node)
         self.stop_time = stop_time
         self.nodes = nodes
-        self.barrier = barrier
         self.clock = 0.
-        # self.progress_tbl = 
 
 
     def update_nodes_time(self):
         for n in self.nodes:
-            # Looks like a potential bottleneck ...
             if self.clock < n.t_exec or not self.barrier(self, n):
                 continue
             # log some information here
@@ -117,6 +125,20 @@ class Network:
             t = self.next_event_at()
             self.clock = t
 
+        if ('ob_step' in self.observe_points):
+            self.collect_step_data()
+
+
+    def collect_step_data(self):
+        result = []
+        for n in self.nodes:
+            result.append(n.step)
+
+        filename = self.db_basename + '_step.csv'
+        with open(filename, 'w', newline='') as csvfile:
+            writer = csv.writer(csvfile, delimiter=',')
+            writer.writerow(result)
+
 
 # Entry point
 def run(config):
@@ -125,5 +147,5 @@ def run(config):
         network.execute()
 
 
-#config = {'size':100, 'straggler_perc':0., 'straggleness':0., 'barriers':[pssp(4, 10)]}
-#run(config)
+config = {'size':100, 'straggler_perc':0., 'straggleness':0., 'barriers':[(pssp(4, 10), 'pssp_s4_p10')], 'observe_points':['ob_step'], 'path':'/Users/stark/Code/Ninox/data'}
+run(config)
