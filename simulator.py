@@ -21,15 +21,50 @@ def random_task_time(straggler_perc, straggleness):
 def asp(net, node):
     return True
 
+
 def bsp(net, node):
     def f(m):
         return (m.step > node.step) or \
-            (m.step == node.step and net.clock > m.t_exec)
+            (m.step == node.step and net.clock >= m.t_exec)
     for m in net.nodes:
         if not f(m): return False
     return True
 
-# ssp: return a function
+
+def ssp(staleness):
+    def ssp_param(net, node):
+        slowest_step = math.inf
+        for m in net.nodes:
+            if m.step < slowest_step: slowest_step = m.step
+        return (node.step - slowest_step <= staleness)
+    return ssp_param
+
+
+def pbsp(sample_size):
+    def pbsp_param(net, node):
+        def f(m):
+            return (m.step > node.step) or \
+                (m.step == node.step and net.clock >= m.t_exec)
+        sampled_nodes = np.random.choice(net.nodes,
+            size=sample_size, replace=False)
+        for m in sampled_nodes:
+            if not f(m): return False
+        return True
+    return pbsp_param
+
+
+def pssp(staleness, sample_size):
+    def pssp_param(net, node):
+        def ssp_param(net, node):
+            sampled_nodes = np.random.choice(net.nodes,
+                size=sample_size, replace=False)
+            slowest_step = math.inf
+            for m in sampled_nodes:
+                if m.step < slowest_step: slowest_step = m.step
+            return (node.step - slowest_step <= staleness)
+        return ssp_param
+    return pssp_param
+
 
 # Data strucutres: node and network
 
@@ -51,6 +86,7 @@ class Network:
         self.nodes = nodes
         self.barrier = barrier
         self.clock = 0.
+        # self.progress_tbl = 
 
 
     def update_nodes_time(self):
@@ -89,5 +125,5 @@ def run(config):
         network.execute()
 
 
-config = {'size':100, 'straggler_perc':0., 'straggleness':0., 'barriers':[asp]}
-run(config)
+#config = {'size':100, 'straggler_perc':0., 'straggleness':0., 'barriers':[pssp(4, 10)]}
+#run(config)
