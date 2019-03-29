@@ -11,6 +11,9 @@ We can only tune the straggler and randomness parameters, not these basic speed.
 """
 
 def config_to_string(config):
-    file_prefix = ('tbl_%d_st%d_stp%d_') % \
+    file_prefix = ('tbl_%d_st%.1f_stp%d_') % \
         (config['size'], config['straggleness'], config['straggler_perc'])
     return os.path.join(config['path'], file_prefix)
+
+def dbfilename(config, barrier_name, ob_type):
+    return config_to_string(config) + barrier_name + '_' + ob_type + '.csv'

@@ -6,8 +6,11 @@ import matplotlib.pyplot as plt
 """
 observation point (for each barriers&size&straggler config):
 - "step" : final step of all nodes. Format: one line, rows are all nodes.
-"""
 
+Parameters:
+- straggler_perc: int, 0 ~ 100
+- straggleness: >= 1.  float, with only 1 digit after the point at most.
+"""
 
 """
 Experiment 1: Distribution of final iteration progress.
@@ -25,18 +28,18 @@ def exp_step(result_dir):
         (pbsp(10), 'pbsp_p10'),
         (pssp(4, 10), 'pssp_s4_p10')
     ]
-    observe_points = ['ob_step']
+    observe_points = ['step']
     configs = [
-        {'size':100, 'straggler_perc':0, 'straggleness':1, 'barriers':barriers, 'observe_points':['ob_step'],
+        {'size':100, 'straggler_perc':0, 'straggleness':1, 'barriers':barriers, 'observe_points':['step'],
         'path':result_dir}
     ]
 
-    #for c in configs: run(c)
+    # for c in configs: run(c)
 
     data = {}
     barrier_names = [s for (_, s) in barriers]
     for name in barrier_names:
-        filename = utils.config_to_string(configs[0]) + name + '_step.csv'
+        filename = utils.dbfilename(configs[0], name, 'step')
         with open(filename, 'r') as f:
             reader = csv.reader(f, delimiter=',')
             data[name] = [int(s) for s in next(reader)]
@@ -60,17 +63,18 @@ def exp_samplesize(result_dir):
         (pbsp(8), 'pbsp_p8'), (pbsp(16), 'pbsp_p16'),
         (pbsp(32), 'pbsp_p32'), (pbsp(64), 'pbsp_p64')
     ]
-    observe_points = ['ob_step']
+    observe_points = ['step']
     configs = [
-        {'size':100, 'straggler_perc':0., 'straggleness':1, 'barriers':barriers, 'observe_points':['ob_step'],
+        {'size':100, 'straggler_perc':0, 'straggleness':1, 'barriers':barriers, 'observe_points':['step'],
         'path':result_dir}
     ]
-    # for c in configs: run(c)
+
+    for c in configs: run(c)
 
     data = {}
     barrier_names = [s for (_, s) in barriers]
     for name in barrier_names:
-        filename = utils.config_to_string(configs[0]) + name + '_step.csv'
+        filename = utils.dbfilename(configs[0], name, 'step')
         with open(filename, 'r') as f:
             reader = csv.reader(f, delimiter=',')
             data[name] = [int(s) for s in next(reader)]
@@ -91,17 +95,17 @@ def exp_straggle_perc(result_dir):
         (pbsp(10), 'pbsp_p10'),
         (pssp(4, 10), 'pssp_s4_p10')
     ]
-    observe_points = ['ob_step']
+    observe_points = ['step']
     configs = [
-        {'size':100, 'straggler_perc':0, 'straggleness':2, 'barriers':barriers, 'observe_points':['ob_step'],
+        {'size':100, 'straggler_perc':0, 'straggleness':2, 'barriers':barriers, 'observe_points':['step'],
         'path':result_dir},
-        {'size':100, 'straggler_perc':5, 'straggleness':2, 'barriers':barriers, 'observe_points':['ob_step'],
+        {'size':100, 'straggler_perc':5, 'straggleness':2, 'barriers':barriers, 'observe_points':['step'],
         'path':result_dir},
-        {'size':100, 'straggler_perc':10, 'straggleness':2, 'barriers':barriers, 'observe_points':['ob_step'],
+        {'size':100, 'straggler_perc':10, 'straggleness':2, 'barriers':barriers, 'observe_points':['step'],
         'path':result_dir},
-        {'size':100, 'straggler_perc':15, 'straggleness':2, 'barriers':barriers, 'observe_points':['ob_step'],
+        {'size':100, 'straggler_perc':15, 'straggleness':2, 'barriers':barriers, 'observe_points':['step'],
         'path':result_dir},
-        {'size':100, 'straggler_perc':20, 'straggleness':2, 'barriers':barriers, 'observe_points':['ob_step'],
+        {'size':100, 'straggler_perc':20, 'straggleness':2, 'barriers':barriers, 'observe_points':['step'],
         'path':result_dir}
     ]
 
@@ -111,8 +115,7 @@ def exp_straggle_perc(result_dir):
     for b in barriers:
         dict_single_straggler = {}
         for c in configs:
-            prefix = utils.config_to_string(c)
-            filename = prefix + b[1] + '_step.csv'
+            filename = utils.dbfilename(c, b[1], 'step')
             with open(filename, 'r') as f:
                 reader = csv.reader(f, delimiter=',')
                 data = [int(s) for s in next(reader)]
@@ -129,7 +132,6 @@ def exp_straggle_perc(result_dir):
         ys = list(i.values())
         y, _ = zip(*ys)
         y = np.divide(y, y[0])
-        #ax.errorbar(x, y, yerr=yerr, label=k)
         ax.plot(x, y, label=k)
     plt.legend()
     plt.show()

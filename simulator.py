@@ -8,11 +8,6 @@ import os
 stop_time = 50
 randomness=0.01
 
-"""
-straggler_perc: int, 0 ~ 100
-straggleness: int, >= 1.
-"""
-
 # Utils
 
 def randomized_speed(base_speed, randomness):
@@ -88,8 +83,9 @@ class Network:
     def __init__(self, config, barrier):
         self.barrier = barrier[0]
         self.observe_points = config['observe_points']
-        db_prefix = utils.config_to_string(config)
-        self.db_basename = db_prefix + barrier[1]
+
+        # Maintain consistency of datafile names
+        self.dbfilename_step = utils.dbfilename(config, barrier[1], 'step')
 
         nodes = []
         for i in range(config['size']):
@@ -124,14 +120,13 @@ class Network:
 
 
     def execute(self):
-        print("Executing: %ss" % self.db_basename)
         while(self.clock < self.stop_time):
-            # print("Time: %.2f\n" % (self.clock))
             self.update_nodes_time()
             t = self.next_event_at()
             self.clock = t
 
-        if ('ob_step' in self.observe_points):
+        if ('step' in self.observe_points):
+            print('Processing: ' + self.dbfilename_step)
             self.collect_step_data()
 
 
@@ -139,8 +134,7 @@ class Network:
         result = []
         for n in self.nodes:
             result.append(n.step)
-
-        filename = self.db_basename + '_step.csv'
+        filename = self.dbfilename_step
         with open(filename, 'w+', newline='') as csvfile:
             writer = csv.writer(csvfile, delimiter=',')
             writer.writerow(result)
