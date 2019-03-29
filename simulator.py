@@ -3,14 +3,11 @@ import math
 import database as db
 import utils
 import csv
+import os
 
 stop_time = 50
 randomness=0.01
 
-"""
-observation point:
-- "step" : final step of all nodes
-"""
 
 # Utils
 
@@ -87,7 +84,8 @@ class Network:
     def __init__(self, config, barrier):
         self.barrier = barrier[0]
         self.observe_points = config['observe_points']
-        self.db_basename = utils.config_to_string(config, barrier[1])
+        db_prefix = utils.config_to_string(config)
+        self.db_basename = db_prefix + barrier[1]
 
         nodes = []
         for i in range(config['size']):
@@ -97,6 +95,9 @@ class Network:
         self.nodes = nodes
         self.clock = 0.
 
+        self.straggler_perc = config['straggler_perc']
+        self.straggleness = config['straggleness']
+
 
     def update_nodes_time(self):
         for n in self.nodes:
@@ -104,7 +105,7 @@ class Network:
                 continue
             # log some information here
             exec_time = random_task_time(
-                config['straggler_perc'], config['straggleness'])
+                self.straggler_perc, self.straggleness)
             n.t_wait = self.clock
             n.t_exec = n.t_wait + exec_time
             n.step += 1
@@ -135,7 +136,7 @@ class Network:
             result.append(n.step)
 
         filename = self.db_basename + '_step.csv'
-        with open(filename, 'w', newline='') as csvfile:
+        with open(filename, 'w+', newline='') as csvfile:
             writer = csv.writer(csvfile, delimiter=',')
             writer.writerow(result)
 
@@ -145,7 +146,3 @@ def run(config):
     for b in config['barriers']:
         network = Network(config, b)
         network.execute()
-
-
-config = {'size':100, 'straggler_perc':0., 'straggleness':0., 'barriers':[(pssp(4, 10), 'pssp_s4_p10')], 'observe_points':['ob_step'], 'path':'/Users/stark/Code/Ninox/data'}
-run(config)

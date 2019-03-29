@@ -1,6 +1,12 @@
-import simulator
+from simulator import *
+import database as db
 
-# Considered barriers: ASP, BSP, pBSP-1/2/3/4.., SSP-2/3/5/10, pSSP-[2/3/5/10]-[1/2/3/4/...]
+import matplotlib.pyplot as plt
+
+"""
+observation point (for each barriers&size&straggler config):
+- "step" : final step of all nodes. Format: one line, rows are all nodes.
+"""
 
 
 """
@@ -11,16 +17,37 @@ Experiment 1: Distribution of final iteration progress.
 # - Adjust straggler percentage. Redo evalulation. Process mean/std line vs percentage.
 # - Adjust straggler scale. Redo evaluation. Process mean/std line vs percentage.
 
-def exp_iteration(result_dir):
-    # barriers = [asp, bsp, ssp(10), ssp(1), pssp(1, 1), pssp(1, 2)]
-    barriers = [simulator.asp]
-    observe_points = ['ob_finalstep']
-    configs = [
-        {'size':100, 'straggler_perc':0., 'straggleness':0., 'barriers':barriers, 'path':result_dir}
+def exp_step(result_dir):
+    db.init_db(result_dir)
+
+    barriers = [
+        (asp, 'asp'), (bsp, 'bsp'), (ssp(4), 'ssp_s4'),
+        (pbsp(10), 'pbsp_p10'),
+        (pssp(4, 10), 'pssp_s4_p10')
     ]
-    map(simulator.run, configs)
-    # get table from result_dir
-    # plot
+    observe_points = ['ob_step']
+    configs = [
+        {'size':100, 'straggler_perc':0., 'straggleness':0., 'barriers':barriers, 'observe_points':['ob_step'],
+        'path':result_dir}
+    ]
+
+    #for c in configs: run(c)
+
+    data = {}
+    barrier_names = [s for (_, s) in barriers]
+    for name in barrier_names:
+        filename = utils.config_to_string(configs[0]) + name + '_step.csv'
+        with open(filename, 'r') as f:
+            reader = csv.reader(f, delimiter=',')
+            data[name] = next(reader)
+
+    fig, ax = plt.subplots()
+    bins = np.linspace(0, 100, 500)
+    for name in barrier_names:
+        ax.hist(data[name], bins, label=name)
+    plt.legend()
+    plt.show()
+
 
 
 """
