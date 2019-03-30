@@ -17,3 +17,8 @@ def config_to_string(config):
 
 def dbfilename(config, barrier_name, ob_type):
     return config_to_string(config) + barrier_name + '_' + ob_type + '.csv'
+
+def full_path(path):
+    path = os.path.expanduser(path)
+    path = os.path.abspath(path)
+    return path

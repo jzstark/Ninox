@@ -3,11 +3,18 @@ import database as db
 
 import matplotlib.pyplot as plt
 
+total_time =
+
 """
 observation point (for each barriers&size&straggler config):
 - "step" : final step of all nodes. Format: one line, rows are all nodes.
+- "sequence": two rows, each row has about (#nodes * average_steps) elements.
+    It is the order that each update is generated.
+    First row: id of node;
+    second row: the step of that node when this update is generated;
+    third row: the time this update is generated
 
-Parameters:
+Parameters spec:
 - straggler_perc: int, 0 ~ 100
 - straggleness: >= 1.  float, with only 1 digit after the point at most.
 """
@@ -146,6 +153,36 @@ Experiment 2: "Accuracy"
 # - Change straggler percentage of pBSP, pSSP. Redo Evaluation,
 # - Change straggler scale. Redo.
 # - Chnage x-axis to real time for all the above
+
+
+def exp_accuracy(result_dir):
+    db.init_db(result_dir)
+
+    barriers = [
+        (asp, 'asp'), (bsp, 'bsp'), (ssp(4), 'ssp_s4'),
+        (pbsp(10), 'pbsp_p10'),
+        (pssp(4, 10), 'pssp_s4_p10')
+    ]
+    observe_points = ['step']
+    configs = [
+        {'size':50, 'straggler_perc':0, 'straggleness':1, 'barriers':barriers, 'observe_points':['sequence'],
+        'path':result_dir}
+    ]
+
+    # for c in configs: run(c)
+
+    nodes = {}; steps = {}; times = {}
+    barrier_names = [s for (_, s) in barriers]
+    for barrier in barrier_names:
+        filename = utils.dbfilename(configs[0], barrier, 'sequence')
+        with open(filename, 'r') as f:
+            reader = csv.reader(f, delimiter=',')
+            nodes[barrier] = [int(s) for s in next(reader)]
+            steps[barrier] = [int(s) for s in next(reader)]
+            times[barrier] = [float(s) for s in next(reader)]
+
+
+
 
 """
 Experiment 3: Comparison of time used on running/waiting/transmission.

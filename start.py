@@ -1,18 +1,20 @@
 import os
-import exp
+from exp import *
 import database as db
+import utils
 
-# Simulation entrypoint. Need to specify what to do with
-def main(db_path):
-    db_path = os.path.expanduser(db_path)
-    db_path = os.path.abspath(db_path)
-    db.init_db(db_path)
+def main(db_dir):
+    db_dir = utils.full_path(db_dir)
+    db.init_db(db_dir)
+
+    def run_exp(exp_fun, save_dir):
+        exp_fun(os.path.join(db_dir, "exp_straggle_perc"))
 
     # Execute experiments
 
-    # exp.exp_step(os.path.join(db_path, "exp_step"))
-    exp.exp_samplesize(os.path.join(db_path, "exp_samplesize"))
-    # exp.exp_straggle_perc(os.path.join(db_path, "exp_straggle_perc"))
-
+    #run_exp(exp_step, "exp_step")
+    #run_exp(exp_samplesize, "exp_samplesize")
+    #run_exp(exp_straggle_perc, "exp_straggle_perc")
+    run_exp(exp_accuracy, "exp_accuracy")
 
 main(db.default_dir)

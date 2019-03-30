@@ -83,9 +83,10 @@ class Network:
     def __init__(self, config, barrier):
         self.barrier = barrier[0]
         self.observe_points = config['observe_points']
-
         # Maintain consistency of datafile names
         self.dbfilename_step = utils.dbfilename(config, barrier[1], 'step')
+        self.dbfilename_sequence = utils.dbfilename(config,
+            barrier[1], 'sequence')
 
         nodes = []
         for i in range(config['size']):
@@ -98,9 +99,12 @@ class Network:
         self.straggler_perc = config['straggler_perc']
         self.straggleness = config['straggleness']
 
+        # a potentially very large list; millions of elements
+        self.sequence = [[],[],[]]
+
 
     def update_nodes_time(self):
-        for n in self.nodes:
+        for i, n in enumerate(self.nodes):
             if self.clock < n.t_exec or not self.barrier(self, n):
                 continue
             # log some information here
@@ -109,6 +113,11 @@ class Network:
             n.t_wait = self.clock
             n.t_exec = n.t_wait + exec_time
             n.step += 1
+
+            if ('sequence' in self.observe_points):
+                self.sequence[0].append(i)
+                self.sequence[1].append(n.step)
+                self.sequence[2].append(n.t_exec)
 
 
     def next_event_at(self):
@@ -126,8 +135,13 @@ class Network:
             self.clock = t
 
         if ('step' in self.observe_points):
-            print('Processing: ' + self.dbfilename_step)
+            print('Processing step: ' + self.dbfilename_step)
             self.collect_step_data()
+
+        if ('sequence' in self.observe_points):
+            print('Processing seq: ' + self.dbfilename_sequence)
+            self.collect_sequence_data()
+            for i in self.sequence: i = []
 
 
     def collect_step_data(self):
@@ -138,6 +152,15 @@ class Network:
         with open(filename, 'w+', newline='') as csvfile:
             writer = csv.writer(csvfile, delimiter=',')
             writer.writerow(result)
+
+
+    def collect_sequence_data(self):
+        filename = self.dbfilename_sequence
+        with open(filename, 'w+', newline='') as csvfile:
+            writer = csv.writer(csvfile, delimiter=',')
+            writer.writerow(self.sequence[0])
+            writer.writerow(self.sequence[1])
+            writer.writerow(self.sequence[2])
 
 
 # Entry point
