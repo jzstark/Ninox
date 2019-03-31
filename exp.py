@@ -3,8 +3,6 @@ import database as db
 
 import matplotlib.pyplot as plt
 
-total_time =
-
 """
 observation point (for each barriers&size&straggler config):
 - "step" : final step of all nodes. Format: one line, rows are all nodes.
@@ -159,7 +157,9 @@ def exp_accuracy(result_dir):
     db.init_db(result_dir)
 
     barriers = [
-        (asp, 'asp'), (bsp, 'bsp'), (ssp(4), 'ssp_s4'),
+        # bsp has to be included! AND has to be the first!!!
+        (bsp, 'bsp'),
+        (asp, 'asp'),  (ssp(4), 'ssp_s4'),
         (pbsp(10), 'pbsp_p10'),
         (pssp(4, 10), 'pssp_s4_p10')
     ]
@@ -181,6 +181,47 @@ def exp_accuracy(result_dir):
             steps[barrier] = [int(s) for s in next(reader)]
             times[barrier] = [float(s) for s in next(reader)]
 
+    N = 10
+    x_points = [(stop_time / N) * i for i in range(N)]
+    length = len(times[barrier_names[0]])
+    result = {}
+    for barrier in barrier_names:
+        diff = [0.] * N
+        max_diff = [0] * N
+        index = [0] * N
+        idx = 0
+        for i in range(N):
+            time = x_points[i]
+            for j in range(idx, length):
+                if times[barrier][j] > time: break
+                idx += 1
+            index[i] = idx
+
+            ## Calculate the **difference**
+
+            if barrier == 'bsp' :
+                diff[i] = 0
+                max_diff[i] = 0
+            else :
+                set_bsp = set()
+                set_barrier = set()
+                bsp_index = result['bsp'][1]
+                for k in range(0, bsp_index[i]):
+                    set_bsp.add((nodes['bsp'][k], steps['bsp'][k]))
+                for k in range(0, index[i]):
+                    set_barrier.add((nodes[barrier][k], steps[barrier][k]))
+
+                diff_a_b = set_bsp.difference(set_barrier) #bsp - barrier
+                diff_b_a = set_barrier.difference(set_bsp) #barrier - bsp
+                diff[i] = len(diff_a_b) + len(diff_b_a)
+
+                diff_union = diff_a_b.union(diff_b_a)
+                max_diff[i] = 0 if (len(diff_union) == 0) \
+                    else max(diff_union)[1]
+            ## End
+        result[barrier] = (diff, max_diff, index)
+    print(result)
+    # The result looks suspicious though ...
 
 
 
