@@ -100,7 +100,7 @@ class Network:
         self.straggleness = config['straggleness']
 
         # a potentially very large list; millions of elements
-        self.sequence = [[],[],[]]
+        self.sequence = []
 
 
     def update_nodes_time(self):
@@ -115,9 +115,7 @@ class Network:
             n.step += 1
 
             if ('sequence' in self.observe_points):
-                self.sequence[0].append(i)
-                self.sequence[1].append(n.step)
-                self.sequence[2].append(n.t_exec)
+                self.sequence.append((i, n.step, n.t_exec))
 
 
     def next_event_at(self):
@@ -158,9 +156,11 @@ class Network:
         filename = self.dbfilename_sequence
         with open(filename, 'w+', newline='') as csvfile:
             writer = csv.writer(csvfile, delimiter=',')
-            writer.writerow(self.sequence[0])
-            writer.writerow(self.sequence[1])
-            writer.writerow(self.sequence[2])
+            self.sequence.sort(key=(lambda x : x[-1]))
+            idx, steps, ts = zip(*(self.sequence))
+            writer.writerow(idx)
+            writer.writerow(steps)
+            writer.writerow(ts)
 
 
 # Entry point

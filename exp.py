@@ -163,9 +163,9 @@ def exp_accuracy(result_dir):
         (pbsp(10), 'pbsp_p10'),
         (pssp(4, 10), 'pssp_s4_p10')
     ]
-    observe_points = ['step']
+    observe_points = ['sequence']
     configs = [
-        {'size':50, 'straggler_perc':0, 'straggleness':1, 'barriers':barriers, 'observe_points':['sequence'],
+        {'size':50, 'straggler_perc':0, 'straggleness':1, 'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir}
     ]
 
@@ -181,11 +181,14 @@ def exp_accuracy(result_dir):
             steps[barrier] = [int(s) for s in next(reader)]
             times[barrier] = [float(s) for s in next(reader)]
 
+    # print(times['asp'])
+
     N = 10
-    x_points = [(stop_time / N) * i for i in range(N)]
-    length = len(times[barrier_names[0]])
+    x_points = [(stop_time / N) * (i + 1) for i in range(N)]
+
     result = {}
     for barrier in barrier_names:
+        length = len(times[barrier])
         diff = [0.] * N
         max_diff = [0] * N
         index = [0] * N
@@ -205,7 +208,7 @@ def exp_accuracy(result_dir):
             else :
                 set_bsp = set()
                 set_barrier = set()
-                bsp_index = result['bsp'][1]
+                bsp_index = result['bsp'][-1] #!
                 for k in range(0, bsp_index[i]):
                     set_bsp.add((nodes['bsp'][k], steps['bsp'][k]))
                 for k in range(0, index[i]):
@@ -213,14 +216,19 @@ def exp_accuracy(result_dir):
 
                 diff_a_b = set_bsp.difference(set_barrier) #bsp - barrier
                 diff_b_a = set_barrier.difference(set_bsp) #barrier - bsp
-                diff[i] = len(diff_a_b) + len(diff_b_a)
+                #diff[i] = len(diff_a_b) + len(diff_b_a)
+                inter = set_bsp.intersection(set_barrier)
+                diff[i] = len(inter) / len(set_barrier)
 
                 diff_union = diff_a_b.union(diff_b_a)
                 max_diff[i] = 0 if (len(diff_union) == 0) \
                     else max(diff_union)[1]
             ## End
+
         result[barrier] = (diff, max_diff, index)
+
     print(result)
+
     # The result looks suspicious though ...
 
 

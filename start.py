@@ -8,7 +8,7 @@ def main(db_dir):
     db.init_db(db_dir)
 
     def run_exp(exp_fun, save_dir):
-        exp_fun(os.path.join(db_dir, "exp_straggle_perc"))
+        exp_fun(os.path.join(db_dir, save_dir))
 
     # Execute experiments
 
