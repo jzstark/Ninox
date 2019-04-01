@@ -159,22 +159,25 @@ def exp_accuracy(result_dir):
     barriers = [
         # bsp has to be included! AND has to be the first!!!
         (bsp, 'bsp'),
-        (asp, 'asp'),  (ssp(0), 'ssp_s0'), (ssp(1), 'ssp_s1'),
+        (asp, 'asp'), (ssp(4), 'ssp_s4'),
         (pbsp(10), 'pbsp_p10'),
-        (pssp(1, 10), 'pssp_s1_p10')
+        (pssp(4, 10), 'pssp_s1_p10')
+    ]
+    barriers_foo = [
+        (bsp, 'bsp'),
+        (ssp(0), 'ssp_s4')
     ]
     observe_points = ['sequence']
-    configs = [
-        {'size':10, 'straggler_perc':0, 'straggleness':1, 'barriers':barriers, 'observe_points':observe_points,
+    config = {'size':100, 'straggler_perc':0, 'straggleness':1,
+        'barriers':barriers_foo, 'observe_points':observe_points,
         'path':result_dir}
-    ]
 
-    for c in configs: run(c)
+    run(config)
 
     nodes = {}; steps = {}; times = {}
-    barrier_names = [s for (_, s) in barriers]
+    barrier_names = [s for (_, s) in config['barriers']]
     for barrier in barrier_names:
-        filename = utils.dbfilename(configs[0], barrier, 'sequence')
+        filename = utils.dbfilename(config, barrier, 'sequence')
         with open(filename, 'r') as f:
             reader = csv.reader(f, delimiter=',')
             nodes[barrier] = [int(s) for s in next(reader)]

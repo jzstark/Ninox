@@ -6,7 +6,7 @@ import csv
 import os
 
 
-stop_time = 10
+stop_time = 100
 randomness=0.01
 seed = 666
 
@@ -38,10 +38,18 @@ def bsp(net, node):
 
 def ssp(staleness):
     def ssp_param(net, node):
+        """
         slowest_step = math.inf
         for m in net.nodes:
             if m.step < slowest_step: slowest_step = m.step
         return (node.step - slowest_step <= staleness)
+        """
+        def f(m):
+            return (m.step > node.step) or \
+                (abs(m.step -node.step) <= staleness and net.clock >= m.t_exec)
+        for m in net.nodes:
+            if not f(m): return False
+        return True
     return ssp_param
 
 
