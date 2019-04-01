@@ -4,7 +4,7 @@ import database as db
 import utils
 import csv
 import os
-
+import random
 
 stop_time = 100
 randomness=0.01
@@ -51,8 +51,9 @@ def ssp(staleness):
 
 def pbsp(sample_size):
     def pbsp_param(net, node):
-        sampled_nodes = np.random.choice(net.nodes,
-            size=sample_size, replace=False)
+        # Do NOOOOT use `numpy.random.choice`!!!!
+        # It permutes the array each time we call it.
+        sampled_nodes = random.sample(net.nodes, sample_size)
         def f(m):
             return (m.step > node.step) or \
                 (m.step == node.step and net.clock >= m.t_exec)
@@ -64,8 +65,7 @@ def pbsp(sample_size):
 
 def pssp(staleness, sample_size):
     def pssp_param(net, node):
-        sampled_nodes = np.random.choice(net.nodes,
-            size=sample_size, replace=False)
+        sampled_nodes = random.sample(net.nodes, sample_size)
         def f(m):
             return (m.step > node.step) or \
                 (node.step - m.step < staleness) or \

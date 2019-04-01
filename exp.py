@@ -161,7 +161,7 @@ def exp_accuracy(result_dir):
         (bsp, 'bsp'),
         (asp, 'asp'), (ssp(4), 'ssp_s4'),
         (pbsp(10), 'pbsp_p10'),
-        (pssp(4, 10), 'pssp_s1_p10')
+        (pssp(4, 10), 'pssp_s4_p10')
     ]
     barriers_foo = [
         (bsp, 'bsp'),
@@ -170,8 +170,8 @@ def exp_accuracy(result_dir):
         (ssp(3), 'ssp_s3')
     ]
     observe_points = ['sequence']
-    config = {'size':10, 'straggler_perc':0, 'straggleness':1,
-        'barriers':barriers_foo, 'observe_points':observe_points,
+    config = {'size':100, 'straggler_perc':0, 'straggleness':1,
+        'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir}
 
     run(config)

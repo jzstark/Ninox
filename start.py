@@ -3,6 +3,9 @@ from exp import *
 import database as db
 import utils
 
+#import cProfile
+
+
 def main(db_dir):
     db_dir = utils.full_path(db_dir)
     db.init_db(db_dir)
@@ -18,3 +21,4 @@ def main(db_dir):
     run_exp(exp_accuracy, "exp_accuracy")
 
 main(db.default_dir)
+#cProfile.run('main(db.default_dir)')
