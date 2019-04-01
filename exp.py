@@ -159,17 +159,17 @@ def exp_accuracy(result_dir):
     barriers = [
         # bsp has to be included! AND has to be the first!!!
         (bsp, 'bsp'),
-        (asp, 'asp'),  (ssp(4), 'ssp_s4'),
+        (asp, 'asp'),  (ssp(0), 'ssp_s0'), (ssp(1), 'ssp_s1'),
         (pbsp(10), 'pbsp_p10'),
-        (pssp(4, 10), 'pssp_s4_p10')
+        (pssp(1, 10), 'pssp_s1_p10')
     ]
     observe_points = ['sequence']
     configs = [
-        {'size':50, 'straggler_perc':0, 'straggleness':1, 'barriers':barriers, 'observe_points':observe_points,
+        {'size':10, 'straggler_perc':0, 'straggleness':1, 'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir}
     ]
 
-    # for c in configs: run(c)
+    for c in configs: run(c)
 
     nodes = {}; steps = {}; times = {}
     barrier_names = [s for (_, s) in barriers]
@@ -180,8 +180,6 @@ def exp_accuracy(result_dir):
             nodes[barrier] = [int(s) for s in next(reader)]
             steps[barrier] = [int(s) for s in next(reader)]
             times[barrier] = [float(s) for s in next(reader)]
-
-    # print(times['asp'])
 
     N = 10
     x_points = [(stop_time / N) * (i + 1) for i in range(N)]

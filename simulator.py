@@ -5,8 +5,10 @@ import utils
 import csv
 import os
 
-stop_time = 50
+
+stop_time = 10
 randomness=0.01
+seed = 666
 
 # Utils
 
@@ -127,6 +129,7 @@ class Network:
 
 
     def execute(self):
+        np.random.seed(seed)
         while(self.clock < self.stop_time):
             self.update_nodes_time()
             t = self.next_event_at()
