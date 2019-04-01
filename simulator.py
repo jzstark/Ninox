@@ -21,7 +21,7 @@ def random_task_time(straggler_perc, straggleness):
         t = t * straggleness
     return t
 
-# Barriers
+# Barriers, deciding if `node` should just go ahead
 
 def asp(net, node):
     return True
@@ -31,6 +31,7 @@ def bsp(net, node):
     def f(m):
         return (m.step > node.step) or \
             (m.step == node.step and net.clock >= m.t_exec)
+    # Do NOT use all() here
     for m in net.nodes:
         if not f(m): return False
     return True
@@ -38,15 +39,10 @@ def bsp(net, node):
 
 def ssp(staleness):
     def ssp_param(net, node):
-        """
-        slowest_step = math.inf
-        for m in net.nodes:
-            if m.step < slowest_step: slowest_step = m.step
-        return (node.step - slowest_step <= staleness)
-        """
         def f(m):
             return (m.step > node.step) or \
-                (abs(m.step -node.step) <= staleness and net.clock >= m.t_exec)
+                (node.step - m.step < staleness) or \
+                (node.step - m.step == staleness and net.clock >= m.t_exec)
         for m in net.nodes:
             if not f(m): return False
         return True
@@ -55,11 +51,11 @@ def ssp(staleness):
 
 def pbsp(sample_size):
     def pbsp_param(net, node):
+        sampled_nodes = np.random.choice(net.nodes,
+            size=sample_size, replace=False)
         def f(m):
             return (m.step > node.step) or \
                 (m.step == node.step and net.clock >= m.t_exec)
-        sampled_nodes = np.random.choice(net.nodes,
-            size=sample_size, replace=False)
         for m in sampled_nodes:
             if not f(m): return False
         return True
@@ -68,14 +64,15 @@ def pbsp(sample_size):
 
 def pssp(staleness, sample_size):
     def pssp_param(net, node):
-        def ssp_param(net, node):
-            sampled_nodes = np.random.choice(net.nodes,
-                size=sample_size, replace=False)
-            slowest_step = math.inf
-            for m in sampled_nodes:
-                if m.step < slowest_step: slowest_step = m.step
-            return (node.step - slowest_step <= staleness)
-        return ssp_param
+        sampled_nodes = np.random.choice(net.nodes,
+            size=sample_size, replace=False)
+        def f(m):
+            return (m.step > node.step) or \
+                (node.step - m.step < staleness) or \
+                (node.step - m.step == staleness and net.clock >= m.t_exec)
+        for m in net.nodes:
+            if not f(m): return False
+        return True
     return pssp_param
 
 
@@ -117,7 +114,6 @@ class Network:
         for i, n in enumerate(self.nodes):
             if self.clock < n.t_exec or not self.barrier(self, n):
                 continue
-            # log some information here
             exec_time = random_task_time(
                 self.straggler_perc, self.straggleness)
             n.t_wait = self.clock
