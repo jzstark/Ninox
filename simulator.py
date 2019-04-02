@@ -70,7 +70,7 @@ def pssp(staleness, sample_size):
             return (m.step > node.step) or \
                 (node.step - m.step < staleness) or \
                 (node.step - m.step == staleness and net.clock >= m.t_exec)
-        for m in net.nodes:
+        for m in sampled_nodes:
             if not f(m): return False
         return True
     return pssp_param
@@ -202,9 +202,21 @@ class Network:
 
 
     def collect_frontier_data(self):
-        node = self.nodes[0]
-        diff_sum, diff_max = zip(*(node.frontier_info))
-        print(diff_sum, diff_max)
+        #total_diff = []
+        # Possible memory issue.
+        #for n in self.nodes:
+        #    diff_sum, diff_max = zip(*(n.frontier_info))
+        #    total_diff.extend(diff_sum)
+        # print(np.mean(total_diff), np.std(total_diff))
+        n = self.nodes[0]
+        diff_sum, diff_max = zip(*(n.frontier_info))
+        print(diff_sum)
+        print(np.mean(diff_sum), np.std(diff_sum))
+
+        # Maybe histgram? (mean, std) is not a good way to show the difference -- their mean value is basically the same (why?).
+        # max value as expected.
+        #print(diff_max)
+        #print(np.mean(diff_max), np.std(diff_max))
 
 
 # Entry point

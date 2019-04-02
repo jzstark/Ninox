@@ -41,7 +41,7 @@ def exp_step(result_dir):
         'path':result_dir}
     ]
 
-    # for c in configs: run(c)
+    #for c in configs: run(c)
 
     data = {}
     barrier_names = [s for (_, s) in barriers]
@@ -56,7 +56,7 @@ def exp_step(result_dir):
     for name in barrier_names:
         ax.hist(data[name], 50, label=name)
     plt.legend()
-    # plt.show()
+    plt.show()
 
     # Also draw the CDF graph
 
@@ -244,14 +244,23 @@ def exp_accuracy2(result_dir):
     db.init_db(result_dir)
 
     barriers = [
-        (bsp, 'bsp'),
-        (asp, 'asp'),
-        (ssp(4), 'ssp_s4'),
-        (pbsp(10), 'pbsp_p10'),
-        (pssp(4, 10), 'pssp_s4_p10')
+        # (bsp, 'bsp'),
+
+        #(asp, 'asp'),
+        #(ssp(1), 'ssp_s1'),
+        #(ssp(4), 'ssp_s4'),
+        #(ssp(8), 'ssp_s8'),
+        #(pbsp(10), 'pbsp_p10'),
+        #(pssp(4, 10), 'pssp_s4_p10')
+
+        (pssp(2, 2), 'pssp_s2_p2'),
+        (pssp(2, 5), 'pssp_s2_p5'),
+        (pssp(2, 10), 'pssp_s2_p10'),
+        (pssp(2, 20), 'pssp_s2_p20'),
+        (pssp(2, 50), 'pssp_s2_p50')
     ]
     observe_points = ['frontier']
-    config = {'size':10, 'straggler_perc':20, 'straggleness':4.,
+    config = {'size':200, 'straggler_perc':0, 'straggleness':1.,
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir}
 
