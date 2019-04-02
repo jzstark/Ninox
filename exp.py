@@ -244,12 +244,14 @@ def exp_accuracy2(result_dir):
     db.init_db(result_dir)
 
     barriers = [
-        (bsp, 'bsp'), (asp, 'asp'), (ssp(4), 'ssp_s4'),
+        (bsp, 'bsp'),
+        (asp, 'asp'),
+        (ssp(4), 'ssp_s4'),
         (pbsp(10), 'pbsp_p10'),
         (pssp(4, 10), 'pssp_s4_p10')
     ]
     observe_points = ['frontier']
-    config = {'size':100, 'straggler_perc':20, 'straggleness':4.,
+    config = {'size':10, 'straggler_perc':20, 'straggleness':4.,
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir}
 

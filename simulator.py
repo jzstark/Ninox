@@ -99,19 +99,24 @@ class Network:
             barrier[1], 'sequence')
 
         nodes = []
-        for i in range(config['size']):
+        size = config['size']
+        for i in range(size):
             node = Node()
             nodes.append(node)
-        self.stop_time = stop_time
+        # This could a problem if we allow nodes dropping in and out freely
+        #for i in nodes:
+        #    node.frontier = [0] * size
         self.nodes = nodes
+        self.stop_time = stop_time
         self.clock = 0.
-        self.step_frontier = [0] * config['size']
 
         self.straggler_perc = config['straggler_perc']
         self.straggleness = config['straggleness']
 
+        self.step_frontier = [0] * size
         # a potentially very large list; millions of elements
         self.sequence = []
+
 
     def update_nodes_time(self):
         for i, n in enumerate(self.nodes):
@@ -129,6 +134,7 @@ class Network:
             # The noisy update from my point of view.
             diff_num = 0 # total deviation from previous step
             diff_max = 0 # max deviation
+
             for j, s in enumerate(n.frontier):
                 diff = self.nodes[j].step - s
                 diff_num += diff
@@ -137,7 +143,7 @@ class Network:
             # Update my progress to ps
             self.step_frontier[i] = n.step
             # Get current screenshot of current progress of all nodes
-            n.frontier = self.step_frontier
+            n.frontier = list.copy(self.step_frontier)
 
             if ('frontier' in self.observe_points):
                 n.frontier_info.append((diff_num, diff_max))
