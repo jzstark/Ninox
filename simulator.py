@@ -84,6 +84,9 @@ class Node:
         self.t_wait = 0.
         self.t_exec = 0.
 
+        self.frontier = [] # length: nodes number
+        self.frontier_info = [] # length: total step number
+
 
 class Network:
 
@@ -102,6 +105,7 @@ class Network:
         self.stop_time = stop_time
         self.nodes = nodes
         self.clock = 0.
+        self.step_frontier = [0] * config['size']
 
         self.straggler_perc = config['straggler_perc']
         self.straggleness = config['straggleness']
@@ -109,16 +113,34 @@ class Network:
         # a potentially very large list; millions of elements
         self.sequence = []
 
-
     def update_nodes_time(self):
         for i, n in enumerate(self.nodes):
             if self.clock < n.t_exec or not self.barrier(self, n):
                 continue
+            # If it's time to finish the wait and go on...
+
+            # Decide my next execution time; increase my step
             exec_time = random_task_time(
                 self.straggler_perc, self.straggleness)
             n.t_wait = self.clock
             n.t_exec = n.t_wait + exec_time
             n.step += 1
+
+            # The noisy update from my point of view.
+            diff_num = 0 # total deviation from previous step
+            diff_max = 0 # max deviation
+            for j, s in enumerate(n.frontier):
+                diff = self.nodes[j].step - s
+                diff_num += diff
+                diff_max = diff if diff > diff_max else diff_max
+
+            # Update my progress to ps
+            self.step_frontier[i] = n.step
+            # Get current screenshot of current progress of all nodes
+            n.frontier = self.step_frontier
+
+            if ('frontier' in self.observe_points):
+                n.frontier_info.append((diff_num, diff_max))
 
             if ('sequence' in self.observe_points):
                 self.sequence.append((i, n.step, n.t_exec))
@@ -146,7 +168,10 @@ class Network:
         if ('sequence' in self.observe_points):
             print('Processing seq: ' + self.dbfilename_sequence)
             self.collect_sequence_data()
-            for i in self.sequence: i = []
+
+        if ('frontier' in self.observe_points):
+            print('Processing frontier: ' + self.dbfilename_sequence)
+            self.collect_frontier_data()
 
 
     def collect_step_data(self):
@@ -168,6 +193,12 @@ class Network:
             writer.writerow(idx)
             writer.writerow(steps)
             writer.writerow(ts)
+
+
+    def collect_frontier_data(self):
+        node = self.nodes[0]
+        diff_sum, diff_max = zip(*(node.frontier_info))
+        print(diff_sum, diff_max)
 
 
 # Entry point

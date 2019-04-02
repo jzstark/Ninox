@@ -12,6 +12,8 @@ observation point (for each barriers&size&straggler config):
     second row: the step of that node when this update is generated;
     third row: the time this update is generated
 
+- "frontier"
+
 Parameters spec:
 - straggler_perc: int, 0 ~ 100
 - straggleness: >= 1.  float, with only 1 digit after the point at most.
@@ -166,12 +168,13 @@ def exp_accuracy(result_dir):
     barriers_foo = [
         (bsp, 'bsp'),
         (asp, 'asp'),
-        (ssp(0), 'ssp_s0'),
-        (ssp(3), 'ssp_s3')
+        #(ssp(0), 'ssp_s0'),
+        #(ssp(1), 'ssp_s1'),
+        #(ssp(2), 'ssp_s2'),
     ]
     observe_points = ['sequence']
     config = {'size':100, 'straggler_perc':0, 'straggleness':1,
-        'barriers':barriers, 'observe_points':observe_points,
+        'barriers':barriers_foo, 'observe_points':observe_points,
         'path':result_dir}
 
     run(config)
@@ -217,8 +220,10 @@ def exp_accuracy(result_dir):
                 for k in range(0, index[i]):
                     set_barrier.add((nodes[barrier][k], steps[barrier][k]))
 
+                # problem: `len(diff_a_b)` is 0 even for asp!
                 diff_a_b = set_bsp.difference(set_barrier) #bsp - barrier
                 diff_b_a = set_barrier.difference(set_bsp) #barrier - bsp
+                print(len(diff_a_b), len(diff_b_a))
                 #diff[i] = len(diff_a_b) + len(diff_b_a)
                 inter = set_bsp.intersection(set_barrier)
                 diff[i] = len(inter) / len(set_barrier)
@@ -235,6 +240,20 @@ def exp_accuracy(result_dir):
     # The result looks suspicious though ...
 
 
+def exp_accuracy2(result_dir):
+    db.init_db(result_dir)
+
+    barriers = [
+        (bsp, 'bsp'), (asp, 'asp'), (ssp(4), 'ssp_s4'),
+        (pbsp(10), 'pbsp_p10'),
+        (pssp(4, 10), 'pssp_s4_p10')
+    ]
+    observe_points = ['frontier']
+    config = {'size':100, 'straggler_perc':20, 'straggleness':4.,
+        'barriers':barriers, 'observe_points':observe_points,
+        'path':result_dir}
+
+    run(config)
 
 """
 Experiment 3: Comparison of time used on running/waiting/transmission.
