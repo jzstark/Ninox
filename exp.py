@@ -244,27 +244,55 @@ def exp_accuracy2(result_dir):
     db.init_db(result_dir)
 
     barriers = [
-        # (bsp, 'bsp'),
-
-        #(asp, 'asp'),
-        #(ssp(1), 'ssp_s1'),
-        #(ssp(4), 'ssp_s4'),
-        #(ssp(8), 'ssp_s8'),
-        #(pbsp(10), 'pbsp_p10'),
-        #(pssp(4, 10), 'pssp_s4_p10')
-
-        (pssp(2, 2), 'pssp_s2_p2'),
-        (pssp(2, 5), 'pssp_s2_p5'),
-        (pssp(2, 10), 'pssp_s2_p10'),
-        (pssp(2, 20), 'pssp_s2_p20'),
-        (pssp(2, 50), 'pssp_s2_p50')
+        (bsp, 'bsp'),
+        (asp, 'asp'),
+        (ssp(4), 'ssp_s4'),
+        (pbsp(5), 'pbsp_p5'),
+        (pbsp(10), 'pbsp_p10'),
+        (pssp(4, 5), 'pssp_s4_p5'),
+        (pssp(4, 10), 'pssp_s4_p10')
+        # (pssp(4, 20), 'pssp_s4_p10')
+        #(pssp(2, 2), 'pssp_s2_p2'),
+        #(pssp(2, 5), 'pssp_s2_p5'),
+        #(pssp(2, 10), 'pssp_s2_p10'),
+        #(pssp(2, 20), 'pssp_s2_p20'),
+        #(pssp(2, 50), 'pssp_s2_p50')
     ]
     observe_points = ['frontier']
-    config = {'size':200, 'straggler_perc':0, 'straggleness':1.,
+    config = {'size':100, 'straggler_perc':10, 'straggleness':3.,
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir}
 
-    run(config)
+    # run(config)
+
+    diff_num = {}; diff_max = {}
+    barrier_names = [s for (_, s) in config['barriers']]
+    for barrier in barrier_names:
+        filename = utils.dbfilename(config, barrier, 'frontier')
+        with open(filename, 'r') as f:
+            reader = csv.reader(f, delimiter=',')
+            diff_num[barrier] = [int(s) for s in next(reader)]
+            diff_max[barrier] = [int(s) for s in next(reader)]
+
+    """
+    fig, ax = plt.subplots(figsize=(8, 4))
+    for k, v in diff_num.items():
+        v = np.divide(v, config['size'])
+        ax.hist(v, 200, normed=1, histtype='step', cumulative=True, label=k)
+    ax.legend()
+    ax.set_xlabel('Average step difference per node (size = %d)' % config['size'])
+    ax.set_ylabel('CDF')
+    plt.show()
+    """
+
+    fig, ax = plt.subplots(figsize=(8, 4))
+    for k, v in diff_max.items():
+        ax.hist(v, 200, normed=1, histtype='step', cumulative=True, label=k)
+    ax.legend()
+    ax.set_xlabel('Max step difference (size = %d)' % config['size'])
+    ax.set_ylabel('CDF')
+    plt.show()
+
 
 """
 Experiment 3: Comparison of time used on running/waiting/transmission.

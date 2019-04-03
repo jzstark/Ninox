@@ -97,6 +97,8 @@ class Network:
         self.dbfilename_step = utils.dbfilename(config, barrier[1], 'step')
         self.dbfilename_sequence = utils.dbfilename(config,
             barrier[1], 'sequence')
+        self.dbfilename_frontier = utils.dbfilename(config,
+            barrier[1], 'frontier')
 
         nodes = []
         size = config['size']
@@ -202,16 +204,24 @@ class Network:
 
 
     def collect_frontier_data(self):
-        #total_diff = []
+        total_diff = []
+        total_diff_max = []
         # Possible memory issue.
-        #for n in self.nodes:
-        #    diff_sum, diff_max = zip(*(n.frontier_info))
-        #    total_diff.extend(diff_sum)
+        for n in self.nodes:
+            diff_sum, diff_max = zip(*(n.frontier_info))
+            total_diff.extend(diff_sum)
+            total_diff_max.extend(diff_max)
+
+        filename = self.dbfilename_frontier
+        with open(filename, 'w+', newline='') as csvfile:
+            writer = csv.writer(csvfile, delimiter=',')
+            writer.writerow(total_diff)
+            writer.writerow(total_diff_max)
         # print(np.mean(total_diff), np.std(total_diff))
-        n = self.nodes[0]
-        diff_sum, diff_max = zip(*(n.frontier_info))
-        print(diff_sum)
-        print(np.mean(diff_sum), np.std(diff_sum))
+        #n = self.nodes[0]
+        #diff_sum, diff_max = zip(*(n.frontier_info))
+        #print(diff_sum)
+        #print(np.mean(diff_sum), np.std(diff_sum))
 
         # Maybe histgram? (mean, std) is not a good way to show the difference -- their mean value is basically the same (why?).
         # max value as expected.
