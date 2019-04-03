@@ -13,6 +13,7 @@ observation point (for each barriers&size&straggler config):
     third row: the time this update is generated
 
 - "frontier"
+- "ratio"
 
 Parameters spec:
 - straggler_perc: int, 0 ~ 100
@@ -37,7 +38,7 @@ def exp_step(result_dir):
     ]
     observe_points = ['step']
     configs = [
-        {'size':100, 'straggler_perc':0, 'straggleness':1, 'barriers':barriers, 'observe_points':['step'],
+        {'size':100, 'straggler_perc':0, 'straggleness':1, 'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir}
     ]
 
@@ -50,11 +51,11 @@ def exp_step(result_dir):
         with open(filename, 'r') as f:
             reader = csv.reader(f, delimiter=',')
             data[name] = [int(s) for s in next(reader)]
-    print(data)
 
     fig, ax = plt.subplots()
     for name in barrier_names:
-        ax.hist(data[name], 50, label=name)
+        ax.hist(data[name], 25, label=name, rwidth=10)
+    ax.set_ylim([0, 60])
     plt.legend()
     plt.show()
 
@@ -91,7 +92,7 @@ def exp_samplesize(result_dir):
     for name in barrier_names:
         ax.hist(data[name], 500, cumulative=True, histtype='step', label=name)
     plt.legend()
-    #plt.show()
+    plt.show()
 
 
 def exp_straggle_perc(result_dir):
@@ -104,15 +105,15 @@ def exp_straggle_perc(result_dir):
     ]
     observe_points = ['step']
     configs = [
-        {'size':100, 'straggler_perc':0, 'straggleness':2, 'barriers':barriers, 'observe_points':['step'],
+        {'size':100, 'straggler_perc':0, 'straggleness':3, 'barriers':barriers, 'observe_points':['step'],
         'path':result_dir},
-        {'size':100, 'straggler_perc':5, 'straggleness':2, 'barriers':barriers, 'observe_points':['step'],
+        {'size':100, 'straggler_perc':5, 'straggleness':3, 'barriers':barriers, 'observe_points':['step'],
         'path':result_dir},
-        {'size':100, 'straggler_perc':10, 'straggleness':2, 'barriers':barriers, 'observe_points':['step'],
+        {'size':100, 'straggler_perc':10, 'straggleness':3, 'barriers':barriers, 'observe_points':['step'],
         'path':result_dir},
-        {'size':100, 'straggler_perc':15, 'straggleness':2, 'barriers':barriers, 'observe_points':['step'],
+        {'size':100, 'straggler_perc':15, 'straggleness':3, 'barriers':barriers, 'observe_points':['step'],
         'path':result_dir},
-        {'size':100, 'straggler_perc':20, 'straggleness':2, 'barriers':barriers, 'observe_points':['step'],
+        {'size':100, 'straggler_perc':20, 'straggleness':3, 'barriers':barriers, 'observe_points':['step'],
         'path':result_dir}
     ]
 
@@ -155,7 +156,7 @@ Experiment 2: "Accuracy"
 # - Chnage x-axis to real time for all the above
 
 
-def exp_accuracy(result_dir):
+def exp_accuracy_old(result_dir):
     db.init_db(result_dir)
 
     barriers = [
@@ -240,7 +241,7 @@ def exp_accuracy(result_dir):
     # The result looks suspicious though ...
 
 
-def exp_accuracy2(result_dir):
+def exp_accuracy(result_dir):
     db.init_db(result_dir)
 
     barriers = [
@@ -299,6 +300,35 @@ Experiment 3: Comparison of time used on running/waiting/transmission.
 """
 
 # - Bar chart. Take only final status (or whole process if you want, but the point is not very clear). Compare barriers.
+
+def exp_ratio(result_dir):
+    db.init_db(result_dir)
+
+    barriers = [
+        (asp, 'asp'), (bsp, 'bsp'), (ssp(4), 'ssp_s4'),
+        (pbsp(10), 'pbsp_p10'),
+        (pssp(4, 10), 'pssp_s4_p10')
+    ]
+    observe_points = ['ratio']
+    config = {'size':100, 'straggler_perc':0, 'straggleness':1,
+        'barriers':barriers, 'observe_points':observe_points,
+        'path':result_dir}
+
+    run(config)
+
+    ratio = {}
+    barrier_names = [s for (_, s) in config['barriers']]
+    for barrier in barrier_names:
+        filename = utils.dbfilename(config, barrier, 'ratio')
+        with open(filename, 'r') as f:
+            reader = csv.reader(f, delimiter=',')
+            ratio[barrier] = [float(s) for s in next(reader)]
+
+    fig, ax = plt.subplots()
+    ax.boxplot(list(ratio.values()), labels=barrier_names)
+    plt.show()
+
+
 
 """
 Experiment 4: Scalability

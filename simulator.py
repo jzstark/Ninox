@@ -99,6 +99,8 @@ class Network:
             barrier[1], 'sequence')
         self.dbfilename_frontier = utils.dbfilename(config,
             barrier[1], 'frontier')
+        self.dbfilename_ratio = utils.dbfilename(config,
+            barrier[1], 'ratio')
 
         nodes = []
         size = config['size']
@@ -109,13 +111,16 @@ class Network:
         #for i in nodes:
         #    node.frontier = [0] * size
         self.nodes = nodes
+        self.size = size
         self.stop_time = stop_time
         self.clock = 0.
 
         self.straggler_perc = config['straggler_perc']
         self.straggleness = config['straggleness']
 
+
         self.step_frontier = [0] * size
+        self.calc_time = [0] * size # total calc time
         # a potentially very large list; millions of elements
         self.sequence = []
 
@@ -132,6 +137,8 @@ class Network:
             n.t_wait = self.clock
             n.t_exec = n.t_wait + exec_time
             n.step += 1
+
+            self.calc_time[i] += exec_time
 
             # The noisy update from my point of view.
             diff_num = 0 # total deviation from previous step
@@ -178,8 +185,12 @@ class Network:
             self.collect_sequence_data()
 
         if ('frontier' in self.observe_points):
-            print('Processing frontier: ' + self.dbfilename_sequence)
+            print('Processing frontier: ' + self.dbfilename_frontier)
             self.collect_frontier_data()
+
+        if ('ratio' in self.observe_points):
+            print('Processing ratio: ' + self.dbfilename_ratio)
+            self.collect_ratio_data()
 
 
     def collect_step_data(self):
@@ -228,6 +239,12 @@ class Network:
         #print(diff_max)
         #print(np.mean(diff_max), np.std(diff_max))
 
+
+    def collect_ratio_data(self):
+        filename = self.dbfilename_ratio
+        with open(filename, 'w+', newline='') as csvfile:
+            writer = csv.writer(csvfile, delimiter=',')
+            writer.writerow(self.calc_time)
 
 # Entry point
 def run(config):
