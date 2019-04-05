@@ -96,6 +96,8 @@ class Network:
         self.barrier = barrier[0]
         self.observe_points = config['observe_points']
         # Maintain consistency of datafile names
+        self.dbfilename_regression = utils.dbfilename(config,
+            barrier[1], 'regression')
         self.dbfilename_step = utils.dbfilename(config, barrier[1], 'step')
         self.dbfilename_sequence = utils.dbfilename(config,
             barrier[1], 'sequence')
@@ -118,6 +120,7 @@ class Network:
         self.clock = 0.
 
         self.model = np.random.rand(*modelsize)
+        self.regression_info = []
 
         self.straggler_perc = config['straggler_perc']
         self.straggleness = config['straggleness']
@@ -167,12 +170,13 @@ class Network:
 
 
     def update_nodes_delta(self):
-        data_sz = dataset.train_data_length
-        chunks_sz = data_sz / len(self.nodes)
+        #data_sz = dataset.train_data_length
+        #chunks_sz = data_sz / len(self.nodes)
         for i, n in enumerate(self.nodes):
-            if self.clock != n.t_exec : continue
+            if self.clock != n.t_wait : continue
             x, y = next(dataset.train_data())
             n.delta = dataset.numgrad(x, y, self.model)
+
 
     def next_event_at(self):
         t = math.inf
@@ -184,13 +188,26 @@ class Network:
 
     def execute(self):
         np.random.seed(seed)
+
+        counter = 0
         while(self.clock < self.stop_time):
-            print("Loss: ", dataset.loss(self.model))
             self.update_nodes_time()
             if ('regression' in self.observe_points):
                 self.update_nodes_delta()
             t = self.next_event_at()
             self.clock = t
+
+            if ('regression' in self.observe_points):
+                if (self.clock - counter > 2):
+                    mean_step = int(np.mean(self.step_frontier))
+                    loss = dataset.loss(self.model)
+                    self.regression_info.append((
+                        int(self.clock), mean_step, loss))
+                    counter = self.clock
+
+        if ('regression' in self.observe_points):
+            print('Processing step: ' + self.dbfilename_regression)
+            self.collect_regression_data()
 
         if ('step' in self.observe_points):
             print('Processing step: ' + self.dbfilename_step)
@@ -207,6 +224,16 @@ class Network:
         if ('ratio' in self.observe_points):
             print('Processing ratio: ' + self.dbfilename_ratio)
             self.collect_ratio_data()
+
+
+    def collect_regression_data(self):
+        clock, iteration, loss = zip(*self.regression_info)
+        filename = self.dbfilename_regression
+        with open(filename, 'w+', newline='') as csvfile:
+            writer = csv.writer(csvfile, delimiter=',')
+            writer.writerow(clock)
+            writer.writerow(iteration)
+            writer.writerow(loss)
 
 
     def collect_step_data(self):

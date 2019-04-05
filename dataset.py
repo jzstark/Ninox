@@ -27,7 +27,7 @@ y_test_small = y_test[:1000]
 
 
 def train_data():
-    num = random.randint(0, train_data_length)
+    num = random.randint(0, train_data_length - 1)
     yield x_train[[num], :], y_train[[num], :]
 
 
@@ -54,3 +54,9 @@ def numgrad(x, y, model):
     y1 = np.matmul(x, model) # 1 * 10
     x = np.transpose(x)
     return np.matmul(x, (y1 - y)) * step_sz
+    #w_t = np.transpose(model)
+    #x_t = np.transpose(x)
+    #y_t = np.transpose(y)
+    #a = np.matmul(np.matmul(w_t, x_t), x)
+    #b = np.matmul(y_t, x)
+    #return np.transpose(a - b)

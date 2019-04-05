@@ -161,7 +161,9 @@ def exp_regression(result_dir):
     db.init_db(result_dir)
 
     barriers = [
-        (bsp, 'bsp'), (asp, 'asp'), (ssp(4), 'ssp_s4'),
+        (bsp, 'bsp'),
+        (asp, 'asp'),
+        (ssp(4), 'ssp_s4'),
         (pbsp(10), 'pbsp_p10'),
         (pssp(4, 10), 'pssp_s4_p10')
     ]
@@ -170,7 +172,31 @@ def exp_regression(result_dir):
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir}
 
-    run(config)
+    # run(config)
+
+    clock = {}; iteration = {}; loss = {}
+    barrier_names = [s for (_, s) in config['barriers']]
+    for barrier in barrier_names:
+        filename = utils.dbfilename(config, barrier, 'regression')
+        with open(filename, 'r') as f:
+            reader = csv.reader(f, delimiter=',')
+            clock[barrier] = [int(s) for s in next(reader)]
+            iteration[barrier] = [int(s) for s in next(reader)]
+            loss[barrier] = [float(s) for s in next(reader)]
+
+    """
+    fig, ax = plt.subplots(figsize=(8, 4))
+    for barrier in barrier_names:
+        ax.plot(clock[barrier], loss[barrier], label=barrier)
+    plt.legend()
+    plt.show()
+    """
+
+    fig, ax = plt.subplots(figsize=(8, 4))
+    for barrier in barrier_names:
+        ax.plot(iteration[barrier], loss[barrier], label=barrier)
+    plt.legend()
+    plt.show()
 
 
 def exp_accuracy_old(result_dir):
