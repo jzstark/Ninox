@@ -14,6 +14,7 @@ observation point (for each barriers&size&straggler config):
 
 - "frontier"
 - "ratio"
+- "regression"
 
 Parameters spec:
 - straggler_perc: int, 0 ~ 100
@@ -155,6 +156,22 @@ Experiment 2: "Accuracy"
 # - Change straggler scale. Redo.
 # - Chnage x-axis to real time for all the above
 
+#
+def exp_regression(result_dir):
+    db.init_db(result_dir)
+
+    barriers = [
+        (bsp, 'bsp'), (asp, 'asp'), (ssp(4), 'ssp_s4'),
+        (pbsp(10), 'pbsp_p10'),
+        (pssp(4, 10), 'pssp_s4_p10')
+    ]
+    observe_points = ['regression']
+    config = {'size':100, 'straggler_perc':0, 'straggleness':1,
+        'barriers':barriers, 'observe_points':observe_points,
+        'path':result_dir}
+
+    run(config)
+
 
 def exp_accuracy_old(result_dir):
     db.init_db(result_dir)
@@ -175,7 +192,7 @@ def exp_accuracy_old(result_dir):
     ]
     observe_points = ['sequence']
     config = {'size':100, 'straggler_perc':0, 'straggleness':1,
-        'barriers':barriers_foo, 'observe_points':observe_points,
+        'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir}
 
     run(config)
@@ -241,7 +258,7 @@ def exp_accuracy_old(result_dir):
     # The result looks suspicious though ...
 
 
-def exp_accuracy(result_dir):
+def exp_frontier(result_dir):
     db.init_db(result_dir)
 
     barriers = [
@@ -264,7 +281,7 @@ def exp_accuracy(result_dir):
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir}
 
-    # run(config)
+    run(config)
 
     diff_num = {}; diff_max = {}
     barrier_names = [s for (_, s) in config['barriers']]
@@ -275,17 +292,19 @@ def exp_accuracy(result_dir):
             diff_num[barrier] = [int(s) for s in next(reader)]
             diff_max[barrier] = [int(s) for s in next(reader)]
 
-    """
+
     fig, ax = plt.subplots(figsize=(8, 4))
     for k, v in diff_num.items():
         v = np.divide(v, config['size'])
         ax.hist(v, 200, normed=1, histtype='step', cumulative=True, label=k)
     ax.legend()
+    ax.set_xlim([0, 4])
     ax.set_xlabel('Average step difference per node (size = %d)' % config['size'])
     ax.set_ylabel('CDF')
     plt.show()
-    """
 
+
+    """
     fig, ax = plt.subplots(figsize=(8, 4))
     for k, v in diff_max.items():
         ax.hist(v, 200, normed=1, histtype='step', cumulative=True, label=k)
@@ -293,6 +312,7 @@ def exp_accuracy(result_dir):
     ax.set_xlabel('Max step difference (size = %d)' % config['size'])
     ax.set_ylabel('CDF')
     plt.show()
+    """
 
 
 """

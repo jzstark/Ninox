@@ -5,11 +5,12 @@ import utils
 import csv
 import os
 import random
+import dataset
 
 stop_time = 100
 randomness=0.01
 seed = 666
-
+modelsize = (28 * 28, 10)
 # Utils
 
 def randomized_speed(base_speed, randomness):
@@ -83,6 +84,7 @@ class Node:
         self.step   = 0
         self.t_wait = 0.
         self.t_exec = 0.
+        self.delta = np.zeros(modelsize)
 
         self.frontier = [] # length: nodes number
         self.frontier_info = [] # length: total step number
@@ -115,10 +117,10 @@ class Network:
         self.stop_time = stop_time
         self.clock = 0.
 
+        self.model = np.random.rand(*modelsize)
+
         self.straggler_perc = config['straggler_perc']
         self.straggleness = config['straggleness']
-
-
         self.step_frontier = [0] * size
         self.calc_time = [0] * size # total calc time
         # a potentially very large list; millions of elements
@@ -139,6 +141,9 @@ class Network:
             n.step += 1
 
             self.calc_time[i] += exec_time
+
+            if('regression' in self.observe_points):
+                self.model = self.model - n.delta
 
             # The noisy update from my point of view.
             diff_num = 0 # total deviation from previous step
@@ -161,6 +166,14 @@ class Network:
                 self.sequence.append((i, n.step, n.t_exec))
 
 
+    def update_nodes_delta(self):
+        data_sz = dataset.train_data_length
+        chunks_sz = data_sz / len(self.nodes)
+        for i, n in enumerate(self.nodes):
+            if self.clock != n.t_exec : continue
+            x, y = next(dataset.train_data())
+            n.delta = dataset.numgrad(x, y, self.model)
+
     def next_event_at(self):
         t = math.inf
         for n in self.nodes:
@@ -172,7 +185,10 @@ class Network:
     def execute(self):
         np.random.seed(seed)
         while(self.clock < self.stop_time):
+            print("Loss: ", dataset.loss(self.model))
             self.update_nodes_time()
+            if ('regression' in self.observe_points):
+                self.update_nodes_delta()
             t = self.next_event_at()
             self.clock = t
 
