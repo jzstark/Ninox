@@ -164,15 +164,21 @@ def exp_regression(result_dir):
         (bsp, 'bsp'),
         (asp, 'asp'),
         (ssp(4), 'ssp_s4'),
-        (pbsp(10), 'pbsp_p10'),
-        (pssp(4, 10), 'pssp_s4_p10')
+        (pbsp(5), 'pbsp_p5'),
+        #(pbsp(10), 'pbsp_p10'),
+        #(pbsp(20), 'pbsp_p20'),
+        #(pbsp(30), 'pbsp_p30'),
+        (pssp(4, 5), 'pssp_s4_p5'),
+        #(pssp(4, 10), 'pssp_s4_p10'),
+        #(pssp(4, 20), 'pssp_s4_p20'),
+        #(pssp(4, 30), 'pssp_s4_p30')
     ]
     observe_points = ['regression']
     config = {'size':100, 'straggler_perc':0, 'straggleness':1,
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir}
 
-    # run(config)
+    run(config)
 
     clock = {}; iteration = {}; loss = {}
     barrier_names = [s for (_, s) in config['barriers']]
@@ -195,6 +201,8 @@ def exp_regression(result_dir):
     fig, ax = plt.subplots(figsize=(8, 4))
     for barrier in barrier_names:
         ax.plot(iteration[barrier], loss[barrier], label=barrier)
+    #plt.xlim([0,100])
+    #plt.ylim([18,21])
     plt.legend()
     plt.show()
 

@@ -3,7 +3,7 @@ import numpy as np
 import random
 mnist = tf.keras.datasets.mnist
 
-step_sz = 0.000005
+step_sz = 0.00005
 
 def onehot(y):
     length = len(y)
@@ -54,9 +54,15 @@ def numgrad(x, y, model):
     y1 = np.matmul(x, model) # 1 * 10
     x = np.transpose(x)
     return np.matmul(x, (y1 - y)) * step_sz
-    #w_t = np.transpose(model)
-    #x_t = np.transpose(x)
-    #y_t = np.transpose(y)
-    #a = np.matmul(np.matmul(w_t, x_t), x)
-    #b = np.matmul(y_t, x)
-    #return np.transpose(a - b)
+
+
+def main():
+    model =  np.random.rand(28 * 28, 10)
+    for i in range(train_data_length):
+        x, y = next(train_data())
+        delta = numgrad(x, y, model)
+        model = model - delta
+        if i % 100 == 0 :
+            print("loss:", loss(model))
+
+main()

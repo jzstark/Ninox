@@ -119,6 +119,7 @@ class Network:
         self.stop_time = stop_time
         self.clock = 0.
 
+        #np.random.seed(seed)
         self.model = np.random.rand(*modelsize)
         self.regression_info = []
 
@@ -199,7 +200,7 @@ class Network:
 
             if ('regression' in self.observe_points):
                 if (self.clock - counter > 2):
-                    mean_step = int(np.mean(self.step_frontier))
+                    mean_step = int(np.max(self.step_frontier))
                     loss = dataset.loss(self.model)
                     self.regression_info.append((
                         int(self.clock), mean_step, loss))
