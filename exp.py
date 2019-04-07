@@ -178,7 +178,7 @@ def exp_regression(result_dir):
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir}
 
-    run(config)
+    #run(config)
 
     clock = {}; iteration = {}; loss = {}
     barrier_names = [s for (_, s) in config['barriers']]
@@ -315,7 +315,7 @@ def exp_frontier(result_dir):
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir}
 
-    run(config)
+    #run(config)
 
     diff_num = {}; diff_max = {}
     barrier_names = [s for (_, s) in config['barriers']]
@@ -328,13 +328,14 @@ def exp_frontier(result_dir):
 
 
     fig, ax = plt.subplots(figsize=(8, 4))
-    for k, v in diff_num.items():
-        v = np.divide(v, config['size'])
-        ax.hist(v, 200, normed=1, histtype='step', cumulative=True, label=k)
+    ax.boxplot(list(diff_num.values()), labels=barrier_names)
+    #for k, v in diff_num.items():
+        #v = np.divide(v, config['size'])
+        #ax.hist(v, 200, normed=1, histtype='step', cumulative=True, label=k)
     ax.legend()
-    ax.set_xlim([0, 4])
+    #ax.set_xlim([0, 4])
     ax.set_xlabel('Average step difference per node (size = %d)' % config['size'])
-    ax.set_ylabel('CDF')
+    #ax.set_ylabel('CDF')
     plt.show()
 
 
@@ -389,3 +390,49 @@ Experiment 4: Scalability
 """
 
 # Leave this to be decided at this stage. Before using notes as x-axis, I need to do some observation of the Accuracy vs. time/iteratio performance under different network size and **sampling size**. Then I can decide what is a good way to present the scability of sampling size.
+
+
+def exp_scalability(result_dir):
+    db.init_db(result_dir)
+
+    barriers = [
+        (pbsp(5), 'pbsp_p5'),
+        (pbsp(10), 'pbsp_p10'),
+        (pssp(4, 5), 'pssp_s4_p5'),
+        (pssp(4, 10), 'pssp_s4_p10')
+    ]
+    observe_points = ['regression']
+    configs = [
+        {'size':100, 'straggler_perc':0, 'straggleness':1,
+        'barriers':barriers, 'observe_points':observe_points,
+        'path':result_dir},
+        {'size':200, 'straggler_perc':0, 'straggleness':1,
+        'barriers':barriers, 'observe_points':observe_points,
+        'path':result_dir}
+    ]
+
+    #for c in configs: run(c)
+
+    clocks = []; iterations = []; losses = []
+    for c in configs:
+        clock = {}; iteration = {}; loss = {}
+        barrier_names = [s for (_, s) in c['barriers']]
+        for barrier in barrier_names:
+            filename = utils.dbfilename(c, barrier, 'regression')
+            with open(filename, 'r') as f:
+                reader = csv.reader(f, delimiter=',')
+                clock[barrier] = [int(s) for s in next(reader)]
+                iteration[barrier] = [int(s) for s in next(reader)]
+                loss[barrier] = [float(s) for s in next(reader)]
+        clocks.append(clock)
+        iterations.append(iteration)
+        losses.append(loss)
+
+    fig, ax = plt.subplots(figsize=(8, 4))
+    for i, c in enumerate(configs):
+        barrier_names = [s for (_, s) in c['barriers']]
+        for barrier in barrier_names:
+            ax.plot(iterations[i][barrier], losses[i][barrier],
+                label=barrier+ '_' + str(c['size']))
+    plt.legend()
+    plt.show()

@@ -20,7 +20,8 @@ def main(db_dir):
     #run_exp(exp_straggle_perc, "exp_straggle_perc")
     #run_exp(exp_frontier, "exp_frontier")
     #run_exp(exp_ratio, "exp_ratio")
-    run_exp(exp_regression, "exp_regression")
+    #run_exp(exp_regression, "exp_regression")
+    run_exp(exp_scalability, "exp_scalability")
 
 main(db.default_dir)
 #cProfile.run('main(db.default_dir)')
