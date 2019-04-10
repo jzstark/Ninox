@@ -174,11 +174,11 @@ def exp_regression(result_dir):
         #(pssp(4, 30), 'pssp_s4_p30')
     ]
     observe_points = ['regression']
-    config = {'size':100, 'straggler_perc':0, 'straggleness':1,
+    config = {'size':500, 'straggler_perc':0, 'straggleness':1,
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir}
 
-    #run(config)
+    # run(config)
 
     clock = {}; iteration = {}; loss = {}
     barrier_names = [s for (_, s) in config['barriers']]
@@ -202,7 +202,7 @@ def exp_regression(result_dir):
     for barrier in barrier_names:
         ax.plot(iteration[barrier], loss[barrier], label=barrier)
     #plt.xlim([0,100])
-    #plt.ylim([18,21])
+    #plt.ylim([19.25,20.75])
     plt.legend()
     plt.show()
 
@@ -395,23 +395,39 @@ Experiment 4: Scalability
 def exp_scalability(result_dir):
     db.init_db(result_dir)
 
+    ssp_name = 'ssp_s4'
     barriers = [
-        (pbsp(5), 'pbsp_p5'),
-        (pbsp(10), 'pbsp_p10'),
+        (ssp(4), ssp_name),
+        (pssp(4, 2), 'pssp_s4_p2'),
         (pssp(4, 5), 'pssp_s4_p5'),
-        (pssp(4, 10), 'pssp_s4_p10')
+        (pssp(4, 10), 'pssp_s4_p10'),
+        (pssp(4, 15), 'pssp_s4_p15'),
+        (pssp(4, 20), 'pssp_s4_p20'),
     ]
     observe_points = ['regression']
+    # run 300 seconds
     configs = [
+        {'size':50, 'straggler_perc':0, 'straggleness':1,
+        'barriers':barriers, 'observe_points':observe_points,
+        'path':result_dir},
         {'size':100, 'straggler_perc':0, 'straggleness':1,
+        'barriers':barriers, 'observe_points':observe_points,
+        'path':result_dir},
+        {'size':150, 'straggler_perc':0, 'straggleness':1,
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir},
         {'size':200, 'straggler_perc':0, 'straggleness':1,
         'barriers':barriers, 'observe_points':observe_points,
-        'path':result_dir}
+        'path':result_dir},
+        {'size':250, 'straggler_perc':0, 'straggleness':1,
+        'barriers':barriers, 'observe_points':observe_points,
+        'path':result_dir},
+        {'size':300, 'straggler_perc':0, 'straggleness':1,
+        'barriers':barriers, 'observe_points':observe_points,
+        'path':result_dir},
     ]
 
-    #for c in configs: run(c)
+    # for c in configs: run(c)
 
     clocks = []; iterations = []; losses = []
     for c in configs:
@@ -429,10 +445,22 @@ def exp_scalability(result_dir):
         losses.append(loss)
 
     fig, ax = plt.subplots(figsize=(8, 4))
-    for i, c in enumerate(configs):
-        barrier_names = [s for (_, s) in c['barriers']]
-        for barrier in barrier_names:
-            ax.plot(iterations[i][barrier], losses[i][barrier],
-                label=barrier+ '_' + str(c['size']))
+
+    markers = ['.', '^', 'o', '*', '+']
+    ls = ['-', '--', '-.', ':', '-']
+
+    barrier_names = [s for (_, s) in barriers if s != ssp_name]
+    sizes = [c['size'] for c in configs]
+    for k, barrier in enumerate(barrier_names):
+        y_mean = []; y_std = []
+        for i, c in enumerate(configs):
+            l = min(len(losses[i][barrier]), len(losses[i][ssp_name]))
+            y = np.divide(losses[i][barrier][0:l], losses[i][ssp_name][0:l])
+            #ax.plot(iterations[i][barrier], losses[i][barrier],
+                #label=barrier+ '_' + str(c['size']))
+            y_mean.append(np.mean(y))
+            y_std.append(np.std(y))
+        ax.plot(sizes, y_mean, marker=markers[k], linestyle=ls[k], label=barrier, )
+    plt.grid(linestyle='-', linewidth=1)
     plt.legend()
     plt.show()

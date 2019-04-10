@@ -7,7 +7,7 @@ import os
 import random
 import dataset
 
-stop_time = 100
+stop_time = 300
 randomness=0.01
 seed = 666
 modelsize = (28 * 28, 10)
@@ -119,7 +119,7 @@ class Network:
         self.stop_time = stop_time
         self.clock = 0.
 
-        #np.random.seed(seed)
+        np.random.seed(seed)
         self.model = np.random.rand(*modelsize)
         self.regression_info = []
 
@@ -188,7 +188,7 @@ class Network:
 
 
     def execute(self):
-        np.random.seed(seed)
+        #np.random.seed(seed)
 
         counter = 0
         while(self.clock < self.stop_time):
