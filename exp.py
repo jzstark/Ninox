@@ -2,6 +2,19 @@ from simulator import *
 import database as db
 
 import matplotlib.pyplot as plt
+import matplotlib.pylab as pylab
+
+font = 16 #'x-large'
+params = {'legend.fontsize': font-2,
+          #'figure.figsize': (9.5, 6),
+         'axes.labelsize': font-4,
+         'axes.titlesize': font,
+         'xtick.labelsize':font,
+         'ytick.labelsize':font}
+pylab.rcParams.update(params)
+
+markers = ['.', '^', 'o', '*', '+']
+linestyles = ['-', '--', '-.', ':', '-']
 
 """
 observation point (for each barriers&size&straggler config):
@@ -146,6 +159,62 @@ def exp_straggle_perc(result_dir):
     plt.show()
 
 
+def exp_straggleness(result_dir):
+    db.init_db(result_dir)
+
+    barriers = [
+        (asp, 'asp'), (bsp, 'bsp'), (ssp(4), 'ssp_s4'),
+        (pbsp(10), 'pbsp_p10'),
+        (pssp(4, 10), 'pssp_s4_p10')
+    ]
+    observe_points = ['step']
+    configs = [
+        {'size':100, 'straggler_perc':5, 'straggleness':1, 'barriers':barriers, 'observe_points':['step'],
+        'path':result_dir},
+        {'size':100, 'straggler_perc':5, 'straggleness':2, 'barriers':barriers, 'observe_points':['step'],
+        'path':result_dir},
+        {'size':100, 'straggler_perc':5, 'straggleness':4, 'barriers':barriers, 'observe_points':['step'],
+        'path':result_dir},
+        {'size':100, 'straggler_perc':5, 'straggleness':6, 'barriers':barriers, 'observe_points':['step'],
+        'path':result_dir},
+        {'size':100, 'straggler_perc':5, 'straggleness':8, 'barriers':barriers, 'observe_points':['step'],
+        'path':result_dir},
+        {'size':100, 'straggler_perc':5, 'straggleness':10, 'barriers':barriers, 'observe_points':['step'],
+        'path':result_dir}
+    ]
+
+    #for c in configs: run(c)
+
+    dict_stragglers = {}
+    for b in barriers:
+        dict_single_straggler = {}
+        for c in configs:
+            filename = utils.dbfilename(c, b[1], 'step')
+            with open(filename, 'r') as f:
+                reader = csv.reader(f, delimiter=',')
+                data = [int(s) for s in next(reader)]
+                mu = np.mean(data)
+                std = np.std(data)
+                dict_single_straggler[c['straggleness']] = (mu, std)
+        dict_stragglers[b[1]] = dict_single_straggler
+
+    print(dict_stragglers)
+
+    fig, ax = plt.subplots()
+    c = 0
+    for k, i in dict_stragglers.items():
+        x = list(i.keys())
+        ys = list(i.values())
+        y, _ = zip(*ys)
+        y = np.divide(y, y[0])
+        ax.plot(x, y, marker=markers[c], label=k)
+        c += 1
+    plt.legend()
+    plt.xlabel("Straggleness of the slow nodes")
+    plt.ylabel("Normalised average iteration progress")
+    plt.show()
+
+
 """
 Experiment 2: "Accuracy"
 """
@@ -194,16 +263,33 @@ def exp_regression(result_dir):
     fig, ax = plt.subplots(figsize=(8, 4))
     for barrier in barrier_names:
         ax.plot(clock[barrier], loss[barrier], label=barrier)
-    plt.legend()
-    plt.show()
-    """
 
     fig, ax = plt.subplots(figsize=(8, 4))
     for barrier in barrier_names:
         ax.plot(iteration[barrier], loss[barrier], label=barrier)
+
     #plt.xlim([0,100])
     #plt.ylim([19.25,20.75])
+    ax.set_xlabel("Iterations")
+    ax.set_ylabel("Loss")
     plt.legend()
+    plt.show()
+    """
+
+    f, (ax1, ax2) = plt.subplots(1, 2, sharey=True, figsize=(12, 5))
+
+    for barrier in barrier_names:
+        ax1.plot(clock[barrier], loss[barrier], label=barrier)
+        ax2.plot(iteration[barrier], loss[barrier], label=barrier)
+
+    ax1.set_xlabel("Time")
+    ax1.set_ylabel("Loss")
+    ax1.legend()
+
+    ax2.set_xlabel("Iterations")
+    ax2.set_ylabel("Loss")
+    ax2.legend()
+
     plt.show()
 
 
@@ -292,33 +378,85 @@ def exp_accuracy_old(result_dir):
     # The result looks suspicious though ...
 
 
+def exp_straggle_accuracy(result_dir):
+    db.init_db(result_dir)
+
+    barriers = [
+        (asp, 'asp'), (bsp, 'bsp'), (ssp(4), 'ssp_s4'),
+        (pbsp(5), 'pbsp_p5'),
+        (pssp(4, 5), 'pssp_s4_p5')
+    ]
+    observe_points = ['regression']
+    configs = [
+        {'size':200, 'straggler_perc':0, 'straggleness':4, 'barriers':barriers, 'observe_points':observe_points,
+        'path':result_dir},
+        {'size':200, 'straggler_perc':5, 'straggleness':4, 'barriers':barriers, 'observe_points':observe_points,
+        'path':result_dir},
+        {'size':200, 'straggler_perc':10, 'straggleness':4, 'barriers':barriers, 'observe_points':observe_points,
+        'path':result_dir},
+        {'size':200, 'straggler_perc':15, 'straggleness':4, 'barriers':barriers, 'observe_points':observe_points,
+        'path':result_dir},
+        {'size':200, 'straggler_perc':20, 'straggleness':4, 'barriers':barriers, 'observe_points':observe_points,
+        'path':result_dir},
+        {'size':200, 'straggler_perc':25, 'straggleness':4, 'barriers':barriers, 'observe_points':observe_points,
+        'path':result_dir},
+        {'size':200, 'straggler_perc':30, 'straggleness':4, 'barriers':barriers, 'observe_points':observe_points,
+        'path':result_dir},
+    ]
+
+    for c in configs: run(c)
+
+    dict_stragglers = {}
+    for b in barriers:
+        dict_single_straggler = {}
+        for c in configs:
+            filename = utils.dbfilename(c, b[1], observe_points[0])
+            with open(filename, 'r') as f:
+                reader = csv.reader(f, delimiter=',')
+                clock = [int(s) for s in next(reader)]
+                iteration = [int(s) for s in next(reader)]
+                loss = [float(s) for s in next(reader)]
+                accuracy = loss[-1]
+                dict_single_straggler[c['straggler_perc']] = accuracy
+        dict_stragglers[b[1]] = dict_single_straggler
+
+    print(dict_stragglers)
+
+    fig, ax = plt.subplots()
+    c = 0
+    for k, i in dict_stragglers.items():
+        x = list(i.keys())
+        y = list(i.values())
+        y = (np.divide(y, y[0]) - 1) * 100
+        ax.plot(x, y, marker=markers[c], label=k)
+        c += 1
+    plt.legend()
+    plt.xlabel("Percentage of slow nodes")
+    plt.ylabel("Accuracy decrease percentage")
+    plt.show()
+
+
 def exp_frontier(result_dir):
+    import scipy.stats as stats
+
     db.init_db(result_dir)
 
     barriers = [
         (bsp, 'bsp'),
         (asp, 'asp'),
         (ssp(4), 'ssp_s4'),
-        (pbsp(5), 'pbsp_p5'),
         (pbsp(10), 'pbsp_p10'),
-        (pssp(4, 5), 'pssp_s4_p5'),
         (pssp(4, 10), 'pssp_s4_p10')
-        # (pssp(4, 20), 'pssp_s4_p10')
-        #(pssp(2, 2), 'pssp_s2_p2'),
-        #(pssp(2, 5), 'pssp_s2_p5'),
-        #(pssp(2, 10), 'pssp_s2_p10'),
-        #(pssp(2, 20), 'pssp_s2_p20'),
-        #(pssp(2, 50), 'pssp_s2_p50')
     ]
     observe_points = ['frontier']
-    config = {'size':100, 'straggler_perc':10, 'straggleness':3.,
+    config = {'size':100, 'straggler_perc':0, 'straggleness':1.,
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir}
 
     #run(config)
 
     diff_num = {}; diff_max = {}
-    barrier_names = [s for (_, s) in config['barriers']]
+    barrier_names = [s for (_, s) in config['barriers'] if s != 'bsp']
     for barrier in barrier_names:
         filename = utils.dbfilename(config, barrier, 'frontier')
         with open(filename, 'r') as f:
@@ -326,16 +464,21 @@ def exp_frontier(result_dir):
             diff_num[barrier] = [int(s) for s in next(reader)]
             diff_max[barrier] = [int(s) for s in next(reader)]
 
-
     fig, ax = plt.subplots(figsize=(8, 4))
-    ax.boxplot(list(diff_num.values()), labels=barrier_names)
-    #for k, v in diff_num.items():
-        #v = np.divide(v, config['size'])
-        #ax.hist(v, 200, normed=1, histtype='step', cumulative=True, label=k)
+    c = 0
+    for k, v in diff_num.items():
+        v = np.divide(v, config['size'])
+        density = stats.gaussian_kde(v)
+        x = np.linspace(0, 4, 200)
+        #n, x, _ =ax.hist(v, 200, histtype='step', cumulative=False, label=k)
+        ax.plot(x, density(x), linestyle=linestyles[c], label=k)
+        c += 1
+    ax.axvline(x=1, linestyle=linestyles[c], label='bsp', color='m')
     ax.legend()
-    #ax.set_xlim([0, 4])
-    ax.set_xlabel('Average step difference per node (size = %d)' % config['size'])
-    #ax.set_ylabel('CDF')
+    ax.set_xlim([0, 4])
+    ax.set_ylim([0, 1])
+    ax.set_xlabel('Average step inconsistency per node')
+    ax.set_ylabel('Node number')
     plt.show()
 
 
