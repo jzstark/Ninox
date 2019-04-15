@@ -7,7 +7,7 @@ import os
 import random
 import dataset
 
-stop_time = 300
+stop_time = 240
 randomness=0.01
 seed = 666
 modelsize = (28 * 28, 10)
@@ -200,10 +200,10 @@ class Network:
 
             if ('regression' in self.observe_points):
                 if (self.clock - counter > 2):
-                    mean_step = int(np.max(self.step_frontier))
+                    max = int(np.max(self.step_frontier))
                     loss = dataset.loss(self.model)
                     self.regression_info.append((
-                        int(self.clock), mean_step, loss))
+                        int(self.clock), max_step, loss))
                     counter = self.clock
 
         if ('regression' in self.observe_points):

@@ -52,7 +52,7 @@ def exp_step(result_dir):
     ]
     observe_points = ['step']
     configs = [
-        {'size':100, 'straggler_perc':0, 'straggleness':1, 'barriers':barriers, 'observe_points':observe_points,
+        {'size':200, 'straggler_perc':0, 'straggleness':1, 'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir}
     ]
 
@@ -66,10 +66,11 @@ def exp_step(result_dir):
             reader = csv.reader(f, delimiter=',')
             data[name] = [int(s) for s in next(reader)]
 
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=(10, 4))
     for name in barrier_names:
-        ax.hist(data[name], 25, label=name, rwidth=10)
+        ax.hist(data[name], 20, label=name, rwidth=20)
     ax.set_ylim([0, 60])
+    plt.xlabel("Simulated time")
     plt.legend()
     plt.show()
 
@@ -87,11 +88,11 @@ def exp_samplesize(result_dir):
     ]
     observe_points = ['step']
     configs = [
-        {'size':100, 'straggler_perc':0, 'straggleness':1, 'barriers':barriers, 'observe_points':['step'],
+        {'size':200, 'straggler_perc':0, 'straggleness':1, 'barriers':barriers, 'observe_points':['step'],
         'path':result_dir}
     ]
 
-    for c in configs: run(c)
+    #for c in configs: run(c)
 
     data = {}
     barrier_names = [s for (_, s) in barriers]
@@ -102,10 +103,14 @@ def exp_samplesize(result_dir):
             data[name] = [int(s) for s in next(reader)]
     print(data)
 
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=(12, 5))
     for name in barrier_names:
-        ax.hist(data[name], 500, cumulative=True, histtype='step', label=name)
-    plt.legend()
+        n, bins, patches = ax.hist(data[name], 500, cumulative=True, histtype='step', label=name)
+        patches[0].set_xy(patches[0].get_xy()[:-1])
+    ax.set_ylim([0, 200])
+    plt.ylabel("CDF")
+    plt.xlabel("Simulated time")
+    plt.legend(loc="lower right")
     plt.show()
 
 
@@ -149,13 +154,17 @@ def exp_straggle_perc(result_dir):
     print(dict_stragglers)
 
     fig, ax = plt.subplots()
+    c = 0
     for k, i in dict_stragglers.items():
         x = list(i.keys())
         ys = list(i.values())
         y, _ = zip(*ys)
         y = np.divide(y, y[0])
-        ax.plot(x, y, label=k)
+        ax.plot(x, y, marker=markers[c], label=k)
+        c += 1
     plt.legend()
+    plt.xlabel("Straggle node percentage")
+    plt.ylabel("Normalised average iteration progress")
     plt.show()
 
 
@@ -276,7 +285,7 @@ def exp_regression(result_dir):
     plt.show()
     """
 
-    f, (ax1, ax2) = plt.subplots(1, 2, sharey=True, figsize=(12, 5))
+    f, (ax1, ax2) = plt.subplots(2, 1, sharey=True) #figsize=(12, 5))
 
     for barrier in barrier_names:
         ax1.plot(clock[barrier], loss[barrier], label=barrier)
@@ -382,25 +391,27 @@ def exp_straggle_accuracy(result_dir):
     db.init_db(result_dir)
 
     barriers = [
-        (asp, 'asp'), (bsp, 'bsp'), (ssp(4), 'ssp_s4'),
+        (asp, 'asp'),
+        (bsp, 'bsp'),
+        (ssp(4), 'ssp_s4'),
         (pbsp(5), 'pbsp_p5'),
         (pssp(4, 5), 'pssp_s4_p5')
     ]
     observe_points = ['regression']
     configs = [
-        {'size':200, 'straggler_perc':0, 'straggleness':4, 'barriers':barriers, 'observe_points':observe_points,
+        {'size':100, 'straggler_perc':0, 'straggleness':4, 'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir},
-        {'size':200, 'straggler_perc':5, 'straggleness':4, 'barriers':barriers, 'observe_points':observe_points,
+        {'size':100, 'straggler_perc':5, 'straggleness':4, 'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir},
-        {'size':200, 'straggler_perc':10, 'straggleness':4, 'barriers':barriers, 'observe_points':observe_points,
+        {'size':100, 'straggler_perc':10, 'straggleness':4, 'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir},
-        {'size':200, 'straggler_perc':15, 'straggleness':4, 'barriers':barriers, 'observe_points':observe_points,
+        {'size':100, 'straggler_perc':15, 'straggleness':4, 'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir},
-        {'size':200, 'straggler_perc':20, 'straggleness':4, 'barriers':barriers, 'observe_points':observe_points,
+        {'size':100, 'straggler_perc':20, 'straggleness':4, 'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir},
-        {'size':200, 'straggler_perc':25, 'straggleness':4, 'barriers':barriers, 'observe_points':observe_points,
+        {'size':100, 'straggler_perc':25, 'straggleness':4, 'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir},
-        {'size':200, 'straggler_perc':30, 'straggleness':4, 'barriers':barriers, 'observe_points':observe_points,
+        {'size':100, 'straggler_perc':30, 'straggleness':4, 'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir},
     ]
 
@@ -478,7 +489,7 @@ def exp_frontier(result_dir):
     ax.set_xlim([0, 4])
     ax.set_ylim([0, 1])
     ax.set_xlabel('Average step inconsistency per node')
-    ax.set_ylabel('Node number')
+    ax.set_ylabel('Density')
     plt.show()
 
 
@@ -512,7 +523,7 @@ def exp_ratio(result_dir):
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir}
 
-    run(config)
+    #run(config)
 
     ratio = {}
     barrier_names = [s for (_, s) in config['barriers']]
@@ -524,6 +535,7 @@ def exp_ratio(result_dir):
 
     fig, ax = plt.subplots()
     ax.boxplot(list(ratio.values()), labels=barrier_names)
+    ax.set_ylabel("Time utilisation percentage")
     plt.show()
 
 
@@ -594,6 +606,8 @@ def exp_scalability(result_dir):
 
     barrier_names = [s for (_, s) in barriers if s != ssp_name]
     sizes = [c['size'] for c in configs]
+
+    """
     for k, barrier in enumerate(barrier_names):
         y_mean = []; y_std = []
         for i, c in enumerate(configs):
@@ -604,6 +618,84 @@ def exp_scalability(result_dir):
             y_mean.append(np.mean(y))
             y_std.append(np.std(y))
         ax.plot(sizes, y_mean, marker=markers[k], linestyle=ls[k], label=barrier, )
-    plt.grid(linestyle='-', linewidth=1)
+    """
+    for k, barrier in enumerate(barrier_names):
+        label = 'p=' + (barrier.split('p'))[-1]
+        y = []
+        for i, c in enumerate(configs):
+            r = np.divide(losses[i][barrier][-1], losses[i][ssp_name][-1])
+            y.append(r)
+        ax.plot(sizes, y, marker=markers[k], linestyle=ls[k], label=label)
+    ax.set_ylabel("Ratio of PSSP/ SSP in regression model loss value")
+    ax.set_xlabel("Number of nodes")
+    plt.grid(linestyle='--', linewidth=1)
+    plt.legend()
+    plt.show()
+
+
+def exp_scalability_step(result_dir):
+    db.init_db(result_dir)
+
+    ssp_name = 'ssp_s4'
+    barriers = [
+        (ssp(4), ssp_name),
+        (pssp(4, 2), 'pssp_s4_p2'),
+        (pssp(4, 5), 'pssp_s4_p5'),
+        (pssp(4, 10), 'pssp_s4_p10'),
+        (pssp(4, 15), 'pssp_s4_p15'),
+        (pssp(4, 20), 'pssp_s4_p20'),
+    ]
+    observe_points = ['step']
+    configs = [
+        {'size':50, 'straggler_perc':0, 'straggleness':1,
+        'barriers':barriers, 'observe_points':observe_points,
+        'path':result_dir},
+        {'size':100, 'straggler_perc':0, 'straggleness':1,
+        'barriers':barriers, 'observe_points':observe_points,
+        'path':result_dir},
+        {'size':150, 'straggler_perc':0, 'straggleness':1,
+        'barriers':barriers, 'observe_points':observe_points,
+        'path':result_dir},
+        {'size':200, 'straggler_perc':0, 'straggleness':1,
+        'barriers':barriers, 'observe_points':observe_points,
+        'path':result_dir},
+        {'size':250, 'straggler_perc':0, 'straggleness':1,
+        'barriers':barriers, 'observe_points':observe_points,
+        'path':result_dir},
+        {'size':300, 'straggler_perc':0, 'straggleness':1,
+        'barriers':barriers, 'observe_points':observe_points,
+        'path':result_dir},
+    ]
+
+    #for c in configs: run(c)
+
+    steps = []
+    for c in configs:
+        step = {}
+        barrier_names = [s for (_, s) in c['barriers']]
+        for barrier in barrier_names:
+            filename = utils.dbfilename(c, barrier, 'step')
+            with open(filename, 'r') as f:
+                reader = csv.reader(f, delimiter=',')
+                step[barrier] = np.mean([int(s) for s in next(reader)])
+        steps.append(step)
+
+    #print(steps)
+
+    fig, ax = plt.subplots()
+    barrier_names = [s for (_, s) in barriers if s != ssp_name]
+    sizes = [c['size'] for c in configs]
+    for k, barrier in enumerate(barrier_names):
+        label = 'p=' + (barrier.split('p'))[-1]
+        y = []
+        for i, c in enumerate(configs):
+            ratio = np.divide(steps[i][barrier], steps[i][ssp_name])
+            y.append(ratio)
+        ax.plot(sizes, y, marker=markers[k],
+            linestyle=linestyles[k], label=label)
+    ax.set_ylabel("Ratio of PSSP step / SSP step progress")
+    ax.set_xlabel("Worker number")
+    plt.grid(linestyle='--', linewidth=1)
+
     plt.legend()
     plt.show()

@@ -19,13 +19,12 @@ def main(db_dir):
     #run_exp(exp_samplesize, "exp_samplesize")
     #run_exp(exp_straggle_perc, "exp_straggle_perc")
     #run_exp(exp_straggleness, "exp_straggleness")
-
     #run_exp(exp_straggle_accuracy, "exp_straggle_accuracy")
-
-    run_exp(exp_frontier, "exp_frontier")
+    #run_exp(exp_frontier, "exp_frontier")
     #run_exp(exp_ratio, "exp_ratio")
     #run_exp(exp_regression, "exp_regression")
-    #run_exp(exp_scalability, "exp_scalability")
+    run_exp(exp_scalability, "exp_scalability")
+    #run_exp(exp_scalability_step, "exp_scalability_step")
 
 main(db.default_dir)
 #cProfile.run('main(db.default_dir)')
