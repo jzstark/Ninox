@@ -23,8 +23,8 @@ def main(db_dir):
     #run_exp(exp_frontier, "exp_frontier")
     #run_exp(exp_ratio, "exp_ratio")
     #run_exp(exp_regression, "exp_regression")
-    run_exp(exp_scalability, "exp_scalability")
-    #run_exp(exp_scalability_step, "exp_scalability_step")
+    #run_exp(exp_scalability, "exp_scalability")
+    run_exp(exp_scalability_step, "exp_scalability_step")
 
 main(db.default_dir)
 #cProfile.run('main(db.default_dir)')

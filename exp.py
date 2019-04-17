@@ -1,4 +1,5 @@
 from simulator import *
+from utils import *
 import database as db
 
 import matplotlib.pyplot as plt
@@ -285,11 +286,12 @@ def exp_regression(result_dir):
     plt.show()
     """
 
-    f, (ax1, ax2) = plt.subplots(2, 1, sharey=True) #figsize=(12, 5))
+    f, (ax1, ax2) = plt.subplots(2, 1, figsize=(12, 12)) #figsize=(12, 5))
 
     for barrier in barrier_names:
-        ax1.plot(clock[barrier], loss[barrier], label=barrier)
-        ax2.plot(iteration[barrier], loss[barrier], label=barrier)
+        ax1.plot(clock[barrier], loss[barrier], label=barrier_to_label(barrier))
+        ax2.plot(iteration[barrier], loss[barrier],
+            label=barrier_to_label(barrier))
 
     ax1.set_xlabel("Time")
     ax1.set_ylabel("Loss")
@@ -460,7 +462,7 @@ def exp_frontier(result_dir):
         (pssp(4, 10), 'pssp_s4_p10')
     ]
     observe_points = ['frontier']
-    config = {'size':100, 'straggler_perc':0, 'straggleness':1.,
+    config = {'size':200, 'straggler_perc':0, 'straggleness':1.,
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir}
 
@@ -475,22 +477,24 @@ def exp_frontier(result_dir):
             diff_num[barrier] = [int(s) for s in next(reader)]
             diff_max[barrier] = [int(s) for s in next(reader)]
 
-    fig, ax = plt.subplots(figsize=(8, 4))
+    fig, ax = plt.subplots(figsize=(10, 5))
     c = 0
     for k, v in diff_num.items():
+        print(k, np.mean(v))
         v = np.divide(v, config['size'])
         density = stats.gaussian_kde(v)
-        x = np.linspace(0, 4, 200)
-        #n, x, _ =ax.hist(v, 200, histtype='step', cumulative=False, label=k)
-        ax.plot(x, density(x), linestyle=linestyles[c], label=k)
+        x = np.linspace(0, 5, 250)
+        #n, x, _ = ax.hist(v, 200, histtype='step', cumulative=False, label=k)
+        ax.plot(x, density(x), linestyle=linestyles[c], label=barrier_to_label(k))
         c += 1
     ax.axvline(x=1, linestyle=linestyles[c], label='bsp', color='m')
     ax.legend()
-    ax.set_xlim([0, 4])
+    ax.set_xlim([0, 5])
     ax.set_ylim([0, 1])
     ax.set_xlabel('Average step inconsistency per node')
     ax.set_ylabel('Density')
     plt.show()
+
 
 
     """
@@ -642,32 +646,42 @@ def exp_scalability_step(result_dir):
         (pssp(4, 2), 'pssp_s4_p2'),
         (pssp(4, 5), 'pssp_s4_p5'),
         (pssp(4, 10), 'pssp_s4_p10'),
-        (pssp(4, 15), 'pssp_s4_p15'),
         (pssp(4, 20), 'pssp_s4_p20'),
+        (pssp(4, 30), 'pssp_s4_p30'),
+        (pssp(4, 40), 'pssp_s4_p40'),
     ]
     observe_points = ['step']
     configs = [
-        {'size':50, 'straggler_perc':0, 'straggleness':1,
-        'barriers':barriers, 'observe_points':observe_points,
-        'path':result_dir},
+        #{'size':50, 'straggler_perc':0, 'straggleness':1,
+        #'barriers':barriers, 'observe_points':observe_points,
+        #'path':result_dir},
         {'size':100, 'straggler_perc':0, 'straggleness':1,
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir},
-        {'size':150, 'straggler_perc':0, 'straggleness':1,
-        'barriers':barriers, 'observe_points':observe_points,
-        'path':result_dir},
+        #{'size':150, 'straggler_perc':0, 'straggleness':1,
+        #'barriers':barriers, 'observe_points':observe_points,
+        #'path':result_dir},
         {'size':200, 'straggler_perc':0, 'straggleness':1,
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir},
-        {'size':250, 'straggler_perc':0, 'straggleness':1,
+        #{'size':250, 'straggler_perc':0, 'straggleness':1,
+        #'barriers':barriers, 'observe_points':observe_points,
+        #'path':result_dir},
+        {'size':300, 'straggler_perc':0, 'straggleness':1,
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir},
-        {'size':300, 'straggler_perc':0, 'straggleness':1,
+        {'size':400, 'straggler_perc':0, 'straggleness':1,
+        'barriers':barriers, 'observe_points':observe_points,
+        'path':result_dir},
+        {'size':500, 'straggler_perc':0, 'straggleness':1,
+        'barriers':barriers, 'observe_points':observe_points,
+        'path':result_dir},
+        {'size':600, 'straggler_perc':0, 'straggleness':1,
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir},
     ]
 
-    #for c in configs: run(c)
+    # for c in configs: run(c)
 
     steps = []
     for c in configs:
@@ -686,13 +700,13 @@ def exp_scalability_step(result_dir):
     barrier_names = [s for (_, s) in barriers if s != ssp_name]
     sizes = [c['size'] for c in configs]
     for k, barrier in enumerate(barrier_names):
-        label = 'p=' + (barrier.split('p'))[-1]
+        label = barrier_to_label(barrier)
         y = []
         for i, c in enumerate(configs):
             ratio = np.divide(steps[i][barrier], steps[i][ssp_name])
             y.append(ratio)
-        ax.plot(sizes, y, marker=markers[k],
-            linestyle=linestyles[k], label=label)
+        ax.plot(sizes, y, marker=markers[k % len(markers)],
+            linestyle=linestyles[k % len(markers)], label=label)
     ax.set_ylabel("Ratio of PSSP step / SSP step progress")
     ax.set_xlabel("Worker number")
     plt.grid(linestyle='--', linewidth=1)

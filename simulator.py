@@ -112,8 +112,6 @@ class Network:
             node = Node()
             nodes.append(node)
         # This could a problem if we allow nodes dropping in and out freely
-        #for i in nodes:
-        #    node.frontier = [0] * size
         self.nodes = nodes
         self.size = size
         self.stop_time = stop_time
@@ -153,10 +151,14 @@ class Network:
             diff_num = 0 # total deviation from previous step
             diff_max = 0 # max deviation
 
+            # All the updates that are missing from node n
             for j, s in enumerate(n.frontier):
                 diff = self.nodes[j].step - s
                 diff_num += diff
                 diff_max = diff if diff > diff_max else diff_max
+
+            # Node n's one update that is missed by other nodes
+            diff_num += 1
 
             # Update my progress to ps
             self.step_frontier[i] = n.step
