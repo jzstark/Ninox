@@ -253,11 +253,11 @@ def exp_regression(result_dir):
         #(pssp(4, 30), 'pssp_s4_p30')
     ]
     observe_points = ['regression']
-    config = {'size':500, 'straggler_perc':0, 'straggleness':1,
+    config = {'size':100, 'straggler_perc':0, 'straggleness':1,
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir}
 
-    # run(config)
+    run(config)
 
     clock = {}; iteration = {}; loss = {}
     barrier_names = [s for (_, s) in config['barriers']]

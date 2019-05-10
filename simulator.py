@@ -5,9 +5,9 @@ import utils
 import csv
 import os
 import random
-import dataset
+import regression
 
-stop_time = 240
+stop_time = 200
 randomness=0.01
 seed = 666
 modelsize = (28 * 28, 10)
@@ -118,7 +118,7 @@ class Network:
         self.clock = 0.
 
         np.random.seed(seed)
-        self.model = np.random.rand(*modelsize)
+        self.model = regression.build_model()  #np.random.rand(*modelsize)
         self.regression_info = []
 
         self.straggler_perc = config['straggler_perc']
@@ -145,7 +145,7 @@ class Network:
             self.calc_time[i] += exec_time
 
             if('regression' in self.observe_points):
-                self.model = self.model - n.delta
+                self.model = regression.update_model(self.model, n.delta)
 
             # The noisy update from my point of view.
             diff_num = 0 # total deviation from previous step
@@ -173,12 +173,9 @@ class Network:
 
 
     def update_nodes_delta(self):
-        #data_sz = dataset.train_data_length
-        #chunks_sz = data_sz / len(self.nodes)
         for i, n in enumerate(self.nodes):
             if self.clock != n.t_wait : continue
-            x, y = next(dataset.train_data())
-            n.delta = dataset.numgrad(x, y, self.model)
+            n.delta = regression.compute_updates(self.model)
 
 
     def next_event_at(self):
@@ -202,10 +199,10 @@ class Network:
 
             if ('regression' in self.observe_points):
                 if (self.clock - counter > 2):
-                    max = int(np.max(self.step_frontier))
-                    loss = dataset.loss(self.model)
+                    max_step = int(np.max(self.step_frontier))
+                    loss, acc = regression.compute_accuracy(self.model)
                     self.regression_info.append((
-                        int(self.clock), max_step, loss))
+                        int(self.clock), max_step, acc))
                     counter = self.clock
 
         if ('regression' in self.observe_points):
