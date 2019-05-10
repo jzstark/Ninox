@@ -15,8 +15,10 @@ def config_to_string(config):
         (config['size'], config['straggleness'], config['straggler_perc'])
     return os.path.join(config['path'], file_prefix)
 
+
 def dbfilename(config, barrier_name, ob_type):
     return config_to_string(config) + barrier_name + '_' + ob_type + '.csv'
+
 
 def full_path(path):
     path = os.path.expanduser(path)

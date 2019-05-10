@@ -1,6 +1,5 @@
 from keras.models import Sequential
 from keras.layers import Dense
-#from keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dropout
 from keras.utils import to_categorical
 from keras.datasets.mnist import load_data
 from keras import optimizers
@@ -16,10 +15,19 @@ import os
 #if platform.system() == "Darwin":
 os.environ['KMP_DUPLICATE_LIB_OK']='True'
 
+"""
+Parameters
+"""
+
 num_classes = 10
 epochs=1
 batch_size=64
 iteration=10
+sgd = optimizers.SGD(lr=0.001, decay=1e-4)
+
+"""
+Load and pre-process MNSIT data
+"""
 
 (x_train, y_train),(x_test, y_test) = load_data()
 image_size = x_train[0].shape[0] * x_train[0].shape[1]
@@ -36,10 +44,28 @@ y_test     = to_categorical(y_test, num_classes)
 x_test_small = x_test[:1000]
 y_test_small = y_test[:1000]
 
+
+"""
+Utilities
+"""
+
 def get_next_batch():
     size = batch_size * iteration
     idx = random.randint(0, train_len - size - 1)
     return x_train[[idx,idx+size], :], y_train[[idx,idx+size], :]
+
+def get_weight(model):
+    l = model.layers[0]
+    return l.get_weights()
+
+def set_weight(model, w, b):
+    l = model.layers[0]
+    return l.set_weights([w, b])
+
+
+"""
+Exposed API for simulation use
+"""
 
 
 def build_model():
@@ -53,18 +79,9 @@ def build_model():
     model.add(Dense(num_classes, activation='softmax'))
     """
     model.add(Dense(num_classes, activation='softmax', input_shape=(image_size,)))
-
-    sgd = optimizers.SGD(lr=0.005, decay=1e-4)
     model.compile(optimizer=sgd, loss='categorical_crossentropy', metrics=['accuracy'])
     return model
 
-def get_weight(model):
-    l = model.layers[0]
-    return l.get_weights()
-
-def set_weight(model, w, b):
-    l = model.layers[0]
-    return l.set_weights([w, b])
 
 def update_model(model, u):
     [w0, b0] = get_weight(model)
@@ -73,6 +90,7 @@ def update_model(model, u):
     set_weight(model, w1, b1)
     return model
 
+
 def compute_updates(model):
     x, y = get_next_batch()
     [w0, b0] = get_weight(model)
@@ -80,6 +98,7 @@ def compute_updates(model):
         validation_data=(x_test_small, y_test_small))
     [w1, b1] = get_weight(model)
     return (w1 - w0, b1 - b0)
+
 
 def compute_accuracy(model):
     loss, accuracy = model.evaluate(x_test_small, y_test_small, batch_size=64)

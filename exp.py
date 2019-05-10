@@ -53,7 +53,7 @@ def exp_step(result_dir):
     ]
     observe_points = ['step']
     configs = [
-        {'size':200, 'straggler_perc':0, 'straggleness':1, 'barriers':barriers, 'observe_points':observe_points,
+        {'stop_time':200, 'size':200, 'straggler_perc':0, 'straggleness':1, 'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir}
     ]
 
@@ -89,7 +89,7 @@ def exp_samplesize(result_dir):
     ]
     observe_points = ['step']
     configs = [
-        {'size':200, 'straggler_perc':0, 'straggleness':1, 'barriers':barriers, 'observe_points':['step'],
+        {'stop_time':200, 'size':200, 'straggler_perc':0, 'straggleness':1, 'barriers':barriers, 'observe_points':['step'],
         'path':result_dir}
     ]
 
@@ -125,15 +125,15 @@ def exp_straggle_perc(result_dir):
     ]
     observe_points = ['step']
     configs = [
-        {'size':100, 'straggler_perc':0, 'straggleness':3, 'barriers':barriers, 'observe_points':['step'],
+        {'stop_time':200, 'size':100, 'straggler_perc':0, 'straggleness':3, 'barriers':barriers, 'observe_points':['step'],
         'path':result_dir},
-        {'size':100, 'straggler_perc':5, 'straggleness':3, 'barriers':barriers, 'observe_points':['step'],
+        {'stop_time':200, 'size':100, 'straggler_perc':5, 'straggleness':3, 'barriers':barriers, 'observe_points':['step'],
         'path':result_dir},
-        {'size':100, 'straggler_perc':10, 'straggleness':3, 'barriers':barriers, 'observe_points':['step'],
+        {'stop_time':200, 'size':100, 'straggler_perc':10, 'straggleness':3, 'barriers':barriers, 'observe_points':['step'],
         'path':result_dir},
-        {'size':100, 'straggler_perc':15, 'straggleness':3, 'barriers':barriers, 'observe_points':['step'],
+        {'stop_time':200, 'size':100, 'straggler_perc':15, 'straggleness':3, 'barriers':barriers, 'observe_points':['step'],
         'path':result_dir},
-        {'size':100, 'straggler_perc':20, 'straggleness':3, 'barriers':barriers, 'observe_points':['step'],
+        {'stop_time':200, 'size':100, 'straggler_perc':20, 'straggleness':3, 'barriers':barriers, 'observe_points':['step'],
         'path':result_dir}
     ]
 
@@ -179,17 +179,17 @@ def exp_straggleness(result_dir):
     ]
     observe_points = ['step']
     configs = [
-        {'size':100, 'straggler_perc':5, 'straggleness':1, 'barriers':barriers, 'observe_points':['step'],
+        {'stop_time':200, 'size':100, 'straggler_perc':5, 'straggleness':1, 'barriers':barriers, 'observe_points':['step'],
         'path':result_dir},
-        {'size':100, 'straggler_perc':5, 'straggleness':2, 'barriers':barriers, 'observe_points':['step'],
+        {'stop_time':200, 'size':100, 'straggler_perc':5, 'straggleness':2, 'barriers':barriers, 'observe_points':['step'],
         'path':result_dir},
-        {'size':100, 'straggler_perc':5, 'straggleness':4, 'barriers':barriers, 'observe_points':['step'],
+        {'stop_time':200, 'size':100, 'straggler_perc':5, 'straggleness':4, 'barriers':barriers, 'observe_points':['step'],
         'path':result_dir},
-        {'size':100, 'straggler_perc':5, 'straggleness':6, 'barriers':barriers, 'observe_points':['step'],
+        {'stop_time':200, 'size':100, 'straggler_perc':5, 'straggleness':6, 'barriers':barriers, 'observe_points':['step'],
         'path':result_dir},
-        {'size':100, 'straggler_perc':5, 'straggleness':8, 'barriers':barriers, 'observe_points':['step'],
+        {'stop_time':200, 'size':100, 'straggler_perc':5, 'straggleness':8, 'barriers':barriers, 'observe_points':['step'],
         'path':result_dir},
-        {'size':100, 'straggler_perc':5, 'straggleness':10, 'barriers':barriers, 'observe_points':['step'],
+        {'stop_time':200, 'size':100, 'straggler_perc':5, 'straggleness':10, 'barriers':barriers, 'observe_points':['step'],
         'path':result_dir}
     ]
 
@@ -253,11 +253,11 @@ def exp_regression(result_dir):
         #(pssp(4, 30), 'pssp_s4_p30')
     ]
     observe_points = ['regression']
-    config = {'size':100, 'straggler_perc':0, 'straggleness':1,
+    config = {'stop_time':200, 'size':100, 'straggler_perc':0, 'straggleness':1,
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir}
 
-    run(config)
+    # run(config)
 
     clock = {}; iteration = {}; loss = {}
     barrier_names = [s for (_, s) in config['barriers']]
@@ -286,7 +286,7 @@ def exp_regression(result_dir):
     plt.show()
     """
 
-    f, (ax1, ax2) = plt.subplots(2, 1, figsize=(12, 12)) #figsize=(12, 5))
+    f, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 12)) #figsize=(12, 5))
 
     for barrier in barrier_names:
         ax1.plot(clock[barrier], loss[barrier], label=barrier_to_label(barrier))
@@ -294,11 +294,13 @@ def exp_regression(result_dir):
             label=barrier_to_label(barrier))
 
     ax1.set_xlabel("Time")
-    ax1.set_ylabel("Loss")
+    ax1.set_ylabel("Accuracy")
     ax1.legend()
 
     ax2.set_xlabel("Iterations")
-    ax2.set_ylabel("Loss")
+    ax2.set_ylabel("Accuracy")
+    ax2.set_xlim([0,50])
+    ax2.set_ylim([0.6,0.9])
     ax2.legend()
 
     plt.show()
@@ -322,7 +324,7 @@ def exp_accuracy_old(result_dir):
         #(ssp(2), 'ssp_s2'),
     ]
     observe_points = ['sequence']
-    config = {'size':100, 'straggler_perc':0, 'straggleness':1,
+    config = {'stop_time':200, 'size':100, 'straggler_perc':0, 'straggleness':1,
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir}
 
@@ -401,19 +403,19 @@ def exp_straggle_accuracy(result_dir):
     ]
     observe_points = ['regression']
     configs = [
-        {'size':100, 'straggler_perc':0, 'straggleness':4, 'barriers':barriers, 'observe_points':observe_points,
+        {'stop_time':200, 'size':100, 'straggler_perc':0, 'straggleness':4, 'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir},
-        {'size':100, 'straggler_perc':5, 'straggleness':4, 'barriers':barriers, 'observe_points':observe_points,
+        {'stop_time':200, 'size':100, 'straggler_perc':5, 'straggleness':4, 'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir},
-        {'size':100, 'straggler_perc':10, 'straggleness':4, 'barriers':barriers, 'observe_points':observe_points,
+        {'stop_time':200, 'size':100, 'straggler_perc':10, 'straggleness':4, 'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir},
-        {'size':100, 'straggler_perc':15, 'straggleness':4, 'barriers':barriers, 'observe_points':observe_points,
+        {'stop_time':200, 'size':100, 'straggler_perc':15, 'straggleness':4, 'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir},
-        {'size':100, 'straggler_perc':20, 'straggleness':4, 'barriers':barriers, 'observe_points':observe_points,
+        {'stop_time':200, 'size':100, 'straggler_perc':20, 'straggleness':4, 'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir},
-        {'size':100, 'straggler_perc':25, 'straggleness':4, 'barriers':barriers, 'observe_points':observe_points,
+        {'stop_time':200, 'size':100, 'straggler_perc':25, 'straggleness':4, 'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir},
-        {'size':100, 'straggler_perc':30, 'straggleness':4, 'barriers':barriers, 'observe_points':observe_points,
+        {'stop_time':200, 'size':100, 'straggler_perc':30, 'straggleness':4, 'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir},
     ]
 
@@ -462,7 +464,7 @@ def exp_frontier(result_dir):
         (pssp(4, 10), 'pssp_s4_p10')
     ]
     observe_points = ['frontier']
-    config = {'size':200, 'straggler_perc':0, 'straggleness':1.,
+    config = {'stop_time':200, 'size':200, 'straggler_perc':0, 'straggleness':1.,
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir}
 
@@ -523,7 +525,7 @@ def exp_ratio(result_dir):
         (pssp(4, 10), 'pssp_s4_p10')
     ]
     observe_points = ['ratio']
-    config = {'size':100, 'straggler_perc':0, 'straggleness':1,
+    config = {'stop_time':200, 'size':100, 'straggler_perc':0, 'straggleness':1,
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir}
 
@@ -566,22 +568,22 @@ def exp_scalability(result_dir):
     observe_points = ['regression']
     # run 300 seconds
     configs = [
-        {'size':50, 'straggler_perc':0, 'straggleness':1,
+        {'stop_time':200, 'size':50, 'straggler_perc':0, 'straggleness':1,
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir},
-        {'size':100, 'straggler_perc':0, 'straggleness':1,
+        {'stop_time':200, 'size':100, 'straggler_perc':0, 'straggleness':1,
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir},
-        {'size':150, 'straggler_perc':0, 'straggleness':1,
+        {'stop_time':200, 'size':150, 'straggler_perc':0, 'straggleness':1,
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir},
-        {'size':200, 'straggler_perc':0, 'straggleness':1,
+        {'stop_time':200, 'size':200, 'straggler_perc':0, 'straggleness':1,
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir},
-        {'size':250, 'straggler_perc':0, 'straggleness':1,
+        {'stop_time':200, 'size':250, 'straggler_perc':0, 'straggleness':1,
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir},
-        {'size':300, 'straggler_perc':0, 'straggleness':1,
+        {'stop_time':200, 'size':300, 'straggler_perc':0, 'straggleness':1,
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir},
     ]
@@ -655,28 +657,28 @@ def exp_scalability_step(result_dir):
         #{'size':50, 'straggler_perc':0, 'straggleness':1,
         #'barriers':barriers, 'observe_points':observe_points,
         #'path':result_dir},
-        {'size':100, 'straggler_perc':0, 'straggleness':1,
+        {'stop_time':200, 'size':100, 'straggler_perc':0, 'straggleness':1,
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir},
         #{'size':150, 'straggler_perc':0, 'straggleness':1,
         #'barriers':barriers, 'observe_points':observe_points,
         #'path':result_dir},
-        {'size':200, 'straggler_perc':0, 'straggleness':1,
+        {'stop_time':200, 'size':200, 'straggler_perc':0, 'straggleness':1,
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir},
         #{'size':250, 'straggler_perc':0, 'straggleness':1,
         #'barriers':barriers, 'observe_points':observe_points,
         #'path':result_dir},
-        {'size':300, 'straggler_perc':0, 'straggleness':1,
+        {'stop_time':200, 'size':300, 'straggler_perc':0, 'straggleness':1,
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir},
-        {'size':400, 'straggler_perc':0, 'straggleness':1,
+        {'stop_time':200, 'size':400, 'straggler_perc':0, 'straggleness':1,
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir},
-        {'size':500, 'straggler_perc':0, 'straggleness':1,
+        {'stop_time':200, 'size':500, 'straggler_perc':0, 'straggleness':1,
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir},
-        {'size':600, 'straggler_perc':0, 'straggleness':1,
+        {'stop_time':200, 'size':600, 'straggler_perc':0, 'straggleness':1,
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir},
     ]

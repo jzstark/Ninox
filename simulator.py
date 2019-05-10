@@ -7,7 +7,6 @@ import os
 import random
 import regression
 
-stop_time = 200
 randomness=0.01
 seed = 666
 modelsize = (28 * 28, 10)
@@ -114,7 +113,7 @@ class Network:
         # This could a problem if we allow nodes dropping in and out freely
         self.nodes = nodes
         self.size = size
-        self.stop_time = stop_time
+        self.stop_time = config['stop_time']
         self.clock = 0.
 
         np.random.seed(seed)

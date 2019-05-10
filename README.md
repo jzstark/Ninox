@@ -27,4 +27,10 @@ What can be further derived from the previous tables:
 
 ## Naming Scheme
 
-The data files: `root_path`/`exp_path`/(`config_prefix` + `barrier_name` + `observation`.csv) 
+The data files: `root_path`/`exp_path`/(`config_prefix` + `barrier_name` + `observation`.csv)
+
+
+## Other
+
+Remember to disable/enable the `run(config)` when you want to start the simulation again or just want to use existing data.
+May need to automate later if necessary.
