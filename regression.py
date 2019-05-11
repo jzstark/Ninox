@@ -23,7 +23,7 @@ num_classes = 10
 epochs=1
 batch_size=64
 iteration=10
-sgd = optimizers.SGD(lr=0.001, decay=1e-4)
+sgd = optimizers.SGD(lr=0.005, decay=1e-4)
 
 """
 Load and pre-process MNSIT data
@@ -58,9 +58,9 @@ def get_weight(model):
     l = model.layers[0]
     return l.get_weights()
 
-def set_weight(model, w, b):
+def set_weight(model, u):
     l = model.layers[0]
-    return l.set_weights([w, b])
+    return l.set_weights(u)
 
 
 """
@@ -87,14 +87,14 @@ def update_model(model, u):
     [w0, b0] = get_weight(model)
     w1 = w0 + u[0]
     b1 = b0 + u[1]
-    set_weight(model, w1, b1)
+    set_weight(model, [w1, b1])
     return model
 
 
 def compute_updates(model):
     x, y = get_next_batch()
     [w0, b0] = get_weight(model)
-    model.fit(x, y, epochs=epochs, batch_size=batch_size, verbose=0,
+    model.fit(x, y, epochs=epochs, batch_size=batch_size, verbose=1,
         validation_data=(x_test_small, y_test_small))
     [w1, b1] = get_weight(model)
     return (w1 - w0, b1 - b0)

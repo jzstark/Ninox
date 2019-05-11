@@ -244,20 +244,16 @@ def exp_regression(result_dir):
         (asp, 'asp'),
         (ssp(4), 'ssp_s4'),
         (pbsp(5), 'pbsp_p5'),
-        #(pbsp(10), 'pbsp_p10'),
-        #(pbsp(20), 'pbsp_p20'),
-        #(pbsp(30), 'pbsp_p30'),
         (pssp(4, 5), 'pssp_s4_p5'),
-        #(pssp(4, 10), 'pssp_s4_p10'),
-        #(pssp(4, 20), 'pssp_s4_p20'),
-        #(pssp(4, 30), 'pssp_s4_p30')
+        (pbsp(1), 'pbsp_p1'),
+        (ssp(50), 'ssp_s50'),
     ]
     observe_points = ['regression']
-    config = {'stop_time':200, 'size':100, 'straggler_perc':0, 'straggleness':1,
+    config = {'stop_time':100, 'size':50, 'straggler_perc':0, 'straggleness':1,
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir}
 
-    # run(config)
+    run(config)
 
     clock = {}; iteration = {}; loss = {}
     barrier_names = [s for (_, s) in config['barriers']]
@@ -299,8 +295,8 @@ def exp_regression(result_dir):
 
     ax2.set_xlabel("Iterations")
     ax2.set_ylabel("Accuracy")
-    ax2.set_xlim([0,50])
-    ax2.set_ylim([0.6,0.9])
+    #ax2.set_xlim([0,50])
+    #ax2.set_ylim([0.6,0.9])
     ax2.legend()
 
     plt.show()

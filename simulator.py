@@ -83,7 +83,9 @@ class Node:
         self.step   = 0
         self.t_wait = 0.
         self.t_exec = 0.
-        self.delta = np.zeros(modelsize)
+        # each model has its own copy of model; do not share a common model in computing gradeint.
+        self.model = regression.build_model()
+        self.delta = [np.zeros(modelsize), np.zeros(10)]
 
         self.frontier = [] # length: nodes number
         self.frontier_info = [] # length: total step number
@@ -174,7 +176,10 @@ class Network:
     def update_nodes_delta(self):
         for i, n in enumerate(self.nodes):
             if self.clock != n.t_wait : continue
-            n.delta = regression.compute_updates(self.model)
+            # Pull weights from parameter server
+            weights = regression.get_weight(self.model)
+            regression.set_weight(n.model, weights)
+            n.delta = regression.compute_updates(n.model)
 
 
     def next_event_at(self):
