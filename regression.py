@@ -19,11 +19,12 @@ os.environ['KMP_DUPLICATE_LIB_OK']='True'
 Parameters
 """
 
+seed=233
 num_classes = 10
 epochs=1
 batch_size=64
-iteration=10
-sgd = optimizers.SGD(lr=0.005, decay=1e-4)
+iteration=20
+sgd = optimizers.SGD(lr=0.01, decay=1e-4)
 
 """
 Load and pre-process MNSIT data
@@ -68,7 +69,7 @@ Exposed API for simulation use
 """
 
 
-def build_model():
+def build_model(accuracy=True):
     model = Sequential()
     """
     model.add(Conv2D(filters=32, kernel_size=(3,3), activation='relu',
@@ -79,7 +80,15 @@ def build_model():
     model.add(Dense(num_classes, activation='softmax'))
     """
     model.add(Dense(num_classes, activation='softmax', input_shape=(image_size,)))
-    model.compile(optimizer=sgd, loss='categorical_crossentropy', metrics=['accuracy'])
+    if accuracy == True:
+        model.compile(optimizer=sgd, loss='categorical_crossentropy', metrics=['accuracy'])
+    else:
+        model.compile(optimizer=sgd, loss='categorical_crossentropy')
+
+    np.random.seed(seed)
+    w_init = np.random.rand(28*28, 10)
+    b_init = np.zeros(10)
+    set_weight(model, [w_init, b_init])
     return model
 
 

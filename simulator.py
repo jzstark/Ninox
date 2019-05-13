@@ -84,7 +84,7 @@ class Node:
         self.t_wait = 0.
         self.t_exec = 0.
         # each model has its own copy of model; do not share a common model in computing gradeint.
-        self.model = regression.build_model()
+        self.model = regression.build_model(accuracy=False)
         self.delta = [np.zeros(modelsize), np.zeros(10)]
 
         self.frontier = [] # length: nodes number
@@ -118,7 +118,6 @@ class Network:
         self.stop_time = config['stop_time']
         self.clock = 0.
 
-        np.random.seed(seed)
         self.model = regression.build_model()  #np.random.rand(*modelsize)
         self.regression_info = []
 
@@ -129,10 +128,24 @@ class Network:
         # a potentially very large list; millions of elements
         self.sequence = []
 
+        self.rejected_request = 0
+        self.accepted_request = 0
+
+
+    def print_info(self):
+        print("Barrier %s: accepted_request: %d, rejected: %d\n" %
+            (self.dbfilename_step, self.accepted_request, self.rejected_request))
+
 
     def update_nodes_time(self):
         for i, n in enumerate(self.nodes):
-            if self.clock < n.t_exec or not self.barrier(self, n):
+            passed = self.barrier(self, n)
+            if passed == True:
+                self.accepted_request += 1
+            else:
+                self.rejected_request += 1
+
+            if self.clock < n.t_exec or not passed: #self.barrier(self, n):
                 continue
             # If it's time to finish the wait and go on...
 
@@ -146,6 +159,7 @@ class Network:
             self.calc_time[i] += exec_time
 
             if('regression' in self.observe_points):
+                # Push my update to server
                 self.model = regression.update_model(self.model, n.delta)
 
             # The noisy update from my point of view.
@@ -166,6 +180,7 @@ class Network:
             # Get current screenshot of current progress of all nodes
             n.frontier = list.copy(self.step_frontier)
 
+            # The mismatch everytime before I push the the updates
             if ('frontier' in self.observe_points):
                 n.frontier_info.append((diff_num, diff_max))
 
@@ -194,6 +209,10 @@ class Network:
         #np.random.seed(seed)
 
         counter = 0
+        if ('regression' in self.observe_points):
+            loss, acc = regression.compute_accuracy(self.model)
+            self.regression_info.append((0, 0, acc))
+
         while(self.clock < self.stop_time):
             self.update_nodes_time()
             if ('regression' in self.observe_points):
@@ -202,12 +221,13 @@ class Network:
             self.clock = t
 
             if ('regression' in self.observe_points):
-                if (self.clock - counter > 2):
-                    max_step = int(np.max(self.step_frontier))
+                if (self.clock - counter > 1):
+                    #max_step = int(np.max(self.step_frontier))
+                    avg_step = np.mean(self.step_frontier)
                     loss, acc = regression.compute_accuracy(self.model)
-                    self.regression_info.append((
-                        int(self.clock), max_step, acc))
+                    self.regression_info.append((self.clock, avg_step, acc))
                     counter = self.clock
+
 
         if ('regression' in self.observe_points):
             print('Processing step: ' + self.dbfilename_regression)
@@ -298,3 +318,4 @@ def run(config):
     for b in config['barriers']:
         network = Network(config, b)
         network.execute()
+        network.print_info()

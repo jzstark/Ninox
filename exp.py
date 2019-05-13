@@ -242,14 +242,14 @@ def exp_regression(result_dir):
     barriers = [
         (bsp, 'bsp'),
         (asp, 'asp'),
-        (ssp(4), 'ssp_s4'),
-        (pbsp(5), 'pbsp_p5'),
-        (pssp(4, 5), 'pssp_s4_p5'),
-        (pbsp(1), 'pbsp_p1'),
-        (ssp(50), 'ssp_s50'),
+        (ssp(5), 'ssp_s5'),
+        #(pbsp(5), 'pbsp_p5'),
+        #(pssp(4, 5), 'pssp_s4_p5'),
+        #(pbsp(1), 'pbsp_p1'),
     ]
     observe_points = ['regression']
-    config = {'stop_time':100, 'size':50, 'straggler_perc':0, 'straggleness':1,
+    #config = {'stop_time':100, 'size':50, 'straggler_perc':0, 'straggleness':1,
+    config = {'stop_time':60, 'size':60, 'straggler_perc':0, 'straggleness':1,
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir}
 
@@ -261,8 +261,8 @@ def exp_regression(result_dir):
         filename = utils.dbfilename(config, barrier, 'regression')
         with open(filename, 'r') as f:
             reader = csv.reader(f, delimiter=',')
-            clock[barrier] = [int(s) for s in next(reader)]
-            iteration[barrier] = [int(s) for s in next(reader)]
+            clock[barrier] = [float(s) for s in next(reader)]
+            iteration[barrier] = [float(s) for s in next(reader)]
             loss[barrier] = [float(s) for s in next(reader)]
 
     """
