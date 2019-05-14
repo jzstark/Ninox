@@ -25,6 +25,8 @@ def main(db_dir):
     run_exp(exp_regression, "exp_regression")
     #run_exp(exp_scalability, "exp_scalability")
     #run_exp(exp_scalability_step, "exp_scalability_step")
+    #run_exp(exp_dummy, "exp_dummy")
+    
 
 main(db.default_dir)
 #cProfile.run('main(db.default_dir)')

@@ -61,7 +61,10 @@ def get_weight(model):
 
 def set_weight(model, u):
     l = model.layers[0]
-    return l.set_weights(u)
+    [w, b] = u
+    # Notice this copy!!!!
+    w1 = w.copy(); b1 = b.copy()
+    return l.set_weights([w1, b1])
 
 
 """

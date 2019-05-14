@@ -128,25 +128,29 @@ class Network:
         # a potentially very large list; millions of elements
         self.sequence = []
 
-        self.rejected_request = 0
-        self.accepted_request = 0
+        self.rejected_request_1 = 0
+        self.rejected_request_2 = 0
+        self.rejected_request_3 = 0
+        self.accepted_request   = 0
 
 
     def print_info(self):
-        print("Barrier %s: accepted_request: %d, rejected: %d\n" %
-            (self.dbfilename_step, self.accepted_request, self.rejected_request))
+        print("Barrier %s: accepted_request: %d, rejected: %d-%d-%d\n" %
+            (self.dbfilename_step, self.accepted_request, self.rejected_request_1, self.rejected_request_2, self.rejected_request_3))
 
 
     def update_nodes_time(self):
         for i, n in enumerate(self.nodes):
             passed = self.barrier(self, n)
-            if passed == True:
-                self.accepted_request += 1
-            else:
-                self.rejected_request += 1
-
             if self.clock < n.t_exec or not passed: #self.barrier(self, n):
+                if (self.clock < n.t_exec and passed):
+                    self.rejected_request_1 += 1
+                elif (self.clock >= n.t_exec and not passed):
+                    self.rejected_request_2 += 1
+                elif (self.clock < n.t_exec and not passed):
+                    self.rejected_request_3 += 1
                 continue
+            self.accepted_request += 1
             # If it's time to finish the wait and go on...
 
             # Decide my next execution time; increase my step

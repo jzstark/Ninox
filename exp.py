@@ -243,17 +243,16 @@ def exp_regression(result_dir):
         (bsp, 'bsp'),
         (asp, 'asp'),
         (ssp(5), 'ssp_s5'),
-        #(pbsp(5), 'pbsp_p5'),
-        #(pssp(4, 5), 'pssp_s4_p5'),
-        #(pbsp(1), 'pbsp_p1'),
+        (pbsp(10), 'pbsp_p5'),
+        (pssp(5, 10), 'pssp_s4_p5'),
     ]
     observe_points = ['regression']
-    #config = {'stop_time':100, 'size':50, 'straggler_perc':0, 'straggleness':1,
-    config = {'stop_time':60, 'size':60, 'straggler_perc':0, 'straggleness':1,
+    config = {'stop_time':40, 'size':40, 'straggler_perc':0, 'straggleness':1,
+    #config = {'stop_time':50, 'size':99, 'straggler_perc':15, 'straggleness':4,
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir}
 
-    run(config)
+    #run(config)
 
     clock = {}; iteration = {}; loss = {}
     barrier_names = [s for (_, s) in config['barriers']]
@@ -711,3 +710,20 @@ def exp_scalability_step(result_dir):
 
     plt.legend()
     plt.show()
+
+
+
+def exp_dummy(result_dir):
+    db.init_db(result_dir)
+
+    barriers = [
+        (asp, 'asp'), (bsp, 'bsp'), (ssp(4), 'ssp_s4'),
+        (pbsp(10), 'pbsp_p10'),
+        (pssp(4, 10), 'pssp_s4_p10')
+    ]
+    observe_points = []
+    configs = [
+        {'stop_time':100, 'size':50, 'straggler_perc':0, 'straggleness':1, 'barriers':barriers, 'observe_points':observe_points,
+        'path':result_dir}
+    ]
+    for c in configs: run(c)
