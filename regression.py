@@ -21,7 +21,7 @@ Parameters
 
 seed=233
 num_classes = 10
-epochs=1
+epochs=10
 batch_size=64
 iteration=20
 sgd = optimizers.SGD(lr=0.01, decay=1e-4)
@@ -84,9 +84,15 @@ def build_model(accuracy=True):
     """
     model.add(Dense(num_classes, activation='softmax', input_shape=(image_size,)))
     if accuracy == True:
-        model.compile(optimizer=sgd, loss='categorical_crossentropy', metrics=['accuracy'])
+        model.compile(
+            #optimizer=sgd,
+            optimizer=optimizers.Adadelta(),
+            loss='categorical_crossentropy', metrics=['accuracy'])
     else:
-        model.compile(optimizer=sgd, loss='categorical_crossentropy')
+        model.compile(
+            #optimizer=sgd,
+            optimizer=optimizers.Adadelta(),
+            loss='categorical_crossentropy')
 
     np.random.seed(seed)
     w_init = np.random.rand(28*28, 10)

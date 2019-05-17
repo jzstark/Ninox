@@ -165,6 +165,9 @@ class Network:
             if('regression' in self.observe_points):
                 # Push my update to server
                 self.model = regression.update_model(self.model, n.delta)
+            print("\nNode #", i)
+            print("PS frontier:", self.step_frontier)
+            print("My fronter:", n.frontier)
 
             # The noisy update from my point of view.
             diff_num = 0 # total deviation from previous step

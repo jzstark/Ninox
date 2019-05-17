@@ -1,0 +1,1786 @@
+
+Node # 0
+PS frontier: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+My fronter: []
+
+Node # 1
+PS frontier: [1, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+My fronter: []
+
+Node # 2
+PS frontier: [1, 1, 0, 0, 0, 0, 0, 0, 0, 0]
+My fronter: []
+
+Node # 3
+PS frontier: [1, 1, 1, 0, 0, 0, 0, 0, 0, 0]
+My fronter: []
+
+Node # 4
+PS frontier: [1, 1, 1, 1, 0, 0, 0, 0, 0, 0]
+My fronter: []
+
+Node # 5
+PS frontier: [1, 1, 1, 1, 1, 0, 0, 0, 0, 0]
+My fronter: []
+
+Node # 6
+PS frontier: [1, 1, 1, 1, 1, 1, 0, 0, 0, 0]
+My fronter: []
+
+Node # 7
+PS frontier: [1, 1, 1, 1, 1, 1, 1, 0, 0, 0]
+My fronter: []
+
+Node # 8
+PS frontier: [1, 1, 1, 1, 1, 1, 1, 1, 0, 0]
+My fronter: []
+
+Node # 9
+PS frontier: [1, 1, 1, 1, 1, 1, 1, 1, 1, 0]
+My fronter: []
+
+Node # 8
+PS frontier: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+My fronter: [1, 1, 1, 1, 1, 1, 1, 1, 1, 0]
+
+Node # 1
+PS frontier: [1, 1, 1, 1, 1, 1, 1, 1, 2, 1]
+My fronter: [1, 1, 0, 0, 0, 0, 0, 0, 0, 0]
+
+Node # 4
+PS frontier: [1, 2, 1, 1, 1, 1, 1, 1, 2, 1]
+My fronter: [1, 1, 1, 1, 1, 0, 0, 0, 0, 0]
+
+Node # 8
+PS frontier: [1, 2, 1, 1, 2, 1, 1, 1, 2, 1]
+My fronter: [1, 1, 1, 1, 1, 1, 1, 1, 2, 1]
+
+Node # 9
+PS frontier: [1, 2, 1, 1, 2, 1, 1, 1, 3, 1]
+My fronter: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+
+Node # 2
+PS frontier: [1, 2, 1, 1, 2, 1, 1, 1, 3, 2]
+My fronter: [1, 1, 1, 0, 0, 0, 0, 0, 0, 0]
+
+Node # 0
+PS frontier: [1, 2, 2, 1, 2, 1, 1, 1, 3, 2]
+My fronter: [1, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+Node # 5
+PS frontier: [2, 2, 2, 1, 2, 1, 1, 1, 3, 2]
+My fronter: [1, 1, 1, 1, 1, 1, 0, 0, 0, 0]
+
+Node # 1
+PS frontier: [2, 2, 2, 1, 2, 2, 1, 1, 3, 2]
+My fronter: [1, 2, 1, 1, 1, 1, 1, 1, 2, 1]
+
+Node # 4
+PS frontier: [2, 3, 2, 1, 2, 2, 1, 1, 3, 2]
+My fronter: [1, 2, 1, 1, 2, 1, 1, 1, 2, 1]
+
+Node # 1
+PS frontier: [2, 3, 2, 1, 3, 2, 1, 1, 3, 2]
+My fronter: [2, 3, 2, 1, 2, 2, 1, 1, 3, 2]
+
+Node # 7
+PS frontier: [2, 4, 2, 1, 3, 2, 1, 1, 3, 2]
+My fronter: [1, 1, 1, 1, 1, 1, 1, 1, 0, 0]
+
+Node # 3
+PS frontier: [2, 4, 2, 1, 3, 2, 1, 2, 3, 2]
+My fronter: [1, 1, 1, 1, 0, 0, 0, 0, 0, 0]
+
+Node # 4
+PS frontier: [2, 4, 2, 2, 3, 2, 1, 2, 3, 2]
+My fronter: [2, 3, 2, 1, 3, 2, 1, 1, 3, 2]
+
+Node # 4
+PS frontier: [2, 4, 2, 2, 4, 2, 1, 2, 3, 2]
+My fronter: [2, 4, 2, 2, 4, 2, 1, 2, 3, 2]
+
+Node # 3
+PS frontier: [2, 4, 2, 2, 5, 2, 1, 2, 3, 2]
+My fronter: [2, 4, 2, 2, 3, 2, 1, 2, 3, 2]
+
+Node # 7
+PS frontier: [2, 4, 2, 3, 5, 2, 1, 2, 3, 2]
+My fronter: [2, 4, 2, 1, 3, 2, 1, 2, 3, 2]
+
+Node # 1
+PS frontier: [2, 4, 2, 3, 5, 2, 1, 3, 3, 2]
+My fronter: [2, 4, 2, 1, 3, 2, 1, 1, 3, 2]
+
+Node # 6
+PS frontier: [2, 5, 2, 3, 5, 2, 1, 3, 3, 2]
+My fronter: [1, 1, 1, 1, 1, 1, 1, 0, 0, 0]
+
+Node # 3
+PS frontier: [2, 5, 2, 3, 5, 2, 2, 3, 3, 2]
+My fronter: [2, 4, 2, 3, 5, 2, 1, 2, 3, 2]
+
+Node # 3
+PS frontier: [2, 5, 2, 4, 5, 2, 2, 3, 3, 2]
+My fronter: [2, 5, 2, 4, 5, 2, 2, 3, 3, 2]
+
+Node # 3
+PS frontier: [2, 5, 2, 5, 5, 2, 2, 3, 3, 2]
+My fronter: [2, 5, 2, 5, 5, 2, 2, 3, 3, 2]
+
+Node # 6
+PS frontier: [2, 5, 2, 6, 5, 2, 2, 3, 3, 2]
+My fronter: [2, 5, 2, 3, 5, 2, 2, 3, 3, 2]
+
+Node # 5
+PS frontier: [2, 5, 2, 6, 5, 2, 3, 3, 3, 2]
+My fronter: [2, 2, 2, 1, 2, 2, 1, 1, 3, 2]
+
+Node # 1
+PS frontier: [2, 5, 2, 6, 5, 3, 3, 3, 3, 2]
+My fronter: [2, 5, 2, 3, 5, 2, 1, 3, 3, 2]
+
+Node # 8
+PS frontier: [2, 6, 2, 6, 5, 3, 3, 3, 3, 2]
+My fronter: [1, 2, 1, 1, 2, 1, 1, 1, 3, 1]
+
+Node # 9
+PS frontier: [2, 6, 2, 6, 5, 3, 3, 3, 4, 2]
+My fronter: [1, 2, 1, 1, 2, 1, 1, 1, 3, 2]
+
+Node # 5
+PS frontier: [2, 6, 2, 6, 5, 3, 3, 3, 4, 3]
+My fronter: [2, 5, 2, 6, 5, 3, 3, 3, 3, 2]
+
+Node # 5
+PS frontier: [2, 6, 2, 6, 5, 4, 3, 3, 4, 3]
+My fronter: [2, 6, 2, 6, 5, 4, 3, 3, 4, 3]
+
+Node # 2
+PS frontier: [2, 6, 2, 6, 5, 5, 3, 3, 4, 3]
+My fronter: [1, 2, 2, 1, 2, 1, 1, 1, 3, 2]
+
+Node # 9
+PS frontier: [2, 6, 3, 6, 5, 5, 3, 3, 4, 3]
+My fronter: [2, 6, 2, 6, 5, 3, 3, 3, 4, 3]
+
+Node # 8
+PS frontier: [2, 6, 3, 6, 5, 5, 3, 3, 4, 4]
+My fronter: [2, 6, 2, 6, 5, 3, 3, 3, 4, 2]
+
+Node # 0
+PS frontier: [2, 6, 3, 6, 5, 5, 3, 3, 5, 4]
+My fronter: [2, 2, 2, 1, 2, 1, 1, 1, 3, 2]
+
+Node # 9
+PS frontier: [3, 6, 3, 6, 5, 5, 3, 3, 5, 4]
+My fronter: [2, 6, 3, 6, 5, 5, 3, 3, 4, 4]
+
+Node # 3
+PS frontier: [3, 6, 3, 6, 5, 5, 3, 3, 5, 5]
+My fronter: [2, 5, 2, 6, 5, 2, 2, 3, 3, 2]
+
+Node # 2
+PS frontier: [3, 6, 3, 7, 5, 5, 3, 3, 5, 5]
+My fronter: [2, 6, 3, 6, 5, 5, 3, 3, 4, 3]
+
+Node # 5
+PS frontier: [3, 6, 4, 7, 5, 5, 3, 3, 5, 5]
+My fronter: [2, 6, 2, 6, 5, 5, 3, 3, 4, 3]
+
+Node # 8
+PS frontier: [3, 6, 4, 7, 5, 6, 3, 3, 5, 5]
+My fronter: [2, 6, 3, 6, 5, 5, 3, 3, 5, 4]
+
+Node # 2
+PS frontier: [3, 6, 4, 7, 5, 6, 3, 3, 6, 5]
+My fronter: [3, 6, 4, 7, 5, 5, 3, 3, 5, 5]
+
+Node # 2
+PS frontier: [3, 6, 5, 7, 5, 6, 3, 3, 6, 5]
+My fronter: [3, 6, 5, 7, 5, 6, 3, 3, 6, 5]
+
+Node # 3
+PS frontier: [3, 6, 6, 7, 5, 6, 3, 3, 6, 5]
+My fronter: [3, 6, 3, 7, 5, 5, 3, 3, 5, 5]
+
+Node # 5
+PS frontier: [3, 6, 6, 8, 5, 6, 3, 3, 6, 5]
+My fronter: [3, 6, 4, 7, 5, 6, 3, 3, 5, 5]
+
+Node # 3
+PS frontier: [3, 6, 6, 8, 5, 7, 3, 3, 6, 5]
+My fronter: [3, 6, 6, 8, 5, 6, 3, 3, 6, 5]
+
+Node # 6
+PS frontier: [3, 6, 6, 9, 5, 7, 3, 3, 6, 5]
+My fronter: [2, 5, 2, 6, 5, 2, 3, 3, 3, 2]
+
+Node # 0
+PS frontier: [3, 6, 6, 9, 5, 7, 4, 3, 6, 5]
+My fronter: [3, 6, 3, 6, 5, 5, 3, 3, 5, 4]
+
+Node # 9
+PS frontier: [4, 6, 6, 9, 5, 7, 4, 3, 6, 5]
+My fronter: [3, 6, 3, 6, 5, 5, 3, 3, 5, 5]
+
+Node # 8
+PS frontier: [4, 6, 6, 9, 5, 7, 4, 3, 6, 6]
+My fronter: [3, 6, 4, 7, 5, 6, 3, 3, 6, 5]
+
+Node # 9
+PS frontier: [4, 6, 6, 9, 5, 7, 4, 3, 7, 6]
+My fronter: [4, 6, 6, 9, 5, 7, 4, 3, 6, 6]
+
+Node # 3
+PS frontier: [4, 6, 6, 9, 5, 7, 4, 3, 7, 7]
+My fronter: [3, 6, 6, 9, 5, 7, 3, 3, 6, 5]
+
+Node # 5
+PS frontier: [4, 6, 6, 10, 5, 7, 4, 3, 7, 7]
+My fronter: [3, 6, 6, 8, 5, 7, 3, 3, 6, 5]
+
+Node # 2
+PS frontier: [4, 6, 6, 10, 5, 8, 4, 3, 7, 7]
+My fronter: [3, 6, 6, 7, 5, 6, 3, 3, 6, 5]
+
+Node # 7
+PS frontier: [4, 6, 7, 10, 5, 8, 4, 3, 7, 7]
+My fronter: [2, 4, 2, 3, 5, 2, 1, 3, 3, 2]
+
+Node # 1
+PS frontier: [4, 6, 7, 10, 5, 8, 4, 4, 7, 7]
+My fronter: [2, 6, 2, 6, 5, 3, 3, 3, 3, 2]
+
+Node # 6
+PS frontier: [4, 7, 7, 10, 5, 8, 4, 4, 7, 7]
+My fronter: [3, 6, 6, 9, 5, 7, 4, 3, 6, 5]
+
+Node # 4
+PS frontier: [4, 7, 7, 10, 5, 8, 5, 4, 7, 7]
+My fronter: [2, 4, 2, 2, 5, 2, 1, 2, 3, 2]
+
+Node # 0
+PS frontier: [4, 7, 7, 10, 6, 8, 5, 4, 7, 7]
+My fronter: [4, 6, 6, 9, 5, 7, 4, 3, 6, 5]
+
+Node # 8
+PS frontier: [5, 7, 7, 10, 6, 8, 5, 4, 7, 7]
+My fronter: [4, 6, 6, 9, 5, 7, 4, 3, 7, 6]
+
+Node # 5
+PS frontier: [5, 7, 7, 10, 6, 8, 5, 4, 8, 7]
+My fronter: [4, 6, 6, 10, 5, 8, 4, 3, 7, 7]
+
+Node # 2
+PS frontier: [5, 7, 7, 10, 6, 9, 5, 4, 8, 7]
+My fronter: [4, 6, 7, 10, 5, 8, 4, 3, 7, 7]
+
+Node # 0
+PS frontier: [5, 7, 8, 10, 6, 9, 5, 4, 8, 7]
+My fronter: [5, 7, 7, 10, 6, 8, 5, 4, 7, 7]
+
+Node # 8
+PS frontier: [6, 7, 8, 10, 6, 9, 5, 4, 8, 7]
+My fronter: [5, 7, 7, 10, 6, 8, 5, 4, 8, 7]
+
+Node # 0
+PS frontier: [6, 7, 8, 10, 6, 9, 5, 4, 9, 7]
+My fronter: [6, 7, 8, 10, 6, 9, 5, 4, 8, 7]
+
+Node # 6
+PS frontier: [7, 7, 8, 10, 6, 9, 5, 4, 9, 7]
+My fronter: [4, 7, 7, 10, 5, 8, 5, 4, 7, 7]
+
+Node # 2
+PS frontier: [7, 7, 8, 10, 6, 9, 6, 4, 9, 7]
+My fronter: [5, 7, 8, 10, 6, 9, 5, 4, 8, 7]
+
+Node # 4
+PS frontier: [7, 7, 9, 10, 6, 9, 6, 4, 9, 7]
+My fronter: [4, 7, 7, 10, 6, 8, 5, 4, 7, 7]
+
+Node # 9
+PS frontier: [7, 7, 9, 10, 7, 9, 6, 4, 9, 7]
+My fronter: [4, 6, 6, 9, 5, 7, 4, 3, 7, 7]
+
+Node # 2
+PS frontier: [7, 7, 9, 10, 7, 9, 6, 4, 9, 8]
+My fronter: [7, 7, 9, 10, 6, 9, 6, 4, 9, 7]
+
+Node # 9
+PS frontier: [7, 7, 10, 10, 7, 9, 6, 4, 9, 8]
+My fronter: [7, 7, 9, 10, 7, 9, 6, 4, 9, 8]
+
+Node # 4
+PS frontier: [7, 7, 10, 10, 7, 9, 6, 4, 9, 9]
+My fronter: [7, 7, 9, 10, 7, 9, 6, 4, 9, 7]
+
+Node # 3
+PS frontier: [7, 7, 10, 10, 8, 9, 6, 4, 9, 9]
+My fronter: [4, 6, 6, 10, 5, 7, 4, 3, 7, 7]
+
+Node # 2
+PS frontier: [7, 7, 10, 11, 8, 9, 6, 4, 9, 9]
+My fronter: [7, 7, 10, 10, 7, 9, 6, 4, 9, 8]
+
+Node # 2
+PS frontier: [7, 7, 11, 11, 8, 9, 6, 4, 9, 9]
+My fronter: [7, 7, 11, 11, 8, 9, 6, 4, 9, 9]
+
+Node # 1
+PS frontier: [7, 7, 12, 11, 8, 9, 6, 4, 9, 9]
+My fronter: [4, 7, 7, 10, 5, 8, 4, 4, 7, 7]
+
+Node # 8
+PS frontier: [7, 8, 12, 11, 8, 9, 6, 4, 9, 9]
+My fronter: [6, 7, 8, 10, 6, 9, 5, 4, 9, 7]
+
+Node # 9
+PS frontier: [7, 8, 12, 11, 8, 9, 6, 4, 10, 9]
+My fronter: [7, 7, 10, 10, 7, 9, 6, 4, 9, 9]
+
+Node # 1
+PS frontier: [7, 8, 12, 11, 8, 9, 6, 4, 10, 10]
+My fronter: [7, 8, 12, 11, 8, 9, 6, 4, 9, 9]
+
+Node # 4
+PS frontier: [7, 9, 12, 11, 8, 9, 6, 4, 10, 10]
+My fronter: [7, 7, 10, 10, 8, 9, 6, 4, 9, 9]
+
+Node # 5
+PS frontier: [7, 9, 12, 11, 9, 9, 6, 4, 10, 10]
+My fronter: [5, 7, 7, 10, 6, 9, 5, 4, 8, 7]
+
+Node # 7
+PS frontier: [7, 9, 12, 11, 9, 10, 6, 4, 10, 10]
+My fronter: [4, 6, 7, 10, 5, 8, 4, 4, 7, 7]
+
+Node # 5
+PS frontier: [7, 9, 12, 11, 9, 10, 6, 5, 10, 10]
+My fronter: [7, 9, 12, 11, 9, 10, 6, 4, 10, 10]
+
+Node # 4
+PS frontier: [7, 9, 12, 11, 9, 11, 6, 5, 10, 10]
+My fronter: [7, 9, 12, 11, 9, 9, 6, 4, 10, 10]
+
+Node # 8
+PS frontier: [7, 9, 12, 11, 10, 11, 6, 5, 10, 10]
+My fronter: [7, 8, 12, 11, 8, 9, 6, 4, 10, 9]
+
+Node # 6
+PS frontier: [7, 9, 12, 11, 10, 11, 6, 5, 11, 10]
+My fronter: [7, 7, 8, 10, 6, 9, 6, 4, 9, 7]
+
+Node # 3
+PS frontier: [7, 9, 12, 11, 10, 11, 7, 5, 11, 10]
+My fronter: [7, 7, 10, 11, 8, 9, 6, 4, 9, 9]
+
+Node # 3
+PS frontier: [7, 9, 12, 12, 10, 11, 7, 5, 11, 10]
+My fronter: [7, 9, 12, 12, 10, 11, 7, 5, 11, 10]
+
+Node # 8
+PS frontier: [7, 9, 12, 13, 10, 11, 7, 5, 11, 10]
+My fronter: [7, 9, 12, 11, 10, 11, 6, 5, 11, 10]
+
+Node # 1
+PS frontier: [7, 9, 12, 13, 10, 11, 7, 5, 12, 10]
+My fronter: [7, 9, 12, 11, 8, 9, 6, 4, 10, 10]
+
+Node # 2
+PS frontier: [7, 10, 12, 13, 10, 11, 7, 5, 12, 10]
+My fronter: [7, 7, 12, 11, 8, 9, 6, 4, 9, 9]
+
+Node # 2
+PS frontier: [7, 10, 13, 13, 10, 11, 7, 5, 12, 10]
+My fronter: [7, 10, 13, 13, 10, 11, 7, 5, 12, 10]
+
+Node # 5
+PS frontier: [7, 10, 14, 13, 10, 11, 7, 5, 12, 10]
+My fronter: [7, 9, 12, 11, 9, 11, 6, 5, 10, 10]
+
+Node # 5
+PS frontier: [7, 10, 14, 13, 10, 12, 7, 5, 12, 10]
+My fronter: [7, 10, 14, 13, 10, 12, 7, 5, 12, 10]
+
+Node # 1
+PS frontier: [7, 10, 14, 13, 10, 13, 7, 5, 12, 10]
+My fronter: [7, 10, 12, 13, 10, 11, 7, 5, 12, 10]
+
+Node # 5
+PS frontier: [7, 11, 14, 13, 10, 13, 7, 5, 12, 10]
+My fronter: [7, 10, 14, 13, 10, 13, 7, 5, 12, 10]
+
+Node # 4
+PS frontier: [7, 11, 14, 13, 10, 14, 7, 5, 12, 10]
+My fronter: [7, 9, 12, 11, 10, 11, 6, 5, 10, 10]
+
+Node # 6
+PS frontier: [7, 11, 14, 13, 11, 14, 7, 5, 12, 10]
+My fronter: [7, 9, 12, 11, 10, 11, 7, 5, 11, 10]
+
+Node # 1
+PS frontier: [7, 11, 14, 13, 11, 14, 8, 5, 12, 10]
+My fronter: [7, 11, 14, 13, 10, 13, 7, 5, 12, 10]
+
+Node # 7
+PS frontier: [7, 12, 14, 13, 11, 14, 8, 5, 12, 10]
+My fronter: [7, 9, 12, 11, 9, 10, 6, 5, 10, 10]
+
+Node # 0
+PS frontier: [7, 12, 14, 13, 11, 14, 8, 6, 12, 10]
+My fronter: [7, 7, 8, 10, 6, 9, 5, 4, 9, 7]
+
+Node # 7
+PS frontier: [8, 12, 14, 13, 11, 14, 8, 6, 12, 10]
+My fronter: [7, 12, 14, 13, 11, 14, 8, 6, 12, 10]
+
+Node # 6
+PS frontier: [8, 12, 14, 13, 11, 14, 8, 7, 12, 10]
+My fronter: [7, 11, 14, 13, 11, 14, 8, 5, 12, 10]
+
+Node # 6
+PS frontier: [8, 12, 14, 13, 11, 14, 9, 7, 12, 10]
+My fronter: [8, 12, 14, 13, 11, 14, 9, 7, 12, 10]
+
+Node # 1
+PS frontier: [8, 12, 14, 13, 11, 14, 10, 7, 12, 10]
+My fronter: [7, 12, 14, 13, 11, 14, 8, 5, 12, 10]
+
+Node # 5
+PS frontier: [8, 13, 14, 13, 11, 14, 10, 7, 12, 10]
+My fronter: [7, 11, 14, 13, 10, 14, 7, 5, 12, 10]
+
+Node # 0
+PS frontier: [8, 13, 14, 13, 11, 15, 10, 7, 12, 10]
+My fronter: [8, 12, 14, 13, 11, 14, 8, 6, 12, 10]
+
+Node # 2
+PS frontier: [9, 13, 14, 13, 11, 15, 10, 7, 12, 10]
+My fronter: [7, 10, 14, 13, 10, 11, 7, 5, 12, 10]
+
+Node # 3
+PS frontier: [9, 13, 15, 13, 11, 15, 10, 7, 12, 10]
+My fronter: [7, 9, 12, 13, 10, 11, 7, 5, 11, 10]
+Barrier /Users/stark/Tmp/Ninox/data/exp_dummy/tbl_10_st1.0_stp0_asp_step.csv: accepted_request: 116, rejected: 954-0-0
+
+
+Node # 0
+PS frontier: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+My fronter: []
+
+Node # 1
+PS frontier: [1, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+My fronter: []
+
+Node # 2
+PS frontier: [1, 1, 0, 0, 0, 0, 0, 0, 0, 0]
+My fronter: []
+
+Node # 3
+PS frontier: [1, 1, 1, 0, 0, 0, 0, 0, 0, 0]
+My fronter: []
+
+Node # 4
+PS frontier: [1, 1, 1, 1, 0, 0, 0, 0, 0, 0]
+My fronter: []
+
+Node # 5
+PS frontier: [1, 1, 1, 1, 1, 0, 0, 0, 0, 0]
+My fronter: []
+
+Node # 6
+PS frontier: [1, 1, 1, 1, 1, 1, 0, 0, 0, 0]
+My fronter: []
+
+Node # 7
+PS frontier: [1, 1, 1, 1, 1, 1, 1, 0, 0, 0]
+My fronter: []
+
+Node # 8
+PS frontier: [1, 1, 1, 1, 1, 1, 1, 1, 0, 0]
+My fronter: []
+
+Node # 9
+PS frontier: [1, 1, 1, 1, 1, 1, 1, 1, 1, 0]
+My fronter: []
+
+Node # 0
+PS frontier: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+My fronter: [1, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+Node # 1
+PS frontier: [2, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+My fronter: [1, 1, 0, 0, 0, 0, 0, 0, 0, 0]
+
+Node # 2
+PS frontier: [2, 2, 1, 1, 1, 1, 1, 1, 1, 1]
+My fronter: [1, 1, 1, 0, 0, 0, 0, 0, 0, 0]
+
+Node # 3
+PS frontier: [2, 2, 2, 1, 1, 1, 1, 1, 1, 1]
+My fronter: [1, 1, 1, 1, 0, 0, 0, 0, 0, 0]
+
+Node # 4
+PS frontier: [2, 2, 2, 2, 1, 1, 1, 1, 1, 1]
+My fronter: [1, 1, 1, 1, 1, 0, 0, 0, 0, 0]
+
+Node # 5
+PS frontier: [2, 2, 2, 2, 2, 1, 1, 1, 1, 1]
+My fronter: [1, 1, 1, 1, 1, 1, 0, 0, 0, 0]
+
+Node # 6
+PS frontier: [2, 2, 2, 2, 2, 2, 1, 1, 1, 1]
+My fronter: [1, 1, 1, 1, 1, 1, 1, 0, 0, 0]
+
+Node # 7
+PS frontier: [2, 2, 2, 2, 2, 2, 2, 1, 1, 1]
+My fronter: [1, 1, 1, 1, 1, 1, 1, 1, 0, 0]
+
+Node # 8
+PS frontier: [2, 2, 2, 2, 2, 2, 2, 2, 1, 1]
+My fronter: [1, 1, 1, 1, 1, 1, 1, 1, 1, 0]
+
+Node # 9
+PS frontier: [2, 2, 2, 2, 2, 2, 2, 2, 2, 1]
+My fronter: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+
+Node # 0
+PS frontier: [2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
+My fronter: [2, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+
+Node # 1
+PS frontier: [3, 2, 2, 2, 2, 2, 2, 2, 2, 2]
+My fronter: [2, 2, 1, 1, 1, 1, 1, 1, 1, 1]
+
+Node # 2
+PS frontier: [3, 3, 2, 2, 2, 2, 2, 2, 2, 2]
+My fronter: [2, 2, 2, 1, 1, 1, 1, 1, 1, 1]
+
+Node # 3
+PS frontier: [3, 3, 3, 2, 2, 2, 2, 2, 2, 2]
+My fronter: [2, 2, 2, 2, 1, 1, 1, 1, 1, 1]
+
+Node # 4
+PS frontier: [3, 3, 3, 3, 2, 2, 2, 2, 2, 2]
+My fronter: [2, 2, 2, 2, 2, 1, 1, 1, 1, 1]
+
+Node # 5
+PS frontier: [3, 3, 3, 3, 3, 2, 2, 2, 2, 2]
+My fronter: [2, 2, 2, 2, 2, 2, 1, 1, 1, 1]
+
+Node # 6
+PS frontier: [3, 3, 3, 3, 3, 3, 2, 2, 2, 2]
+My fronter: [2, 2, 2, 2, 2, 2, 2, 1, 1, 1]
+
+Node # 7
+PS frontier: [3, 3, 3, 3, 3, 3, 3, 2, 2, 2]
+My fronter: [2, 2, 2, 2, 2, 2, 2, 2, 1, 1]
+
+Node # 8
+PS frontier: [3, 3, 3, 3, 3, 3, 3, 3, 2, 2]
+My fronter: [2, 2, 2, 2, 2, 2, 2, 2, 2, 1]
+
+Node # 9
+PS frontier: [3, 3, 3, 3, 3, 3, 3, 3, 3, 2]
+My fronter: [2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
+
+Node # 0
+PS frontier: [3, 3, 3, 3, 3, 3, 3, 3, 3, 3]
+My fronter: [3, 2, 2, 2, 2, 2, 2, 2, 2, 2]
+
+Node # 1
+PS frontier: [4, 3, 3, 3, 3, 3, 3, 3, 3, 3]
+My fronter: [3, 3, 2, 2, 2, 2, 2, 2, 2, 2]
+
+Node # 2
+PS frontier: [4, 4, 3, 3, 3, 3, 3, 3, 3, 3]
+My fronter: [3, 3, 3, 2, 2, 2, 2, 2, 2, 2]
+
+Node # 3
+PS frontier: [4, 4, 4, 3, 3, 3, 3, 3, 3, 3]
+My fronter: [3, 3, 3, 3, 2, 2, 2, 2, 2, 2]
+
+Node # 4
+PS frontier: [4, 4, 4, 4, 3, 3, 3, 3, 3, 3]
+My fronter: [3, 3, 3, 3, 3, 2, 2, 2, 2, 2]
+
+Node # 5
+PS frontier: [4, 4, 4, 4, 4, 3, 3, 3, 3, 3]
+My fronter: [3, 3, 3, 3, 3, 3, 2, 2, 2, 2]
+
+Node # 6
+PS frontier: [4, 4, 4, 4, 4, 4, 3, 3, 3, 3]
+My fronter: [3, 3, 3, 3, 3, 3, 3, 2, 2, 2]
+
+Node # 7
+PS frontier: [4, 4, 4, 4, 4, 4, 4, 3, 3, 3]
+My fronter: [3, 3, 3, 3, 3, 3, 3, 3, 2, 2]
+
+Node # 8
+PS frontier: [4, 4, 4, 4, 4, 4, 4, 4, 3, 3]
+My fronter: [3, 3, 3, 3, 3, 3, 3, 3, 3, 2]
+
+Node # 9
+PS frontier: [4, 4, 4, 4, 4, 4, 4, 4, 4, 3]
+My fronter: [3, 3, 3, 3, 3, 3, 3, 3, 3, 3]
+Barrier /Users/stark/Tmp/Ninox/data/exp_dummy/tbl_10_st1.0_stp0_bsp_step.csv: accepted_request: 40, rejected: 0-171-179
+
+
+Node # 0
+PS frontier: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+My fronter: []
+
+Node # 1
+PS frontier: [1, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+My fronter: []
+
+Node # 2
+PS frontier: [1, 1, 0, 0, 0, 0, 0, 0, 0, 0]
+My fronter: []
+
+Node # 3
+PS frontier: [1, 1, 1, 0, 0, 0, 0, 0, 0, 0]
+My fronter: []
+
+Node # 4
+PS frontier: [1, 1, 1, 1, 0, 0, 0, 0, 0, 0]
+My fronter: []
+
+Node # 5
+PS frontier: [1, 1, 1, 1, 1, 0, 0, 0, 0, 0]
+My fronter: []
+
+Node # 6
+PS frontier: [1, 1, 1, 1, 1, 1, 0, 0, 0, 0]
+My fronter: []
+
+Node # 7
+PS frontier: [1, 1, 1, 1, 1, 1, 1, 0, 0, 0]
+My fronter: []
+
+Node # 8
+PS frontier: [1, 1, 1, 1, 1, 1, 1, 1, 0, 0]
+My fronter: []
+
+Node # 9
+PS frontier: [1, 1, 1, 1, 1, 1, 1, 1, 1, 0]
+My fronter: []
+
+Node # 8
+PS frontier: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+My fronter: [1, 1, 1, 1, 1, 1, 1, 1, 1, 0]
+
+Node # 1
+PS frontier: [1, 1, 1, 1, 1, 1, 1, 1, 2, 1]
+My fronter: [1, 1, 0, 0, 0, 0, 0, 0, 0, 0]
+
+Node # 4
+PS frontier: [1, 2, 1, 1, 1, 1, 1, 1, 2, 1]
+My fronter: [1, 1, 1, 1, 1, 0, 0, 0, 0, 0]
+
+Node # 8
+PS frontier: [1, 2, 1, 1, 2, 1, 1, 1, 2, 1]
+My fronter: [1, 1, 1, 1, 1, 1, 1, 1, 2, 1]
+
+Node # 9
+PS frontier: [1, 2, 1, 1, 2, 1, 1, 1, 3, 1]
+My fronter: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+
+Node # 2
+PS frontier: [1, 2, 1, 1, 2, 1, 1, 1, 3, 2]
+My fronter: [1, 1, 1, 0, 0, 0, 0, 0, 0, 0]
+
+Node # 0
+PS frontier: [1, 2, 2, 1, 2, 1, 1, 1, 3, 2]
+My fronter: [1, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+Node # 5
+PS frontier: [2, 2, 2, 1, 2, 1, 1, 1, 3, 2]
+My fronter: [1, 1, 1, 1, 1, 1, 0, 0, 0, 0]
+
+Node # 1
+PS frontier: [2, 2, 2, 1, 2, 2, 1, 1, 3, 2]
+My fronter: [1, 2, 1, 1, 1, 1, 1, 1, 2, 1]
+
+Node # 4
+PS frontier: [2, 3, 2, 1, 2, 2, 1, 1, 3, 2]
+My fronter: [1, 2, 1, 1, 2, 1, 1, 1, 2, 1]
+
+Node # 1
+PS frontier: [2, 3, 2, 1, 3, 2, 1, 1, 3, 2]
+My fronter: [2, 3, 2, 1, 2, 2, 1, 1, 3, 2]
+
+Node # 7
+PS frontier: [2, 4, 2, 1, 3, 2, 1, 1, 3, 2]
+My fronter: [1, 1, 1, 1, 1, 1, 1, 1, 0, 0]
+
+Node # 3
+PS frontier: [2, 4, 2, 1, 3, 2, 1, 2, 3, 2]
+My fronter: [1, 1, 1, 1, 0, 0, 0, 0, 0, 0]
+
+Node # 4
+PS frontier: [2, 4, 2, 2, 3, 2, 1, 2, 3, 2]
+My fronter: [2, 3, 2, 1, 3, 2, 1, 1, 3, 2]
+
+Node # 4
+PS frontier: [2, 4, 2, 2, 4, 2, 1, 2, 3, 2]
+My fronter: [2, 4, 2, 2, 4, 2, 1, 2, 3, 2]
+
+Node # 3
+PS frontier: [2, 4, 2, 2, 5, 2, 1, 2, 3, 2]
+My fronter: [2, 4, 2, 2, 3, 2, 1, 2, 3, 2]
+
+Node # 7
+PS frontier: [2, 4, 2, 3, 5, 2, 1, 2, 3, 2]
+My fronter: [2, 4, 2, 1, 3, 2, 1, 2, 3, 2]
+
+Node # 1
+PS frontier: [2, 4, 2, 3, 5, 2, 1, 3, 3, 2]
+My fronter: [2, 4, 2, 1, 3, 2, 1, 1, 3, 2]
+
+Node # 6
+PS frontier: [2, 5, 2, 3, 5, 2, 1, 3, 3, 2]
+My fronter: [1, 1, 1, 1, 1, 1, 1, 0, 0, 0]
+
+Node # 3
+PS frontier: [2, 5, 2, 3, 5, 2, 2, 3, 3, 2]
+My fronter: [2, 4, 2, 3, 5, 2, 1, 2, 3, 2]
+
+Node # 3
+PS frontier: [2, 5, 2, 4, 5, 2, 2, 3, 3, 2]
+My fronter: [2, 5, 2, 4, 5, 2, 2, 3, 3, 2]
+
+Node # 3
+PS frontier: [2, 5, 2, 5, 5, 2, 2, 3, 3, 2]
+My fronter: [2, 5, 2, 5, 5, 2, 2, 3, 3, 2]
+
+Node # 6
+PS frontier: [2, 5, 2, 6, 5, 2, 2, 3, 3, 2]
+My fronter: [2, 5, 2, 3, 5, 2, 2, 3, 3, 2]
+
+Node # 5
+PS frontier: [2, 5, 2, 6, 5, 2, 3, 3, 3, 2]
+My fronter: [2, 2, 2, 1, 2, 2, 1, 1, 3, 2]
+
+Node # 1
+PS frontier: [2, 5, 2, 6, 5, 3, 3, 3, 3, 2]
+My fronter: [2, 5, 2, 3, 5, 2, 1, 3, 3, 2]
+
+Node # 8
+PS frontier: [2, 6, 2, 6, 5, 3, 3, 3, 3, 2]
+My fronter: [1, 2, 1, 1, 2, 1, 1, 1, 3, 1]
+
+Node # 9
+PS frontier: [2, 6, 2, 6, 5, 3, 3, 3, 4, 2]
+My fronter: [1, 2, 1, 1, 2, 1, 1, 1, 3, 2]
+
+Node # 5
+PS frontier: [2, 6, 2, 6, 5, 3, 3, 3, 4, 3]
+My fronter: [2, 5, 2, 6, 5, 3, 3, 3, 3, 2]
+
+Node # 5
+PS frontier: [2, 6, 2, 6, 5, 4, 3, 3, 4, 3]
+My fronter: [2, 6, 2, 6, 5, 4, 3, 3, 4, 3]
+
+Node # 2
+PS frontier: [2, 6, 2, 6, 5, 5, 3, 3, 4, 3]
+My fronter: [1, 2, 2, 1, 2, 1, 1, 1, 3, 2]
+
+Node # 9
+PS frontier: [2, 6, 3, 6, 5, 5, 3, 3, 4, 3]
+My fronter: [2, 6, 2, 6, 5, 3, 3, 3, 4, 3]
+
+Node # 8
+PS frontier: [2, 6, 3, 6, 5, 5, 3, 3, 4, 4]
+My fronter: [2, 6, 2, 6, 5, 3, 3, 3, 4, 2]
+
+Node # 0
+PS frontier: [2, 6, 3, 6, 5, 5, 3, 3, 5, 4]
+My fronter: [2, 2, 2, 1, 2, 1, 1, 1, 3, 2]
+
+Node # 9
+PS frontier: [3, 6, 3, 6, 5, 5, 3, 3, 5, 4]
+My fronter: [2, 6, 3, 6, 5, 5, 3, 3, 4, 4]
+
+Node # 3
+PS frontier: [3, 6, 3, 6, 5, 5, 3, 3, 5, 5]
+My fronter: [2, 5, 2, 6, 5, 2, 2, 3, 3, 2]
+
+Node # 2
+PS frontier: [3, 6, 3, 7, 5, 5, 3, 3, 5, 5]
+My fronter: [2, 6, 3, 6, 5, 5, 3, 3, 4, 3]
+
+Node # 5
+PS frontier: [3, 6, 4, 7, 5, 5, 3, 3, 5, 5]
+My fronter: [2, 6, 2, 6, 5, 5, 3, 3, 4, 3]
+
+Node # 8
+PS frontier: [3, 6, 4, 7, 5, 6, 3, 3, 5, 5]
+My fronter: [2, 6, 3, 6, 5, 5, 3, 3, 5, 4]
+
+Node # 2
+PS frontier: [3, 6, 4, 7, 5, 6, 3, 3, 6, 5]
+My fronter: [3, 6, 4, 7, 5, 5, 3, 3, 5, 5]
+
+Node # 2
+PS frontier: [3, 6, 5, 7, 5, 6, 3, 3, 6, 5]
+My fronter: [3, 6, 5, 7, 5, 6, 3, 3, 6, 5]
+
+Node # 5
+PS frontier: [3, 6, 6, 7, 5, 6, 3, 3, 6, 5]
+My fronter: [3, 6, 4, 7, 5, 6, 3, 3, 5, 5]
+
+Node # 6
+PS frontier: [3, 6, 6, 7, 5, 7, 3, 3, 6, 5]
+My fronter: [2, 5, 2, 6, 5, 2, 3, 3, 3, 2]
+
+Node # 0
+PS frontier: [3, 6, 6, 7, 5, 7, 4, 3, 6, 5]
+My fronter: [3, 6, 3, 6, 5, 5, 3, 3, 5, 4]
+
+Node # 9
+PS frontier: [4, 6, 6, 7, 5, 7, 4, 3, 6, 5]
+My fronter: [3, 6, 3, 6, 5, 5, 3, 3, 5, 5]
+
+Node # 8
+PS frontier: [4, 6, 6, 7, 5, 7, 4, 3, 6, 6]
+My fronter: [3, 6, 4, 7, 5, 6, 3, 3, 6, 5]
+
+Node # 0
+PS frontier: [4, 6, 6, 7, 5, 7, 4, 3, 7, 6]
+My fronter: [4, 6, 6, 7, 5, 7, 4, 3, 6, 5]
+
+Node # 2
+PS frontier: [5, 6, 6, 7, 5, 7, 4, 3, 7, 6]
+My fronter: [3, 6, 6, 7, 5, 6, 3, 3, 6, 5]
+
+Node # 3
+PS frontier: [5, 6, 7, 7, 5, 7, 4, 3, 7, 6]
+My fronter: [3, 6, 3, 7, 5, 5, 3, 3, 5, 5]
+
+Node # 5
+PS frontier: [5, 6, 7, 8, 5, 7, 4, 3, 7, 6]
+My fronter: [3, 6, 6, 7, 5, 7, 3, 3, 6, 5]
+
+Node # 7
+PS frontier: [5, 6, 7, 8, 5, 8, 4, 3, 7, 6]
+My fronter: [2, 4, 2, 3, 5, 2, 1, 3, 3, 2]
+
+Node # 1
+PS frontier: [5, 6, 7, 8, 5, 8, 4, 4, 7, 6]
+My fronter: [2, 6, 2, 6, 5, 3, 3, 3, 3, 2]
+
+Node # 0
+PS frontier: [5, 7, 7, 8, 5, 8, 4, 4, 7, 6]
+My fronter: [5, 6, 6, 7, 5, 7, 4, 3, 7, 6]
+
+Node # 6
+PS frontier: [6, 7, 7, 8, 5, 8, 4, 4, 7, 6]
+My fronter: [3, 6, 6, 7, 5, 7, 4, 3, 6, 5]
+
+Node # 4
+PS frontier: [6, 7, 7, 8, 5, 8, 5, 4, 7, 6]
+My fronter: [2, 4, 2, 2, 5, 2, 1, 2, 3, 2]
+
+Node # 9
+PS frontier: [6, 7, 7, 8, 6, 8, 5, 4, 7, 6]
+My fronter: [4, 6, 6, 7, 5, 7, 4, 3, 6, 6]
+
+Node # 1
+PS frontier: [6, 7, 7, 8, 6, 8, 5, 4, 7, 7]
+My fronter: [5, 7, 7, 8, 5, 8, 4, 4, 7, 6]
+
+Node # 8
+PS frontier: [6, 8, 7, 8, 6, 8, 5, 4, 7, 7]
+My fronter: [4, 6, 6, 7, 5, 7, 4, 3, 7, 6]
+
+Node # 4
+PS frontier: [6, 8, 7, 8, 6, 8, 5, 4, 8, 7]
+My fronter: [6, 7, 7, 8, 6, 8, 5, 4, 7, 6]
+
+Node # 7
+PS frontier: [6, 8, 7, 8, 7, 8, 5, 4, 8, 7]
+My fronter: [5, 6, 7, 8, 5, 8, 4, 4, 7, 6]
+
+Node # 2
+PS frontier: [6, 8, 7, 8, 7, 8, 5, 5, 8, 7]
+My fronter: [5, 6, 7, 7, 5, 7, 4, 3, 7, 6]
+
+Node # 2
+PS frontier: [6, 8, 8, 8, 7, 8, 5, 5, 8, 7]
+My fronter: [6, 8, 8, 8, 7, 8, 5, 5, 8, 7]
+
+Node # 9
+PS frontier: [6, 8, 9, 8, 7, 8, 5, 5, 8, 7]
+My fronter: [6, 7, 7, 8, 6, 8, 5, 4, 7, 7]
+
+Node # 1
+PS frontier: [6, 8, 9, 8, 7, 8, 5, 5, 8, 8]
+My fronter: [6, 8, 7, 8, 6, 8, 5, 4, 7, 7]
+
+Node # 8
+PS frontier: [6, 9, 9, 8, 7, 8, 5, 5, 8, 8]
+My fronter: [6, 8, 7, 8, 6, 8, 5, 4, 8, 7]
+
+Node # 7
+PS frontier: [6, 9, 9, 8, 7, 8, 5, 5, 9, 8]
+My fronter: [6, 8, 7, 8, 7, 8, 5, 5, 8, 7]
+
+Node # 3
+PS frontier: [6, 9, 9, 8, 7, 8, 5, 6, 9, 8]
+My fronter: [5, 6, 7, 8, 5, 7, 4, 3, 7, 6]
+
+Node # 7
+PS frontier: [6, 9, 9, 9, 7, 8, 5, 6, 9, 8]
+My fronter: [6, 9, 9, 8, 7, 8, 5, 6, 9, 8]
+
+Node # 3
+PS frontier: [6, 9, 9, 9, 7, 8, 5, 7, 9, 8]
+My fronter: [6, 9, 9, 9, 7, 8, 5, 6, 9, 8]
+
+Node # 6
+PS frontier: [6, 9, 9, 10, 7, 8, 5, 7, 9, 8]
+My fronter: [6, 7, 7, 8, 5, 8, 5, 4, 7, 6]
+
+Node # 8
+PS frontier: [6, 9, 9, 10, 7, 8, 6, 7, 9, 8]
+My fronter: [6, 9, 9, 8, 7, 8, 5, 5, 9, 8]
+
+Node # 5
+PS frontier: [6, 9, 9, 10, 7, 8, 6, 7, 10, 8]
+My fronter: [5, 6, 7, 8, 5, 8, 4, 3, 7, 6]
+
+Node # 7
+PS frontier: [6, 9, 9, 10, 7, 9, 6, 7, 10, 8]
+My fronter: [6, 9, 9, 9, 7, 8, 5, 7, 9, 8]
+
+Node # 5
+PS frontier: [6, 9, 9, 10, 7, 9, 6, 8, 10, 8]
+My fronter: [6, 9, 9, 10, 7, 9, 6, 7, 10, 8]
+
+Node # 0
+PS frontier: [6, 9, 9, 10, 7, 10, 6, 8, 10, 8]
+My fronter: [6, 7, 7, 8, 5, 8, 4, 4, 7, 6]
+
+Node # 2
+PS frontier: [7, 9, 9, 10, 7, 10, 6, 8, 10, 8]
+My fronter: [6, 8, 9, 8, 7, 8, 5, 5, 8, 7]
+
+Node # 4
+PS frontier: [7, 9, 10, 10, 7, 10, 6, 8, 10, 8]
+My fronter: [6, 8, 7, 8, 7, 8, 5, 4, 8, 7]
+
+Node # 0
+PS frontier: [7, 9, 10, 10, 8, 10, 6, 8, 10, 8]
+My fronter: [7, 9, 9, 10, 7, 10, 6, 8, 10, 8]
+
+Node # 1
+PS frontier: [8, 9, 10, 10, 8, 10, 6, 8, 10, 8]
+My fronter: [6, 9, 9, 8, 7, 8, 5, 5, 8, 8]
+
+Node # 5
+PS frontier: [8, 10, 10, 10, 8, 10, 6, 8, 10, 8]
+My fronter: [6, 9, 9, 10, 7, 10, 6, 8, 10, 8]
+
+Node # 6
+PS frontier: [8, 10, 10, 10, 8, 11, 6, 8, 10, 8]
+My fronter: [6, 9, 9, 10, 7, 8, 6, 7, 9, 8]
+
+Node # 1
+PS frontier: [8, 10, 10, 10, 8, 11, 7, 8, 10, 8]
+My fronter: [8, 10, 10, 10, 8, 10, 6, 8, 10, 8]
+
+Node # 3
+PS frontier: [8, 11, 10, 10, 8, 11, 7, 8, 10, 8]
+My fronter: [6, 9, 9, 10, 7, 8, 5, 7, 9, 8]
+
+Node # 0
+PS frontier: [8, 11, 10, 11, 8, 11, 7, 8, 10, 8]
+My fronter: [8, 9, 10, 10, 8, 10, 6, 8, 10, 8]
+
+Node # 8
+PS frontier: [9, 11, 10, 11, 8, 11, 7, 8, 10, 8]
+My fronter: [6, 9, 9, 10, 7, 8, 6, 7, 10, 8]
+
+Node # 4
+PS frontier: [9, 11, 10, 11, 8, 11, 7, 8, 11, 8]
+My fronter: [7, 9, 10, 10, 8, 10, 6, 8, 10, 8]
+
+Node # 7
+PS frontier: [9, 11, 10, 11, 9, 11, 7, 8, 11, 8]
+My fronter: [6, 9, 9, 10, 7, 9, 6, 8, 10, 8]
+
+Node # 3
+PS frontier: [9, 11, 10, 11, 9, 11, 7, 9, 11, 8]
+My fronter: [8, 11, 10, 11, 8, 11, 7, 8, 10, 8]
+
+Node # 6
+PS frontier: [9, 11, 10, 12, 9, 11, 7, 9, 11, 8]
+My fronter: [8, 10, 10, 10, 8, 11, 7, 8, 10, 8]
+
+Node # 8
+PS frontier: [9, 11, 10, 12, 9, 11, 8, 9, 11, 8]
+My fronter: [9, 11, 10, 11, 8, 11, 7, 8, 11, 8]
+
+Node # 6
+PS frontier: [9, 11, 10, 12, 9, 11, 8, 9, 12, 8]
+My fronter: [9, 11, 10, 12, 9, 11, 8, 9, 11, 8]
+
+Node # 6
+PS frontier: [9, 11, 10, 12, 9, 11, 9, 9, 12, 8]
+My fronter: [9, 11, 10, 12, 9, 11, 9, 9, 12, 8]
+
+Node # 1
+PS frontier: [9, 11, 10, 12, 9, 11, 10, 9, 12, 8]
+My fronter: [8, 11, 10, 10, 8, 11, 7, 8, 10, 8]
+
+Node # 9
+PS frontier: [9, 12, 10, 12, 9, 11, 10, 9, 12, 8]
+My fronter: [6, 8, 9, 8, 7, 8, 5, 5, 8, 8]
+
+Node # 0
+PS frontier: [9, 12, 10, 12, 9, 11, 10, 9, 12, 9]
+My fronter: [9, 11, 10, 11, 8, 11, 7, 8, 10, 8]
+
+Node # 5
+PS frontier: [10, 12, 10, 12, 9, 11, 10, 9, 12, 9]
+My fronter: [8, 10, 10, 10, 8, 11, 6, 8, 10, 8]
+
+Node # 3
+PS frontier: [10, 12, 10, 12, 9, 12, 10, 9, 12, 9]
+My fronter: [9, 11, 10, 12, 9, 11, 7, 9, 11, 8]
+
+Node # 6
+PS frontier: [10, 12, 10, 13, 9, 12, 10, 9, 12, 9]
+My fronter: [9, 11, 10, 12, 9, 11, 10, 9, 12, 8]
+
+Node # 6
+PS frontier: [10, 12, 10, 13, 9, 12, 11, 9, 12, 9]
+My fronter: [10, 12, 10, 13, 9, 12, 11, 9, 12, 9]
+
+Node # 5
+PS frontier: [10, 12, 10, 13, 9, 12, 12, 9, 12, 9]
+My fronter: [10, 12, 10, 12, 9, 12, 10, 9, 12, 9]
+
+Node # 1
+PS frontier: [10, 12, 10, 13, 9, 13, 12, 9, 12, 9]
+My fronter: [9, 12, 10, 12, 9, 11, 10, 9, 12, 8]
+Barrier /Users/stark/Tmp/Ninox/data/exp_dummy/tbl_10_st1.0_stp0_ssp_s4_step.csv: accepted_request: 110, rejected: 768-35-117
+
+
+Node # 0
+PS frontier: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+My fronter: []
+
+Node # 1
+PS frontier: [1, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+My fronter: []
+
+Node # 2
+PS frontier: [1, 1, 0, 0, 0, 0, 0, 0, 0, 0]
+My fronter: []
+
+Node # 3
+PS frontier: [1, 1, 1, 0, 0, 0, 0, 0, 0, 0]
+My fronter: []
+
+Node # 4
+PS frontier: [1, 1, 1, 1, 0, 0, 0, 0, 0, 0]
+My fronter: []
+
+Node # 5
+PS frontier: [1, 1, 1, 1, 1, 0, 0, 0, 0, 0]
+My fronter: []
+
+Node # 6
+PS frontier: [1, 1, 1, 1, 1, 1, 0, 0, 0, 0]
+My fronter: []
+
+Node # 7
+PS frontier: [1, 1, 1, 1, 1, 1, 1, 0, 0, 0]
+My fronter: []
+
+Node # 8
+PS frontier: [1, 1, 1, 1, 1, 1, 1, 1, 0, 0]
+My fronter: []
+
+Node # 9
+PS frontier: [1, 1, 1, 1, 1, 1, 1, 1, 1, 0]
+My fronter: []
+
+Node # 1
+PS frontier: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+My fronter: [1, 1, 0, 0, 0, 0, 0, 0, 0, 0]
+
+Node # 0
+PS frontier: [1, 2, 1, 1, 1, 1, 1, 1, 1, 1]
+My fronter: [1, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+Node # 2
+PS frontier: [2, 2, 1, 1, 1, 1, 1, 1, 1, 1]
+My fronter: [1, 1, 1, 0, 0, 0, 0, 0, 0, 0]
+
+Node # 5
+PS frontier: [2, 2, 2, 1, 1, 1, 1, 1, 1, 1]
+My fronter: [1, 1, 1, 1, 1, 1, 0, 0, 0, 0]
+
+Node # 8
+PS frontier: [2, 2, 2, 1, 1, 2, 1, 1, 1, 1]
+My fronter: [1, 1, 1, 1, 1, 1, 1, 1, 1, 0]
+
+Node # 9
+PS frontier: [2, 2, 2, 1, 1, 2, 1, 1, 2, 1]
+My fronter: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+
+Node # 3
+PS frontier: [2, 2, 2, 1, 1, 2, 1, 1, 2, 2]
+My fronter: [1, 1, 1, 1, 0, 0, 0, 0, 0, 0]
+
+Node # 4
+PS frontier: [2, 2, 2, 2, 1, 2, 1, 1, 2, 2]
+My fronter: [1, 1, 1, 1, 1, 0, 0, 0, 0, 0]
+
+Node # 7
+PS frontier: [2, 2, 2, 2, 2, 2, 1, 1, 2, 2]
+My fronter: [1, 1, 1, 1, 1, 1, 1, 1, 0, 0]
+
+Node # 6
+PS frontier: [2, 2, 2, 2, 2, 2, 1, 2, 2, 2]
+My fronter: [1, 1, 1, 1, 1, 1, 1, 0, 0, 0]
+
+Node # 0
+PS frontier: [2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
+My fronter: [2, 2, 1, 1, 1, 1, 1, 1, 1, 1]
+
+Node # 1
+PS frontier: [3, 2, 2, 2, 2, 2, 2, 2, 2, 2]
+My fronter: [1, 2, 1, 1, 1, 1, 1, 1, 1, 1]
+
+Node # 2
+PS frontier: [3, 3, 2, 2, 2, 2, 2, 2, 2, 2]
+My fronter: [2, 2, 2, 1, 1, 1, 1, 1, 1, 1]
+
+Node # 5
+PS frontier: [3, 3, 3, 2, 2, 2, 2, 2, 2, 2]
+My fronter: [2, 2, 2, 1, 1, 2, 1, 1, 1, 1]
+
+Node # 6
+PS frontier: [3, 3, 3, 2, 2, 3, 2, 2, 2, 2]
+My fronter: [2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
+
+Node # 7
+PS frontier: [3, 3, 3, 2, 2, 3, 3, 2, 2, 2]
+My fronter: [2, 2, 2, 2, 2, 2, 1, 2, 2, 2]
+
+Node # 8
+PS frontier: [3, 3, 3, 2, 2, 3, 3, 3, 2, 2]
+My fronter: [2, 2, 2, 1, 1, 2, 1, 1, 2, 1]
+
+Node # 9
+PS frontier: [3, 3, 3, 2, 2, 3, 3, 3, 3, 2]
+My fronter: [2, 2, 2, 1, 1, 2, 1, 1, 2, 2]
+
+Node # 4
+PS frontier: [3, 3, 3, 2, 2, 3, 3, 3, 3, 3]
+My fronter: [2, 2, 2, 2, 2, 2, 1, 1, 2, 2]
+
+Node # 3
+PS frontier: [3, 3, 3, 2, 3, 3, 3, 3, 3, 3]
+My fronter: [2, 2, 2, 2, 1, 2, 1, 1, 2, 2]
+
+Node # 1
+PS frontier: [3, 3, 3, 3, 3, 3, 3, 3, 3, 3]
+My fronter: [3, 3, 2, 2, 2, 2, 2, 2, 2, 2]
+
+Node # 5
+PS frontier: [3, 4, 3, 3, 3, 3, 3, 3, 3, 3]
+My fronter: [3, 3, 3, 2, 2, 3, 2, 2, 2, 2]
+
+Node # 0
+PS frontier: [3, 4, 3, 3, 3, 4, 3, 3, 3, 3]
+My fronter: [3, 2, 2, 2, 2, 2, 2, 2, 2, 2]
+
+Node # 2
+PS frontier: [4, 4, 3, 3, 3, 4, 3, 3, 3, 3]
+My fronter: [3, 3, 3, 2, 2, 2, 2, 2, 2, 2]
+
+Node # 3
+PS frontier: [4, 4, 4, 3, 3, 4, 3, 3, 3, 3]
+My fronter: [3, 3, 3, 3, 3, 3, 3, 3, 3, 3]
+
+Node # 7
+PS frontier: [4, 4, 4, 4, 3, 4, 3, 3, 3, 3]
+My fronter: [3, 3, 3, 2, 2, 3, 3, 3, 2, 2]
+
+Node # 9
+PS frontier: [4, 4, 4, 4, 3, 4, 3, 4, 3, 3]
+My fronter: [3, 3, 3, 2, 2, 3, 3, 3, 3, 3]
+
+Node # 4
+PS frontier: [4, 4, 4, 4, 3, 4, 3, 4, 3, 4]
+My fronter: [3, 3, 3, 2, 3, 3, 3, 3, 3, 3]
+
+Node # 5
+PS frontier: [4, 4, 4, 4, 4, 4, 3, 4, 3, 4]
+My fronter: [3, 4, 3, 3, 3, 4, 3, 3, 3, 3]
+
+Node # 1
+PS frontier: [4, 4, 4, 4, 4, 5, 3, 4, 3, 4]
+My fronter: [3, 4, 3, 3, 3, 3, 3, 3, 3, 3]
+
+Node # 4
+PS frontier: [4, 5, 4, 4, 4, 5, 3, 4, 3, 4]
+My fronter: [4, 4, 4, 4, 4, 4, 3, 4, 3, 4]
+
+Node # 7
+PS frontier: [4, 5, 4, 4, 5, 5, 3, 4, 3, 4]
+My fronter: [4, 4, 4, 4, 3, 4, 3, 4, 3, 3]
+
+Node # 9
+PS frontier: [4, 5, 4, 4, 5, 5, 3, 5, 3, 4]
+My fronter: [4, 4, 4, 4, 3, 4, 3, 4, 3, 4]
+
+Node # 0
+PS frontier: [4, 5, 4, 4, 5, 5, 3, 5, 3, 5]
+My fronter: [4, 4, 3, 3, 3, 4, 3, 3, 3, 3]
+
+Node # 2
+PS frontier: [5, 5, 4, 4, 5, 5, 3, 5, 3, 5]
+My fronter: [4, 4, 4, 3, 3, 4, 3, 3, 3, 3]
+
+Node # 3
+PS frontier: [5, 5, 5, 4, 5, 5, 3, 5, 3, 5]
+My fronter: [4, 4, 4, 4, 3, 4, 3, 3, 3, 3]
+
+Node # 8
+PS frontier: [5, 5, 5, 5, 5, 5, 3, 5, 3, 5]
+My fronter: [3, 3, 3, 2, 2, 3, 3, 3, 3, 2]
+
+Node # 6
+PS frontier: [5, 5, 5, 5, 5, 5, 3, 5, 4, 5]
+My fronter: [3, 3, 3, 2, 2, 3, 3, 2, 2, 2]
+
+Node # 4
+PS frontier: [5, 5, 5, 5, 5, 5, 4, 5, 4, 5]
+My fronter: [4, 5, 4, 4, 5, 5, 3, 4, 3, 4]
+
+Node # 1
+PS frontier: [5, 5, 5, 5, 6, 5, 4, 5, 4, 5]
+My fronter: [4, 5, 4, 4, 4, 5, 3, 4, 3, 4]
+
+Node # 5
+PS frontier: [5, 6, 5, 5, 6, 5, 4, 5, 4, 5]
+My fronter: [4, 4, 4, 4, 4, 5, 3, 4, 3, 4]
+
+Node # 7
+PS frontier: [5, 6, 5, 5, 6, 6, 4, 5, 4, 5]
+My fronter: [4, 5, 4, 4, 5, 5, 3, 5, 3, 4]
+
+Node # 8
+PS frontier: [5, 6, 5, 5, 6, 6, 4, 6, 4, 5]
+My fronter: [5, 5, 5, 5, 5, 5, 3, 5, 4, 5]
+
+Node # 3
+PS frontier: [5, 6, 5, 5, 6, 6, 4, 6, 5, 5]
+My fronter: [5, 5, 5, 5, 5, 5, 3, 5, 3, 5]
+
+Node # 8
+PS frontier: [5, 6, 5, 6, 6, 6, 4, 6, 5, 5]
+My fronter: [5, 6, 5, 5, 6, 6, 4, 6, 5, 5]
+
+Node # 9
+PS frontier: [5, 6, 5, 6, 6, 6, 4, 6, 6, 5]
+My fronter: [4, 5, 4, 4, 5, 5, 3, 5, 3, 5]
+
+Node # 2
+PS frontier: [5, 6, 5, 6, 6, 6, 4, 6, 6, 6]
+My fronter: [5, 5, 5, 4, 5, 5, 3, 5, 3, 5]
+
+Node # 6
+PS frontier: [5, 6, 6, 6, 6, 6, 4, 6, 6, 6]
+My fronter: [5, 5, 5, 5, 5, 5, 4, 5, 4, 5]
+
+Node # 0
+PS frontier: [5, 6, 6, 6, 6, 6, 5, 6, 6, 6]
+My fronter: [5, 5, 4, 4, 5, 5, 3, 5, 3, 5]
+
+Node # 5
+PS frontier: [6, 6, 6, 6, 6, 6, 5, 6, 6, 6]
+My fronter: [5, 6, 5, 5, 6, 6, 4, 5, 4, 5]
+
+Node # 2
+PS frontier: [6, 6, 6, 6, 6, 7, 5, 6, 6, 6]
+My fronter: [5, 6, 6, 6, 6, 6, 4, 6, 6, 6]
+
+Node # 3
+PS frontier: [6, 6, 7, 6, 6, 7, 5, 6, 6, 6]
+My fronter: [5, 6, 5, 6, 6, 6, 4, 6, 5, 5]
+
+Node # 7
+PS frontier: [6, 6, 7, 7, 6, 7, 5, 6, 6, 6]
+My fronter: [5, 6, 5, 5, 6, 6, 4, 6, 4, 5]
+
+Node # 8
+PS frontier: [6, 6, 7, 7, 6, 7, 5, 7, 6, 6]
+My fronter: [5, 6, 5, 6, 6, 6, 4, 6, 6, 5]
+
+Node # 1
+PS frontier: [6, 6, 7, 7, 6, 7, 5, 7, 7, 6]
+My fronter: [5, 6, 5, 5, 6, 5, 4, 5, 4, 5]
+
+Node # 4
+PS frontier: [6, 7, 7, 7, 6, 7, 5, 7, 7, 6]
+My fronter: [5, 5, 5, 5, 6, 5, 4, 5, 4, 5]
+
+Node # 6
+PS frontier: [6, 7, 7, 7, 7, 7, 5, 7, 7, 6]
+My fronter: [5, 6, 6, 6, 6, 6, 5, 6, 6, 6]
+
+Node # 9
+PS frontier: [6, 7, 7, 7, 7, 7, 6, 7, 7, 6]
+My fronter: [5, 6, 5, 6, 6, 6, 4, 6, 6, 6]
+Barrier /Users/stark/Tmp/Ninox/data/exp_dummy/tbl_10_st1.0_stp0_pbsp_p3_step.csv: accepted_request: 68, rejected: 46-219-267
+
+
+Node # 0
+PS frontier: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+My fronter: []
+
+Node # 1
+PS frontier: [1, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+My fronter: []
+
+Node # 2
+PS frontier: [1, 1, 0, 0, 0, 0, 0, 0, 0, 0]
+My fronter: []
+
+Node # 3
+PS frontier: [1, 1, 1, 0, 0, 0, 0, 0, 0, 0]
+My fronter: []
+
+Node # 4
+PS frontier: [1, 1, 1, 1, 0, 0, 0, 0, 0, 0]
+My fronter: []
+
+Node # 5
+PS frontier: [1, 1, 1, 1, 1, 0, 0, 0, 0, 0]
+My fronter: []
+
+Node # 6
+PS frontier: [1, 1, 1, 1, 1, 1, 0, 0, 0, 0]
+My fronter: []
+
+Node # 7
+PS frontier: [1, 1, 1, 1, 1, 1, 1, 0, 0, 0]
+My fronter: []
+
+Node # 8
+PS frontier: [1, 1, 1, 1, 1, 1, 1, 1, 0, 0]
+My fronter: []
+
+Node # 9
+PS frontier: [1, 1, 1, 1, 1, 1, 1, 1, 1, 0]
+My fronter: []
+
+Node # 8
+PS frontier: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+My fronter: [1, 1, 1, 1, 1, 1, 1, 1, 1, 0]
+
+Node # 1
+PS frontier: [1, 1, 1, 1, 1, 1, 1, 1, 2, 1]
+My fronter: [1, 1, 0, 0, 0, 0, 0, 0, 0, 0]
+
+Node # 4
+PS frontier: [1, 2, 1, 1, 1, 1, 1, 1, 2, 1]
+My fronter: [1, 1, 1, 1, 1, 0, 0, 0, 0, 0]
+
+Node # 8
+PS frontier: [1, 2, 1, 1, 2, 1, 1, 1, 2, 1]
+My fronter: [1, 1, 1, 1, 1, 1, 1, 1, 2, 1]
+
+Node # 9
+PS frontier: [1, 2, 1, 1, 2, 1, 1, 1, 3, 1]
+My fronter: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+
+Node # 2
+PS frontier: [1, 2, 1, 1, 2, 1, 1, 1, 3, 2]
+My fronter: [1, 1, 1, 0, 0, 0, 0, 0, 0, 0]
+
+Node # 0
+PS frontier: [1, 2, 2, 1, 2, 1, 1, 1, 3, 2]
+My fronter: [1, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+Node # 5
+PS frontier: [2, 2, 2, 1, 2, 1, 1, 1, 3, 2]
+My fronter: [1, 1, 1, 1, 1, 1, 0, 0, 0, 0]
+
+Node # 1
+PS frontier: [2, 2, 2, 1, 2, 2, 1, 1, 3, 2]
+My fronter: [1, 2, 1, 1, 1, 1, 1, 1, 2, 1]
+
+Node # 4
+PS frontier: [2, 3, 2, 1, 2, 2, 1, 1, 3, 2]
+My fronter: [1, 2, 1, 1, 2, 1, 1, 1, 2, 1]
+
+Node # 1
+PS frontier: [2, 3, 2, 1, 3, 2, 1, 1, 3, 2]
+My fronter: [2, 3, 2, 1, 2, 2, 1, 1, 3, 2]
+
+Node # 7
+PS frontier: [2, 4, 2, 1, 3, 2, 1, 1, 3, 2]
+My fronter: [1, 1, 1, 1, 1, 1, 1, 1, 0, 0]
+
+Node # 3
+PS frontier: [2, 4, 2, 1, 3, 2, 1, 2, 3, 2]
+My fronter: [1, 1, 1, 1, 0, 0, 0, 0, 0, 0]
+
+Node # 4
+PS frontier: [2, 4, 2, 2, 3, 2, 1, 2, 3, 2]
+My fronter: [2, 3, 2, 1, 3, 2, 1, 1, 3, 2]
+
+Node # 4
+PS frontier: [2, 4, 2, 2, 4, 2, 1, 2, 3, 2]
+My fronter: [2, 4, 2, 2, 4, 2, 1, 2, 3, 2]
+
+Node # 3
+PS frontier: [2, 4, 2, 2, 5, 2, 1, 2, 3, 2]
+My fronter: [2, 4, 2, 2, 3, 2, 1, 2, 3, 2]
+
+Node # 7
+PS frontier: [2, 4, 2, 3, 5, 2, 1, 2, 3, 2]
+My fronter: [2, 4, 2, 1, 3, 2, 1, 2, 3, 2]
+
+Node # 1
+PS frontier: [2, 4, 2, 3, 5, 2, 1, 3, 3, 2]
+My fronter: [2, 4, 2, 1, 3, 2, 1, 1, 3, 2]
+
+Node # 6
+PS frontier: [2, 5, 2, 3, 5, 2, 1, 3, 3, 2]
+My fronter: [1, 1, 1, 1, 1, 1, 1, 0, 0, 0]
+
+Node # 3
+PS frontier: [2, 5, 2, 3, 5, 2, 2, 3, 3, 2]
+My fronter: [2, 4, 2, 3, 5, 2, 1, 2, 3, 2]
+
+Node # 3
+PS frontier: [2, 5, 2, 4, 5, 2, 2, 3, 3, 2]
+My fronter: [2, 5, 2, 4, 5, 2, 2, 3, 3, 2]
+
+Node # 3
+PS frontier: [2, 5, 2, 5, 5, 2, 2, 3, 3, 2]
+My fronter: [2, 5, 2, 5, 5, 2, 2, 3, 3, 2]
+
+Node # 6
+PS frontier: [2, 5, 2, 6, 5, 2, 2, 3, 3, 2]
+My fronter: [2, 5, 2, 3, 5, 2, 2, 3, 3, 2]
+
+Node # 5
+PS frontier: [2, 5, 2, 6, 5, 2, 3, 3, 3, 2]
+My fronter: [2, 2, 2, 1, 2, 2, 1, 1, 3, 2]
+
+Node # 1
+PS frontier: [2, 5, 2, 6, 5, 3, 3, 3, 3, 2]
+My fronter: [2, 5, 2, 3, 5, 2, 1, 3, 3, 2]
+
+Node # 8
+PS frontier: [2, 6, 2, 6, 5, 3, 3, 3, 3, 2]
+My fronter: [1, 2, 1, 1, 2, 1, 1, 1, 3, 1]
+
+Node # 9
+PS frontier: [2, 6, 2, 6, 5, 3, 3, 3, 4, 2]
+My fronter: [1, 2, 1, 1, 2, 1, 1, 1, 3, 2]
+
+Node # 5
+PS frontier: [2, 6, 2, 6, 5, 3, 3, 3, 4, 3]
+My fronter: [2, 5, 2, 6, 5, 3, 3, 3, 3, 2]
+
+Node # 5
+PS frontier: [2, 6, 2, 6, 5, 4, 3, 3, 4, 3]
+My fronter: [2, 6, 2, 6, 5, 4, 3, 3, 4, 3]
+
+Node # 2
+PS frontier: [2, 6, 2, 6, 5, 5, 3, 3, 4, 3]
+My fronter: [1, 2, 2, 1, 2, 1, 1, 1, 3, 2]
+
+Node # 9
+PS frontier: [2, 6, 3, 6, 5, 5, 3, 3, 4, 3]
+My fronter: [2, 6, 2, 6, 5, 3, 3, 3, 4, 3]
+
+Node # 8
+PS frontier: [2, 6, 3, 6, 5, 5, 3, 3, 4, 4]
+My fronter: [2, 6, 2, 6, 5, 3, 3, 3, 4, 2]
+
+Node # 0
+PS frontier: [2, 6, 3, 6, 5, 5, 3, 3, 5, 4]
+My fronter: [2, 2, 2, 1, 2, 1, 1, 1, 3, 2]
+
+Node # 9
+PS frontier: [3, 6, 3, 6, 5, 5, 3, 3, 5, 4]
+My fronter: [2, 6, 3, 6, 5, 5, 3, 3, 4, 4]
+
+Node # 3
+PS frontier: [3, 6, 3, 6, 5, 5, 3, 3, 5, 5]
+My fronter: [2, 5, 2, 6, 5, 2, 2, 3, 3, 2]
+
+Node # 2
+PS frontier: [3, 6, 3, 7, 5, 5, 3, 3, 5, 5]
+My fronter: [2, 6, 3, 6, 5, 5, 3, 3, 4, 3]
+
+Node # 5
+PS frontier: [3, 6, 4, 7, 5, 5, 3, 3, 5, 5]
+My fronter: [2, 6, 2, 6, 5, 5, 3, 3, 4, 3]
+
+Node # 8
+PS frontier: [3, 6, 4, 7, 5, 6, 3, 3, 5, 5]
+My fronter: [2, 6, 3, 6, 5, 5, 3, 3, 5, 4]
+
+Node # 2
+PS frontier: [3, 6, 4, 7, 5, 6, 3, 3, 6, 5]
+My fronter: [3, 6, 4, 7, 5, 5, 3, 3, 5, 5]
+
+Node # 2
+PS frontier: [3, 6, 5, 7, 5, 6, 3, 3, 6, 5]
+My fronter: [3, 6, 5, 7, 5, 6, 3, 3, 6, 5]
+
+Node # 5
+PS frontier: [3, 6, 6, 7, 5, 6, 3, 3, 6, 5]
+My fronter: [3, 6, 4, 7, 5, 6, 3, 3, 5, 5]
+
+Node # 6
+PS frontier: [3, 6, 6, 7, 5, 7, 3, 3, 6, 5]
+My fronter: [2, 5, 2, 6, 5, 2, 3, 3, 3, 2]
+
+Node # 0
+PS frontier: [3, 6, 6, 7, 5, 7, 4, 3, 6, 5]
+My fronter: [3, 6, 3, 6, 5, 5, 3, 3, 5, 4]
+
+Node # 9
+PS frontier: [4, 6, 6, 7, 5, 7, 4, 3, 6, 5]
+My fronter: [3, 6, 3, 6, 5, 5, 3, 3, 5, 5]
+
+Node # 8
+PS frontier: [4, 6, 6, 7, 5, 7, 4, 3, 6, 6]
+My fronter: [3, 6, 4, 7, 5, 6, 3, 3, 6, 5]
+
+Node # 0
+PS frontier: [4, 6, 6, 7, 5, 7, 4, 3, 7, 6]
+My fronter: [4, 6, 6, 7, 5, 7, 4, 3, 6, 5]
+
+Node # 2
+PS frontier: [5, 6, 6, 7, 5, 7, 4, 3, 7, 6]
+My fronter: [3, 6, 6, 7, 5, 6, 3, 3, 6, 5]
+
+Node # 3
+PS frontier: [5, 6, 7, 7, 5, 7, 4, 3, 7, 6]
+My fronter: [3, 6, 3, 7, 5, 5, 3, 3, 5, 5]
+
+Node # 5
+PS frontier: [5, 6, 7, 8, 5, 7, 4, 3, 7, 6]
+My fronter: [3, 6, 6, 7, 5, 7, 3, 3, 6, 5]
+
+Node # 7
+PS frontier: [5, 6, 7, 8, 5, 8, 4, 3, 7, 6]
+My fronter: [2, 4, 2, 3, 5, 2, 1, 3, 3, 2]
+
+Node # 1
+PS frontier: [5, 6, 7, 8, 5, 8, 4, 4, 7, 6]
+My fronter: [2, 6, 2, 6, 5, 3, 3, 3, 3, 2]
+
+Node # 0
+PS frontier: [5, 7, 7, 8, 5, 8, 4, 4, 7, 6]
+My fronter: [5, 6, 6, 7, 5, 7, 4, 3, 7, 6]
+
+Node # 6
+PS frontier: [6, 7, 7, 8, 5, 8, 4, 4, 7, 6]
+My fronter: [3, 6, 6, 7, 5, 7, 4, 3, 6, 5]
+
+Node # 4
+PS frontier: [6, 7, 7, 8, 5, 8, 5, 4, 7, 6]
+My fronter: [2, 4, 2, 2, 5, 2, 1, 2, 3, 2]
+
+Node # 9
+PS frontier: [6, 7, 7, 8, 6, 8, 5, 4, 7, 6]
+My fronter: [4, 6, 6, 7, 5, 7, 4, 3, 6, 6]
+
+Node # 1
+PS frontier: [6, 7, 7, 8, 6, 8, 5, 4, 7, 7]
+My fronter: [5, 7, 7, 8, 5, 8, 4, 4, 7, 6]
+
+Node # 8
+PS frontier: [6, 8, 7, 8, 6, 8, 5, 4, 7, 7]
+My fronter: [4, 6, 6, 7, 5, 7, 4, 3, 7, 6]
+
+Node # 4
+PS frontier: [6, 8, 7, 8, 6, 8, 5, 4, 8, 7]
+My fronter: [6, 7, 7, 8, 6, 8, 5, 4, 7, 6]
+
+Node # 7
+PS frontier: [6, 8, 7, 8, 7, 8, 5, 4, 8, 7]
+My fronter: [5, 6, 7, 8, 5, 8, 4, 4, 7, 6]
+
+Node # 2
+PS frontier: [6, 8, 7, 8, 7, 8, 5, 5, 8, 7]
+My fronter: [5, 6, 7, 7, 5, 7, 4, 3, 7, 6]
+
+Node # 2
+PS frontier: [6, 8, 8, 8, 7, 8, 5, 5, 8, 7]
+My fronter: [6, 8, 8, 8, 7, 8, 5, 5, 8, 7]
+
+Node # 9
+PS frontier: [6, 8, 9, 8, 7, 8, 5, 5, 8, 7]
+My fronter: [6, 7, 7, 8, 6, 8, 5, 4, 7, 7]
+
+Node # 1
+PS frontier: [6, 8, 9, 8, 7, 8, 5, 5, 8, 8]
+My fronter: [6, 8, 7, 8, 6, 8, 5, 4, 7, 7]
+
+Node # 8
+PS frontier: [6, 9, 9, 8, 7, 8, 5, 5, 8, 8]
+My fronter: [6, 8, 7, 8, 6, 8, 5, 4, 8, 7]
+
+Node # 7
+PS frontier: [6, 9, 9, 8, 7, 8, 5, 5, 9, 8]
+My fronter: [6, 8, 7, 8, 7, 8, 5, 5, 8, 7]
+
+Node # 3
+PS frontier: [6, 9, 9, 8, 7, 8, 5, 6, 9, 8]
+My fronter: [5, 6, 7, 8, 5, 7, 4, 3, 7, 6]
+
+Node # 7
+PS frontier: [6, 9, 9, 9, 7, 8, 5, 6, 9, 8]
+My fronter: [6, 9, 9, 8, 7, 8, 5, 6, 9, 8]
+
+Node # 3
+PS frontier: [6, 9, 9, 9, 7, 8, 5, 7, 9, 8]
+My fronter: [6, 9, 9, 9, 7, 8, 5, 6, 9, 8]
+
+Node # 6
+PS frontier: [6, 9, 9, 10, 7, 8, 5, 7, 9, 8]
+My fronter: [6, 7, 7, 8, 5, 8, 5, 4, 7, 6]
+
+Node # 8
+PS frontier: [6, 9, 9, 10, 7, 8, 6, 7, 9, 8]
+My fronter: [6, 9, 9, 8, 7, 8, 5, 5, 9, 8]
+
+Node # 5
+PS frontier: [6, 9, 9, 10, 7, 8, 6, 7, 10, 8]
+My fronter: [5, 6, 7, 8, 5, 8, 4, 3, 7, 6]
+
+Node # 7
+PS frontier: [6, 9, 9, 10, 7, 9, 6, 7, 10, 8]
+My fronter: [6, 9, 9, 9, 7, 8, 5, 7, 9, 8]
+
+Node # 5
+PS frontier: [6, 9, 9, 10, 7, 9, 6, 8, 10, 8]
+My fronter: [6, 9, 9, 10, 7, 9, 6, 7, 10, 8]
+
+Node # 0
+PS frontier: [6, 9, 9, 10, 7, 10, 6, 8, 10, 8]
+My fronter: [6, 7, 7, 8, 5, 8, 4, 4, 7, 6]
+
+Node # 2
+PS frontier: [7, 9, 9, 10, 7, 10, 6, 8, 10, 8]
+My fronter: [6, 8, 9, 8, 7, 8, 5, 5, 8, 7]
+
+Node # 4
+PS frontier: [7, 9, 10, 10, 7, 10, 6, 8, 10, 8]
+My fronter: [6, 8, 7, 8, 7, 8, 5, 4, 8, 7]
+
+Node # 0
+PS frontier: [7, 9, 10, 10, 8, 10, 6, 8, 10, 8]
+My fronter: [7, 9, 9, 10, 7, 10, 6, 8, 10, 8]
+
+Node # 1
+PS frontier: [8, 9, 10, 10, 8, 10, 6, 8, 10, 8]
+My fronter: [6, 9, 9, 8, 7, 8, 5, 5, 8, 8]
+
+Node # 5
+PS frontier: [8, 10, 10, 10, 8, 10, 6, 8, 10, 8]
+My fronter: [6, 9, 9, 10, 7, 10, 6, 8, 10, 8]
+
+Node # 6
+PS frontier: [8, 10, 10, 10, 8, 11, 6, 8, 10, 8]
+My fronter: [6, 9, 9, 10, 7, 8, 6, 7, 9, 8]
+
+Node # 1
+PS frontier: [8, 10, 10, 10, 8, 11, 7, 8, 10, 8]
+My fronter: [8, 10, 10, 10, 8, 10, 6, 8, 10, 8]
+
+Node # 3
+PS frontier: [8, 11, 10, 10, 8, 11, 7, 8, 10, 8]
+My fronter: [6, 9, 9, 10, 7, 8, 5, 7, 9, 8]
+
+Node # 0
+PS frontier: [8, 11, 10, 11, 8, 11, 7, 8, 10, 8]
+My fronter: [8, 9, 10, 10, 8, 10, 6, 8, 10, 8]
+
+Node # 8
+PS frontier: [9, 11, 10, 11, 8, 11, 7, 8, 10, 8]
+My fronter: [6, 9, 9, 10, 7, 8, 6, 7, 10, 8]
+
+Node # 4
+PS frontier: [9, 11, 10, 11, 8, 11, 7, 8, 11, 8]
+My fronter: [7, 9, 10, 10, 8, 10, 6, 8, 10, 8]
+
+Node # 7
+PS frontier: [9, 11, 10, 11, 9, 11, 7, 8, 11, 8]
+My fronter: [6, 9, 9, 10, 7, 9, 6, 8, 10, 8]
+
+Node # 3
+PS frontier: [9, 11, 10, 11, 9, 11, 7, 9, 11, 8]
+My fronter: [8, 11, 10, 11, 8, 11, 7, 8, 10, 8]
+
+Node # 6
+PS frontier: [9, 11, 10, 12, 9, 11, 7, 9, 11, 8]
+My fronter: [8, 10, 10, 10, 8, 11, 7, 8, 10, 8]
+
+Node # 8
+PS frontier: [9, 11, 10, 12, 9, 11, 8, 9, 11, 8]
+My fronter: [9, 11, 10, 11, 8, 11, 7, 8, 11, 8]
+
+Node # 6
+PS frontier: [9, 11, 10, 12, 9, 11, 8, 9, 12, 8]
+My fronter: [9, 11, 10, 12, 9, 11, 8, 9, 11, 8]
+
+Node # 6
+PS frontier: [9, 11, 10, 12, 9, 11, 9, 9, 12, 8]
+My fronter: [9, 11, 10, 12, 9, 11, 9, 9, 12, 8]
+
+Node # 1
+PS frontier: [9, 11, 10, 12, 9, 11, 10, 9, 12, 8]
+My fronter: [8, 11, 10, 10, 8, 11, 7, 8, 10, 8]
+
+Node # 9
+PS frontier: [9, 12, 10, 12, 9, 11, 10, 9, 12, 8]
+My fronter: [6, 8, 9, 8, 7, 8, 5, 5, 8, 8]
+
+Node # 0
+PS frontier: [9, 12, 10, 12, 9, 11, 10, 9, 12, 9]
+My fronter: [9, 11, 10, 11, 8, 11, 7, 8, 10, 8]
+
+Node # 5
+PS frontier: [10, 12, 10, 12, 9, 11, 10, 9, 12, 9]
+My fronter: [8, 10, 10, 10, 8, 11, 6, 8, 10, 8]
+
+Node # 3
+PS frontier: [10, 12, 10, 12, 9, 12, 10, 9, 12, 9]
+My fronter: [9, 11, 10, 12, 9, 11, 7, 9, 11, 8]
+
+Node # 6
+PS frontier: [10, 12, 10, 13, 9, 12, 10, 9, 12, 9]
+My fronter: [9, 11, 10, 12, 9, 11, 10, 9, 12, 8]
+
+Node # 6
+PS frontier: [10, 12, 10, 13, 9, 12, 11, 9, 12, 9]
+My fronter: [10, 12, 10, 13, 9, 12, 11, 9, 12, 9]
+
+Node # 5
+PS frontier: [10, 12, 10, 13, 9, 12, 12, 9, 12, 9]
+My fronter: [10, 12, 10, 12, 9, 12, 10, 9, 12, 9]
+
+Node # 1
+PS frontier: [10, 12, 10, 13, 9, 13, 12, 9, 12, 9]
+My fronter: [9, 12, 10, 12, 9, 11, 10, 9, 12, 8]
+Barrier /Users/stark/Tmp/Ninox/data/exp_dummy/tbl_10_st1.0_stp0_pssp_s4_p3_step.csv: accepted_request: 110, rejected: 768-35-117
+

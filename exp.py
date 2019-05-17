@@ -242,12 +242,12 @@ def exp_regression(result_dir):
     barriers = [
         (bsp, 'bsp'),
         (asp, 'asp'),
-        (ssp(5), 'ssp_s5'),
-        (pbsp(10), 'pbsp_p5'),
-        (pssp(5, 10), 'pssp_s4_p5'),
+        (ssp(4), 'ssp_s4'),
+        (pbsp(2), 'pbsp_p2'),
+        (pssp(4, 2), 'pssp_s4_p2'),
     ]
     observe_points = ['regression']
-    config = {'stop_time':40, 'size':40, 'straggler_perc':0, 'straggleness':1,
+    config = {'stop_time':10, 'size':10, 'straggler_perc':0, 'straggleness':1,
     #config = {'stop_time':50, 'size':99, 'straggler_perc':15, 'straggleness':4,
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir}
@@ -718,12 +718,11 @@ def exp_dummy(result_dir):
 
     barriers = [
         (asp, 'asp'), (bsp, 'bsp'), (ssp(4), 'ssp_s4'),
-        (pbsp(10), 'pbsp_p10'),
-        (pssp(4, 10), 'pssp_s4_p10')
+        (pbsp(3), 'pbsp_p3'), (pssp(4, 10), 'pssp_s4_p3')
     ]
     observe_points = []
     configs = [
-        {'stop_time':100, 'size':50, 'straggler_perc':0, 'straggleness':1, 'barriers':barriers, 'observe_points':observe_points,
+        {'stop_time':10, 'size':10, 'straggler_perc':0, 'straggleness':1, 'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir}
     ]
     for c in configs: run(c)
