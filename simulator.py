@@ -140,16 +140,12 @@ class Network:
 
 
     def update_nodes_time(self):
+        passed = []
         for i, n in enumerate(self.nodes):
-            passed = self.barrier(self, n)
-            if self.clock < n.t_exec or not passed: #self.barrier(self, n):
-                if (self.clock < n.t_exec and passed):
-                    self.rejected_request_1 += 1
-                elif (self.clock >= n.t_exec and not passed):
-                    self.rejected_request_2 += 1
-                elif (self.clock < n.t_exec and not passed):
-                    self.rejected_request_3 += 1
-                continue
+            if self.clock >= n.t_exec and self.barrier(self, n):
+                passed.append((i, n))
+
+        for i, n in passed:
             self.accepted_request += 1
             # If it's time to finish the wait and go on...
 
@@ -174,22 +170,33 @@ class Network:
             diff_max = 0 # max deviation
 
             # All the updates that are missing from node n
+            """
             for j, s in enumerate(n.frontier):
                 diff = self.nodes[j].step - s
                 diff_num += diff
                 diff_max = diff if diff > diff_max else diff_max
+            """
+            if n.frontier == []:
+                diff = self.step_frontier
+            else:
+                diff = np.abs(np.subtract(self.step_frontier, n.frontier))
+            diff_num = np.sum(diff)
+            diff_max = np.max(diff)
 
             # Node n's one update that is missed by other nodes
             diff_num += 1
 
-            # Update my progress to ps
-            self.step_frontier[i] = n.step
-            # Get current screenshot of current progress of all nodes
-            n.frontier = list.copy(self.step_frontier)
-
             # The mismatch everytime before I push the the updates
             if ('frontier' in self.observe_points):
                 n.frontier_info.append((diff_num, diff_max))
+
+        for i, n in passed:
+            # Update my progress to ps
+            self.step_frontier[i] = n.step
+
+        for i, n in passed:
+            # Get current screenshot of current progress of all nodes
+            n.frontier = list.copy(self.step_frontier)
 
             if ('sequence' in self.observe_points):
                 self.sequence.append((i, n.step, n.t_exec))

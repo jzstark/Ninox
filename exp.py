@@ -243,11 +243,11 @@ def exp_regression(result_dir):
         (bsp, 'bsp'),
         (asp, 'asp'),
         (ssp(4), 'ssp_s4'),
-        (pbsp(2), 'pbsp_p2'),
-        (pssp(4, 2), 'pssp_s4_p2'),
+        (pbsp(10), 'pbsp_p10'),
+        (pssp(4, 5), 'pssp_s4_p5'),
     ]
     observe_points = ['regression']
-    config = {'stop_time':10, 'size':10, 'straggler_perc':0, 'straggleness':1,
+    config = {'stop_time':50, 'size':49, 'straggler_perc':20, 'straggleness':3,
     #config = {'stop_time':50, 'size':99, 'straggler_perc':15, 'straggleness':4,
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir}
@@ -459,20 +459,23 @@ def exp_frontier(result_dir):
         (pssp(4, 10), 'pssp_s4_p10')
     ]
     observe_points = ['frontier']
-    config = {'stop_time':200, 'size':200, 'straggler_perc':0, 'straggleness':1.,
+    config = {'stop_time':100, 'size':100, 'straggler_perc':0, 'straggleness':1.,
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir}
 
     #run(config)
 
     diff_num = {}; diff_max = {}
-    barrier_names = [s for (_, s) in config['barriers'] if s != 'bsp']
+    barrier_names = [s for (_, s) in config['barriers'] ]
     for barrier in barrier_names:
         filename = utils.dbfilename(config, barrier, 'frontier')
         with open(filename, 'r') as f:
             reader = csv.reader(f, delimiter=',')
             diff_num[barrier] = [int(s) for s in next(reader)]
             diff_max[barrier] = [int(s) for s in next(reader)]
+
+    print(diff_num)
+
 
     fig, ax = plt.subplots(figsize=(10, 5))
     c = 0
@@ -484,7 +487,7 @@ def exp_frontier(result_dir):
         #n, x, _ = ax.hist(v, 200, histtype='step', cumulative=False, label=k)
         ax.plot(x, density(x), linestyle=linestyles[c], label=barrier_to_label(k))
         c += 1
-    ax.axvline(x=1, linestyle=linestyles[c], label='bsp', color='m')
+    #ax.axvline(x=1, linestyle=linestyles[c], label='bsp', color='m')
     ax.legend()
     ax.set_xlim([0, 5])
     ax.set_ylim([0, 1])
@@ -718,11 +721,11 @@ def exp_dummy(result_dir):
 
     barriers = [
         (asp, 'asp'), (bsp, 'bsp'), (ssp(4), 'ssp_s4'),
-        (pbsp(3), 'pbsp_p3'), (pssp(4, 10), 'pssp_s4_p3')
+        (pbsp(3), 'pbsp_p3'), (pssp(4, 3), 'pssp_s4_p3')
     ]
     observe_points = []
     configs = [
-        {'stop_time':10, 'size':10, 'straggler_perc':0, 'straggleness':1, 'barriers':barriers, 'observe_points':observe_points,
+        {'stop_time':10, 'size':9, 'straggler_perc':0, 'straggleness':1, 'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir}
     ]
     for c in configs: run(c)
