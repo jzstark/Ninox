@@ -6,6 +6,7 @@ import csv
 import os
 import random
 import regression
+import gc
 
 randomness=0.01
 seed = 666
@@ -79,12 +80,14 @@ def pssp(staleness, sample_size):
 # Data strucutres: node and network
 
 class Node:
-    def __init__(self):
+    def __init__(self, reg):
         self.step   = 0
         self.t_wait = 0.
         self.t_exec = 0.
         # each model has its own copy of model; do not share a common model in computing gradeint.
-        self.model = regression.build_model(accuracy=False)
+        if(reg == True):
+            opt = regression.make_optimiser()
+            self.model = regression.build_model(opt, accuracy=False)
         self.delta = [np.zeros(modelsize), np.zeros(10)]
 
         self.frontier = [] # length: nodes number
@@ -110,7 +113,8 @@ class Network:
         nodes = []
         size = config['size']
         for i in range(size):
-            node = Node()
+            reg_flag = 'regression' in self.observe_points
+            node = Node(reg=reg_flag)
             nodes.append(node)
         # This could a problem if we allow nodes dropping in and out freely
         self.nodes = nodes
@@ -118,7 +122,9 @@ class Network:
         self.stop_time = config['stop_time']
         self.clock = 0.
 
-        self.model = regression.build_model()  #np.random.rand(*modelsize)
+        if('regression' in self.observe_points):
+            opt = regression.make_optimiser()
+            self.model = regression.build_model(opt)  #np.random.rand(*modelsize)
         self.regression_info = []
 
         self.straggler_perc = config['straggler_perc']
@@ -182,6 +188,7 @@ class Network:
                 diff = np.abs(np.subtract(self.step_frontier, n.frontier))
             diff_num = np.sum(diff)
             diff_max = np.max(diff)
+            # print(diff_num)
 
             # Node n's one update that is missed by other nodes
             diff_num += 1
@@ -203,11 +210,13 @@ class Network:
 
 
     def update_nodes_delta(self):
+        N = len(self.nodes)
         for i, n in enumerate(self.nodes):
             if self.clock != n.t_wait : continue
             # Pull weights from parameter server
             weights = regression.get_weight(self.model)
             regression.set_weight(n.model, weights)
+            #n.delta = regression.compute_updates(n.model, i, N)
             n.delta = regression.compute_updates(n.model)
 
 
@@ -333,3 +342,5 @@ def run(config):
         network = Network(config, b)
         network.execute()
         network.print_info()
+        del(network)
+        #gc.collect()

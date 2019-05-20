@@ -240,19 +240,23 @@ def exp_regression(result_dir):
     db.init_db(result_dir)
 
     barriers = [
-        (bsp, 'bsp'),
+        #(bsp, 'bsp'),
         (asp, 'asp'),
+        (ssp(15), 'ssp_s15'),
         (ssp(4), 'ssp_s4'),
-        (pbsp(10), 'pbsp_p10'),
-        (pssp(4, 5), 'pssp_s4_p5'),
+
+        #(ssp(10), 'ssp_s10'),
+        #(pbsp(1), 'pbsp_p10'),
+        #(pbsp(40), 'pbsp_p40'),
+        #(pssp(4, 5), 'pssp_s4_p5'),
     ]
     observe_points = ['regression']
-    config = {'stop_time':50, 'size':49, 'straggler_perc':20, 'straggleness':3,
+    config = {'stop_time':25, 'size':50, 'straggler_perc':0, 'straggleness':1,
     #config = {'stop_time':50, 'size':99, 'straggler_perc':15, 'straggleness':4,
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir}
 
-    #run(config)
+    run(config)
 
     clock = {}; iteration = {}; loss = {}
     barrier_names = [s for (_, s) in config['barriers']]
@@ -452,14 +456,28 @@ def exp_frontier(result_dir):
     db.init_db(result_dir)
 
     barriers = [
-        (bsp, 'bsp'),
         (asp, 'asp'),
+        #(ssp(1), 'ssp_s1'),
         (ssp(4), 'ssp_s4'),
-        (pbsp(10), 'pbsp_p10'),
-        (pssp(4, 10), 'pssp_s4_p10')
+        #(ssp(10), 'ssp_s10'),
+        #(ssp(20), 'ssp_s20'),
+        #(pbsp(5), 'pbsp_p5'),
+        #(pbsp(20), 'pbsp_p20'),
+        #(pbsp(50), 'pbsp_p50'),
+        #(pbsp(80), 'pbsp_p80'),
+        #(pbsp(95), 'pbsp_p95'),
+        #(pbsp(99), 'pbsp_p99'),
+
+        (pssp(4, 5), 'pssp_s4_p5'),
+        (pssp(4, 20), 'pssp_s4_p20'),
+        (pssp(4, 50), 'pssp_s4_p50'),
+        (pssp(4, 90), 'pssp_s4_p90'),
+        (pssp(4, 95), 'pssp_s4_p95'),
+        (pssp(4, 99), 'pssp_s4_p99'),
+        (pssp(4, 100), 'pssp_s4_p100'),
     ]
     observe_points = ['frontier']
-    config = {'stop_time':100, 'size':100, 'straggler_perc':0, 'straggleness':1.,
+    config = {'stop_time':50, 'size':100, 'straggler_perc':0, 'straggleness':1.,
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir}
 
@@ -479,13 +497,14 @@ def exp_frontier(result_dir):
 
     fig, ax = plt.subplots(figsize=(10, 5))
     c = 0
-    for k, v in diff_num.items():
+    barriers = [(k, v) for (k, v) in diff_num.items() if k != "bsp"]
+    for k, v in barriers:
         print(k, np.mean(v))
         v = np.divide(v, config['size'])
         density = stats.gaussian_kde(v)
         x = np.linspace(0, 5, 250)
         #n, x, _ = ax.hist(v, 200, histtype='step', cumulative=False, label=k)
-        ax.plot(x, density(x), linestyle=linestyles[c], label=barrier_to_label(k))
+        ax.plot(x, density(x), linestyle=linestyles[c % len(linestyles)], label=barrier_to_label(k))
         c += 1
     #ax.axvline(x=1, linestyle=linestyles[c], label='bsp', color='m')
     ax.legend()

@@ -21,10 +21,9 @@ Parameters
 
 seed=233
 num_classes = 10
-epochs=1
+epochs=2
 batch_size=64
 iteration=10
-sgd = optimizers.SGD(lr=0.005, decay=1e-4)
 
 """
 Load and pre-process MNSIT data
@@ -50,10 +49,24 @@ y_test_small = y_test[:1000]
 Utilities
 """
 
+def make_optimiser():
+    # This has to be newly created for each new instance.
+    return optimizers.SGD(lr=0.005, decay=1e-4)
+
+
 def get_next_batch():
     size = batch_size * iteration
     idx = random.randint(0, train_len - size - 1)
     return x_train[[idx,idx+size], :], y_train[[idx,idx+size], :]
+
+"""
+
+def get_next_batch(i, n):
+    size = batch_size * iteration
+    slice = int((train_len - size - 1) / n)
+    idx = random.randint(i * slice, i * slice + slice - 1)
+    return x_train[[idx,idx+size], :], y_train[[idx,idx+size], :]
+"""
 
 def get_weight(model):
     l = model.layers[0]
@@ -72,7 +85,7 @@ Exposed API for simulation use
 """
 
 
-def build_model(accuracy=True):
+def build_model(opt, accuracy=True):
     model = Sequential()
     """
     model.add(Conv2D(filters=32, kernel_size=(3,3), activation='relu',
@@ -85,12 +98,12 @@ def build_model(accuracy=True):
     model.add(Dense(num_classes, activation='softmax', input_shape=(image_size,)))
     if accuracy == True:
         model.compile(
-            optimizer=sgd,
+            optimizer=opt,
             #optimizer=optimizers.Adadelta(),
             loss='categorical_crossentropy', metrics=['accuracy'])
     else:
         model.compile(
-            optimizer=sgd,
+            optimizer=opt,
             #optimizer=optimizers.Adadelta(),
             loss='categorical_crossentropy')
 
@@ -109,9 +122,11 @@ def update_model(model, u):
     return model
 
 
+#def compute_updates(model, i, n):
+    #x, y = get_next_batch(i, n)
 def compute_updates(model):
     x, y = get_next_batch()
-    [w0, b0] = get_weight(model)
+    [w0, b0] = get_weight(model) #make copy
     model.fit(x, y, epochs=epochs, batch_size=batch_size, verbose=1,
         validation_data=(x_test_small, y_test_small))
     [w1, b1] = get_weight(model)
