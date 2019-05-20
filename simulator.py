@@ -216,8 +216,8 @@ class Network:
             # Pull weights from parameter server
             weights = regression.get_weight(self.model)
             regression.set_weight(n.model, weights)
-            #n.delta = regression.compute_updates(n.model, i, N)
-            n.delta = regression.compute_updates(n.model)
+            n.delta = regression.compute_updates(n.model, i, N)
+            #n.delta = regression.compute_updates(n.model)
 
 
     def next_event_at(self):
