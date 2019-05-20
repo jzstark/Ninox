@@ -164,38 +164,29 @@ class Network:
 
             self.calc_time[i] += exec_time
 
+            # The mismatch everytime before I push the the updates
+            if ('frontier' in self.observe_points):
+                # The noisy update from my point of view.
+                # All the updates that are missing from node n
+                if n.frontier == []:
+                    diff = self.step_frontier
+                else:
+                    diff = np.abs(np.subtract(self.step_frontier, n.frontier))
+                diff_num = np.sum(diff)
+                diff_max = np.max(diff)
+                diff_min = np.min(diff)
+                # print(diff_num)
+                # Node n's one update that is missed by other nodes
+                diff_num += 1
+
+                n.frontier_info.append((diff_num, diff_max, diff_min))
+
             if('regression' in self.observe_points):
                 # Push my update to server
                 self.model = regression.update_model(self.model, n.delta)
             print("\nNode #", i)
             print("PS frontier:", self.step_frontier)
             print("My fronter:", n.frontier)
-
-            # The noisy update from my point of view.
-            diff_num = 0 # total deviation from previous step
-            diff_max = 0 # max deviation
-
-            # All the updates that are missing from node n
-            """
-            for j, s in enumerate(n.frontier):
-                diff = self.nodes[j].step - s
-                diff_num += diff
-                diff_max = diff if diff > diff_max else diff_max
-            """
-            if n.frontier == []:
-                diff = self.step_frontier
-            else:
-                diff = np.abs(np.subtract(self.step_frontier, n.frontier))
-            diff_num = np.sum(diff)
-            diff_max = np.max(diff)
-            # print(diff_num)
-
-            # Node n's one update that is missed by other nodes
-            diff_num += 1
-
-            # The mismatch everytime before I push the the updates
-            if ('frontier' in self.observe_points):
-                n.frontier_info.append((diff_num, diff_max))
 
         for i, n in passed:
             # Update my progress to ps
@@ -307,28 +298,25 @@ class Network:
     def collect_frontier_data(self):
         total_diff = []
         total_diff_max = []
+        total_diff_min = []
         # Possible memory issue.
         for n in self.nodes:
-            diff_sum, diff_max = zip(*(n.frontier_info))
+            diff_sum, diff_max, diff_min = zip(*(n.frontier_info))
             total_diff.extend(diff_sum)
             total_diff_max.extend(diff_max)
+            total_diff_min.extend(diff_min)
 
         filename = self.dbfilename_frontier
         with open(filename, 'w+', newline='') as csvfile:
             writer = csv.writer(csvfile, delimiter=',')
             writer.writerow(total_diff)
             writer.writerow(total_diff_max)
+            writer.writerow(total_diff_min)
         # print(np.mean(total_diff), np.std(total_diff))
         #n = self.nodes[0]
         #diff_sum, diff_max = zip(*(n.frontier_info))
         #print(diff_sum)
         #print(np.mean(diff_sum), np.std(diff_sum))
-
-        # Maybe histgram? (mean, std) is not a good way to show the difference -- their mean value is basically the same (why?).
-        # max value as expected.
-        #print(diff_max)
-        #print(np.mean(diff_max), np.std(diff_max))
-
 
     def collect_ratio_data(self):
         filename = self.dbfilename_ratio

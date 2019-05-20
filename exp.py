@@ -400,16 +400,18 @@ def exp_straggle_accuracy(result_dir):
         (pssp(4, 5), 'pssp_s4_p5')
     ]
     observe_points = ['regression']
+    t = 100
+    s = 60
     configs = [
-        {'stop_time':100, 'size':60, 'straggler_perc':0, 'straggleness':4, 'barriers':barriers, 'observe_points':observe_points,
+        {'stop_time':t, 'size':s, 'straggler_perc':0, 'straggleness':4, 'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir},
-        {'stop_time':100, 'size':60, 'straggler_perc':5, 'straggleness':4, 'barriers':barriers, 'observe_points':observe_points,
+        {'stop_time':t, 'size':s, 'straggler_perc':5, 'straggleness':4, 'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir},
-        {'stop_time':100, 'size':60, 'straggler_perc':10, 'straggleness':4, 'barriers':barriers, 'observe_points':observe_points,
+        {'stop_time':t, 'size':s, 'straggler_perc':10, 'straggleness':4, 'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir},
-        {'stop_time':100, 'size':60, 'straggler_perc':15, 'straggleness':4, 'barriers':barriers, 'observe_points':observe_points,
+        {'stop_time':t, 'size':s, 'straggler_perc':15, 'straggleness':4, 'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir},
-        {'stop_time':100, 'size':60, 'straggler_perc':20, 'straggleness':4, 'barriers':barriers, 'observe_points':observe_points,
+        {'stop_time':t, 'size':s, 'straggler_perc':20, 'straggleness':4, 'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir},
         #{'stop_time':200, 'size':100, 'straggler_perc':25, 'straggleness':4, 'barriers':barriers, 'observe_points':observe_points,
         #'path':result_dir},
@@ -482,7 +484,7 @@ def exp_frontier(result_dir):
 
     #run(config)
 
-    diff_num = {}; diff_max = {}
+    diff_num = {}; diff_max = {}; diff_min = {}
     barrier_names = [s for (_, s) in config['barriers'] ]
     for barrier in barrier_names:
         filename = utils.dbfilename(config, barrier, 'frontier')
@@ -490,6 +492,7 @@ def exp_frontier(result_dir):
             reader = csv.reader(f, delimiter=',')
             diff_num[barrier] = [int(s) for s in next(reader)]
             diff_max[barrier] = [int(s) for s in next(reader)]
+            diff_min[barrier] = [int(s) for s in next(reader)]
 
     print(diff_num)
 
@@ -513,8 +516,6 @@ def exp_frontier(result_dir):
     ax.set_ylabel('Density')
     plt.show()
 
-
-
     """
     fig, ax = plt.subplots(figsize=(8, 4))
     for k, v in diff_max.items():
@@ -524,6 +525,67 @@ def exp_frontier(result_dir):
     ax.set_ylabel('CDF')
     plt.show()
     """
+
+
+def exp_straggle_consistency(result_dir):
+    db.init_db(result_dir)
+
+    barriers = [
+        (asp, 'asp'), (bsp, 'bsp'), (ssp(4), 'ssp_s4'),
+        (pbsp(10), 'pbsp_p10'),
+        (pssp(4, 10), 'pssp_s4_p10')
+    ]
+    ob = ['frontier']
+    t = 100
+    s = 100
+    configs = [
+        {'stop_time':t, 'size':s, 'straggler_perc':0, 'straggleness':4, 'barriers':barriers, 'observe_points':ob, 'path':result_dir},
+        {'stop_time':t, 'size':s, 'straggler_perc':5, 'straggleness':4, 'barriers':barriers, 'observe_points':ob, 'path':result_dir},
+        {'stop_time':t, 'size':s, 'straggler_perc':10, 'straggleness':4, 'barriers':barriers, 'observe_points':ob, 'path':result_dir},
+        {'stop_time':t, 'size':s, 'straggler_perc':15, 'straggleness':4, 'barriers':barriers, 'observe_points':ob, 'path':result_dir},
+        {'stop_time':t, 'size':s, 'straggler_perc':20, 'straggleness':4, 'barriers':barriers, 'observe_points':ob, 'path':result_dir},
+        {'stop_time':t, 'size':s, 'straggler_perc':25, 'straggleness':4, 'barriers':barriers, 'observe_points':ob, 'path':result_dir},
+    ]
+
+    #for c in configs: run(c)
+
+    dict_stragglers = {}
+    for b in barriers:
+        dict_single_straggler = {}
+        for c in configs:
+            filename = utils.dbfilename(c, b[1], 'frontier')
+            with open(filename, 'r') as f:
+                reader = csv.reader(f, delimiter=',')
+                diff_num = [int(s) for s in next(reader)]
+                diff_max = [int(s) for s in next(reader)]
+                diff_min = [int(s) for s in next(reader)]
+                mu = np.mean(diff_num)
+                std = np.std(diff_num)
+                dict_single_straggler[c['straggler_perc']] = (mu, std)
+        dict_stragglers[b[1]] = dict_single_straggler
+
+    print(dict_stragglers)
+
+    f, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 12)) #figsize=(12, 5))
+    c = 0
+    for k, i in dict_stragglers.items():
+        x = list(i.keys())
+        ys = list(i.values())
+        mu, std = zip(*ys)
+        #mu = np.divide(mu, mu[0])
+        #std = np.divide(std, std[0])
+        ax1.plot(x, mu, marker=markers[c], label=k)
+        ax2.plot(x, std, marker=markers[c], label=k)
+        c = (c + 1) % (len(markers))
+
+    ax1.set_xlabel("Straggle node percentage")
+    ax1.set_ylabel("Mean of step difference")
+    ax1.legend()
+
+    ax2.set_xlabel("Straggle node percentage")
+    ax2.set_ylabel("Stddev of step difference")
+    ax2.legend()
+    plt.show()
 
 
 """
