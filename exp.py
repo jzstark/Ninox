@@ -795,6 +795,111 @@ def exp_scalability_step(result_dir):
     plt.show()
 
 
+def exp_scalability_consistency(result_dir):
+    db.init_db(result_dir)
+
+    ssp_name = 'ssp_s4'
+    barriers = [
+        (ssp(4), ssp_name),
+        (pssp(4, 2), 'pssp_s4_p2'),
+        (pssp(4, 5), 'pssp_s4_p5'),
+        (pssp(4, 10), 'pssp_s4_p10'),
+        (pssp(4, 20), 'pssp_s4_p20'),
+        (pssp(4, 30), 'pssp_s4_p30'),
+        #(pssp(4, 40), 'pssp_s4_p40'),
+    ]
+    barriers_bsp = [
+        (bsp, ssp_name),
+        (pbsp(2),  'pbsp_p2'),
+        (pbsp(5),  'pbsp_p5'),
+        (pbsp(10), 'pbsp_p10'),
+        (pbsp(20), 'pbsp_p20'),
+        (pbsp(30), 'pbsp_p30'),
+        #(pssp(4, 40), 'pssp_s4_p40'),
+    ]
+    observe_points = ['frontier']
+    configs = [
+        {'stop_time':100, 'size':50, 'straggler_perc':0, 'straggleness':1,
+        'barriers':barriers, 'observe_points':observe_points,
+        'path':result_dir},
+        {'stop_time':100, 'size':100, 'straggler_perc':0, 'straggleness':1,
+        'barriers':barriers, 'observe_points':observe_points,
+        'path':result_dir},
+        {'stop_time':100, 'size':200, 'straggler_perc':0, 'straggleness':1,
+        'barriers':barriers, 'observe_points':observe_points, 'path':result_dir},
+        {'stop_time':100, 'size':250, 'straggler_perc':0, 'straggleness':1,
+        'barriers':barriers, 'observe_points':observe_points,
+        'path':result_dir},
+        {'stop_time':100, 'size':300, 'straggler_perc':0, 'straggleness':1,
+        'barriers':barriers, 'observe_points':observe_points,
+        'path':result_dir},
+        {'stop_time':100, 'size':350, 'straggler_perc':0, 'straggleness':1,
+        'barriers':barriers, 'observe_points':observe_points,
+        'path':result_dir},
+        {'stop_time':100, 'size':400, 'straggler_perc':0, 'straggleness':1,
+        'barriers':barriers, 'observe_points':observe_points,
+        'path':result_dir},
+        {'stop_time':100, 'size':450, 'straggler_perc':0, 'straggleness':1,
+        'barriers':barriers, 'observe_points':observe_points,
+        'path':result_dir},
+        {'stop_time':100, 'size':500, 'straggler_perc':0, 'straggleness':1,
+        'barriers':barriers, 'observe_points':observe_points,
+        'path':result_dir},
+    ]
+
+    for c in configs: run(c)
+
+    diffs = []
+    for c in configs:
+        diff = {}
+        barrier_names = [s for (_, s) in c['barriers']]
+        for barrier in barrier_names:
+            filename = utils.dbfilename(c, barrier, 'frontier')
+            with open(filename, 'r') as f:
+                reader = csv.reader(f, delimiter=',')
+                diff_num = [int(s) for s in next(reader)]
+                diff_max = [int(s) for s in next(reader)]
+                diff_min = [int(s) for s in next(reader)]
+                mu  = np.mean(diff_num)
+                std = np.std(diff_num)
+                diff[barrier] = (mu, std)
+        diffs.append(diff)
+
+    print(diffs)
+
+    f, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 12)) #figsize=(12, 5))
+    barrier_names = [s for (_, s) in barriers if s != ssp_name]
+    sizes = [c['size'] for c in configs]
+
+    for k, barrier in enumerate(barrier_names):
+        label = barrier_to_label(barrier)
+        y = []
+        for i, c in enumerate(configs):
+            ratio = np.divide(diffs[i][barrier][0], diffs[i][ssp_name][0])
+            y.append(ratio)
+        ax1.plot(sizes, y, marker=markers[k % len(markers)],
+            linestyle=linestyles[k % len(markers)], label=label)
+
+    for k, barrier in enumerate(barrier_names):
+        label = barrier_to_label(barrier)
+        y = []
+        for i, c in enumerate(configs):
+            ratio = np.divide(diffs[i][barrier][1], diffs[i][ssp_name][1])
+            y.append(ratio)
+        ax2.plot(sizes, y, marker=markers[k % len(markers)],
+            linestyle=linestyles[k % len(markers)], label=label)
+
+    ax1.set_ylabel("Ratio of PSSP diff / SSP step consistency (mean) ")
+    ax1.set_xlabel("Worker number")
+
+    ax2.set_ylabel("Ratio of PSSP diff / SSP step consistency (std) ")
+    ax2.set_xlabel("Worker number")
+
+    plt.grid(linestyle='--', linewidth=1)
+    plt.legend()
+    plt.show()
+
+
 
 def exp_dummy(result_dir):
     db.init_db(result_dir)
