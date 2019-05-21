@@ -225,6 +225,67 @@ def exp_straggleness(result_dir):
     plt.show()
 
 
+def exp_straggleness_consistency(result_dir):
+    db.init_db(result_dir)
+
+    barriers = [
+        (asp, 'asp'), (bsp, 'bsp'), (ssp(4), 'ssp_s4'),
+        (pbsp(10), 'pbsp_p10'),
+        (pssp(4, 10), 'pssp_s4_p10')
+    ]
+    ob = ['frontier']
+    t = 100
+    s = 100
+    configs = [
+        {'stop_time':t, 'size':s, 'straggler_perc':5, 'straggleness':1, 'barriers':barriers, 'observe_points':ob, 'path':result_dir},
+        {'stop_time':t, 'size':s, 'straggler_perc':5, 'straggleness':2, 'barriers':barriers, 'observe_points':ob, 'path':result_dir},
+        {'stop_time':t, 'size':s, 'straggler_perc':5, 'straggleness':4, 'barriers':barriers, 'observe_points':ob, 'path':result_dir},
+        {'stop_time':t, 'size':s, 'straggler_perc':5, 'straggleness':6, 'barriers':barriers, 'observe_points':ob, 'path':result_dir},
+        {'stop_time':t, 'size':s, 'straggler_perc':5, 'straggleness':8, 'barriers':barriers, 'observe_points':ob, 'path':result_dir},
+        {'stop_time':t, 'size':s, 'straggler_perc':5, 'straggleness':10, 'barriers':barriers, 'observe_points':ob, 'path':result_dir},
+    ]
+
+    #for c in configs: run(c)
+
+    dict_stragglers = {}
+    for b in barriers:
+        dict_single_straggler = {}
+        for c in configs:
+            filename = utils.dbfilename(c, b[1], 'frontier')
+            with open(filename, 'r') as f:
+                reader = csv.reader(f, delimiter=',')
+                diff_num = [int(s) for s in next(reader)]
+                diff_max = [int(s) for s in next(reader)]
+                diff_min = [int(s) for s in next(reader)]
+                mu = np.mean(diff_num)
+                std = np.std(diff_num)
+                dict_single_straggler[c['straggleness']] = (mu, std)
+        dict_stragglers[b[1]] = dict_single_straggler
+
+    print(dict_stragglers)
+
+    f, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 12)) #figsize=(12, 5))
+    c = 0
+    for k, i in dict_stragglers.items():
+        x = list(i.keys())
+        ys = list(i.values())
+        mu, std = zip(*ys)
+        #mu = np.divide(mu, mu[0])
+        #std = np.divide(std, std[0])
+        ax1.plot(x, mu, marker=markers[c], label=k)
+        ax2.plot(x, std, marker=markers[c], label=k)
+        c = (c + 1) % (len(markers))
+
+    ax1.set_xlabel("Straggle node percentage")
+    ax1.set_ylabel("Mean of step difference")
+    ax1.legend()
+
+    ax2.set_xlabel("Straggle node percentage")
+    ax2.set_ylabel("Stddev of step difference")
+    ax2.legend()
+    plt.show()
+
+
 """
 Experiment 2: "Accuracy"
 """
@@ -572,18 +633,18 @@ def exp_straggle_consistency(result_dir):
         x = list(i.keys())
         ys = list(i.values())
         mu, std = zip(*ys)
-        #mu = np.divide(mu, mu[0])
-        #std = np.divide(std, std[0])
+        mu = np.divide(mu, mu[0])
+        std = np.divide(std, std[0])
         ax1.plot(x, mu, marker=markers[c], label=k)
         ax2.plot(x, std, marker=markers[c], label=k)
         c = (c + 1) % (len(markers))
 
     ax1.set_xlabel("Straggle node percentage")
-    ax1.set_ylabel("Mean of step difference")
+    ax1.set_ylabel("Normalised step difference (mean)")
     ax1.legend()
 
     ax2.set_xlabel("Straggle node percentage")
-    ax2.set_ylabel("Stddev of step difference")
+    ax2.set_ylabel("Normalised step difference (stddev)")
     ax2.legend()
     plt.show()
 
@@ -806,7 +867,7 @@ def exp_scalability_consistency(result_dir):
         (pssp(4, 10), 'pssp_s4_p10'),
         (pssp(4, 20), 'pssp_s4_p20'),
         (pssp(4, 30), 'pssp_s4_p30'),
-        #(pssp(4, 40), 'pssp_s4_p40'),
+        (pssp(4, 40), 'pssp_s4_p40'),
     ]
     barriers_bsp = [
         (bsp, ssp_name),
@@ -815,7 +876,7 @@ def exp_scalability_consistency(result_dir):
         (pbsp(10), 'pbsp_p10'),
         (pbsp(20), 'pbsp_p20'),
         (pbsp(30), 'pbsp_p30'),
-        #(pssp(4, 40), 'pssp_s4_p40'),
+        (pssp(4, 40), 'pssp_s4_p40'),
     ]
     observe_points = ['frontier']
     configs = [
@@ -847,7 +908,7 @@ def exp_scalability_consistency(result_dir):
         'path':result_dir},
     ]
 
-    for c in configs: run(c)
+    #for c in configs: run(c)
 
     diffs = []
     for c in configs:
@@ -875,7 +936,8 @@ def exp_scalability_consistency(result_dir):
         label = barrier_to_label(barrier)
         y = []
         for i, c in enumerate(configs):
-            ratio = np.divide(diffs[i][barrier][0], diffs[i][ssp_name][0])
+            #ratio = np.divide(diffs[i][barrier][0], diffs[i][ssp_name][0])
+            ratio = np.divide(diffs[i][barrier][0], c['size'])
             y.append(ratio)
         ax1.plot(sizes, y, marker=markers[k % len(markers)],
             linestyle=linestyles[k % len(markers)], label=label)
@@ -884,19 +946,23 @@ def exp_scalability_consistency(result_dir):
         label = barrier_to_label(barrier)
         y = []
         for i, c in enumerate(configs):
-            ratio = np.divide(diffs[i][barrier][1], diffs[i][ssp_name][1])
+            #ratio = np.divide(diffs[i][barrier][1], diffs[i][ssp_name][1])
+            ratio = np.divide(diffs[i][barrier][1], c['size'])
             y.append(ratio)
         ax2.plot(sizes, y, marker=markers[k % len(markers)],
             linestyle=linestyles[k % len(markers)], label=label)
 
-    ax1.set_ylabel("Ratio of PSSP diff / SSP step consistency (mean) ")
+    #ax1.set_ylabel("Ratio of PSSP diff / SSP step consistency (mean) ")
+    ax1.set_ylabel("Normalised PSSP step consistency (mean) ")
     ax1.set_xlabel("Worker number")
+    ax1.legend()
 
-    ax2.set_ylabel("Ratio of PSSP diff / SSP step consistency (std) ")
+    #ax2.set_ylabel("Ratio of PSSP diff / SSP step consistency (std) ")
+    ax2.set_ylabel("Normalised PSSP step consistency (std) ")
     ax2.set_xlabel("Worker number")
+    ax2.legend()
 
     plt.grid(linestyle='--', linewidth=1)
-    plt.legend()
     plt.show()
 
 

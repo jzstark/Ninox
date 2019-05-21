@@ -184,9 +184,9 @@ class Network:
             if('regression' in self.observe_points):
                 # Push my update to server
                 self.model = regression.update_model(self.model, n.delta)
-            print("\nNode #", i)
-            print("PS frontier:", self.step_frontier)
-            print("My fronter:", n.frontier)
+            #print("\nNode #", i)
+            #print("PS frontier:", self.step_frontier)
+            #print("My fronter:", n.frontier)
 
         for i, n in passed:
             # Update my progress to ps
