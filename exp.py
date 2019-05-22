@@ -365,29 +365,27 @@ def exp_regression(result_dir):
     plt.show()
 
 
-def exp_accuracy_old(result_dir):
+def exp_consistency_t2(result_dir):
     db.init_db(result_dir)
 
     barriers = [
-        # bsp has to be included! AND has to be the first!!!
-        (bsp, 'bsp'),
+        # (bsp, 'bsp'), --> should be all 0 or very close to it at least
         (asp, 'asp'), (ssp(4), 'ssp_s4'),
+        (pbsp(5), 'pbsp_p5'),
         (pbsp(10), 'pbsp_p10'),
-        (pssp(4, 10), 'pssp_s4_p10')
+        (pssp(4, 5), 'pssp_s4_p5'),
+        (pssp(4, 10), 'pssp_s4_p10'),
     ]
-    barriers_foo = [
-        (bsp, 'bsp'),
-        (asp, 'asp'),
-        #(ssp(0), 'ssp_s0'),
-        #(ssp(1), 'ssp_s1'),
-        #(ssp(2), 'ssp_s2'),
-    ]
+
+    size = 100
+    # Observe N different points in the whole updates sequence
+    N = int(size/3) # a random step
     observe_points = ['sequence']
-    config = {'stop_time':200, 'size':100, 'straggler_perc':0, 'straggleness':1,
+    config = {'stop_time':50, 'size':size, 'straggler_perc':0, 'straggleness':1,
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir}
 
-    run(config)
+    #run(config)
 
     nodes = {}; steps = {}; times = {}
     barrier_names = [s for (_, s) in config['barriers']]
@@ -399,55 +397,51 @@ def exp_accuracy_old(result_dir):
             steps[barrier] = [int(s) for s in next(reader)]
             times[barrier] = [float(s) for s in next(reader)]
 
-    N = 10
-    x_points = [(stop_time / N) * (i + 1) for i in range(N)]
+    #print(nodes)
+    #print(steps)
+
+    # l: length of target vector; n: number of workers
+    def generate_true_seq(l, n):
+        seq = [None] * l
+        for i in range(l):
+            c = int(i / n)
+            p = i % n
+            # +1 to agree with the step in exp (starting from 1)
+            seq[i] = (p, c+1)
+        return seq
 
     result = {}
     for barrier in barrier_names:
-        length = len(times[barrier])
-        diff = [0.] * N
-        max_diff = [0] * N
-        index = [0] * N
-        idx = 0
-        for i in range(N):
-            time = x_points[i]
-            for j in range(idx, length):
-                if times[barrier][j] > time: break
-                idx += 1
-            index[i] = idx
+        print("Barrier:", barrier)
+        length = len(nodes[barrier]) # length of this sequence
+        assert(length > N)
+        true_seq  = generate_true_seq(length, config['size'])
+        noisy_seq = list(zip(nodes[barrier], steps[barrier]))
+        #print("True seq:", true_seq)
+        #print("Noisy seq:", noisy_seq)
 
-            ## Calculate the **difference**
+        diffs = []
+        for idx in range(N, length + 1, N):
+            # Compute difference
+            true_set = set(true_seq[0:idx])
+            noisy_set = set(noisy_seq[0:idx])
+            diff_a_b = true_set.difference(noisy_set)
+            diff_b_a = noisy_set.difference(true_set)
+            diff = len(diff_a_b) + len(diff_b_a)
+            diffs.append((diff, idx))
+        result[barrier] = diffs
+    #print(result)
 
-            if barrier == 'bsp' :
-                diff[i] = 0
-                max_diff[i] = 0
-            else :
-                set_bsp = set()
-                set_barrier = set()
-                bsp_index = result['bsp'][-1] #!
-                for k in range(0, bsp_index[i]):
-                    set_bsp.add((nodes['bsp'][k], steps['bsp'][k]))
-                for k in range(0, index[i]):
-                    set_barrier.add((nodes[barrier][k], steps[barrier][k]))
-
-                # problem: `len(diff_a_b)` is 0 even for asp!
-                diff_a_b = set_bsp.difference(set_barrier) #bsp - barrier
-                diff_b_a = set_barrier.difference(set_bsp) #barrier - bsp
-                print(len(diff_a_b), len(diff_b_a))
-                #diff[i] = len(diff_a_b) + len(diff_b_a)
-                inter = set_bsp.intersection(set_barrier)
-                diff[i] = len(inter) / len(set_barrier)
-
-                diff_union = diff_a_b.union(diff_b_a)
-                max_diff[i] = 0 if (len(diff_union) == 0) \
-                    else max(diff_union)[1]
-            ## End
-
-        result[barrier] = (diff, max_diff, index)
-
-    print(result)
-
-    # The result looks suspicious though ...
+    fig, ax = plt.subplots(figsize=(8, 5))
+    barrier_names = result.keys()
+    for barrier in barrier_names:
+        [y, t] = list(zip(*result[barrier]))
+        y = np.divide(y, t)
+        ax.plot(t, y, label=barrier)
+    ax.set_xlabel("Sequence length T")
+    ax.set_ylabel("Normalised nosiy-true sequence difference")
+    plt.legend()
+    plt.show()
 
 
 def exp_straggle_accuracy(result_dir):
@@ -860,7 +854,8 @@ def exp_scalability_consistency(result_dir):
     db.init_db(result_dir)
 
     ssp_name = 'ssp_s4'
-    barriers = [
+    barriers_ssp = [
+        (asp, 'asp'),
         (ssp(4), ssp_name),
         (pssp(4, 2), 'pssp_s4_p2'),
         (pssp(4, 5), 'pssp_s4_p5'),
@@ -869,14 +864,14 @@ def exp_scalability_consistency(result_dir):
         (pssp(4, 30), 'pssp_s4_p30'),
         (pssp(4, 40), 'pssp_s4_p40'),
     ]
-    barriers_bsp = [
-        (bsp, ssp_name),
+    barriers = [
+        (asp, 'asp'),
         (pbsp(2),  'pbsp_p2'),
         (pbsp(5),  'pbsp_p5'),
         (pbsp(10), 'pbsp_p10'),
         (pbsp(20), 'pbsp_p20'),
         (pbsp(30), 'pbsp_p30'),
-        (pssp(4, 40), 'pssp_s4_p40'),
+        (pbsp(40), 'pbsp_p40'),
     ]
     observe_points = ['frontier']
     configs = [
@@ -929,7 +924,7 @@ def exp_scalability_consistency(result_dir):
     print(diffs)
 
     f, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 12)) #figsize=(12, 5))
-    barrier_names = [s for (_, s) in barriers if s != ssp_name]
+    barrier_names = [s for (_, s) in barriers] #if s != ssp_name]
     sizes = [c['size'] for c in configs]
 
     for k, barrier in enumerate(barrier_names):
@@ -953,12 +948,12 @@ def exp_scalability_consistency(result_dir):
             linestyle=linestyles[k % len(markers)], label=label)
 
     #ax1.set_ylabel("Ratio of PSSP diff / SSP step consistency (mean) ")
-    ax1.set_ylabel("Normalised PSSP step consistency (mean) ")
+    ax1.set_ylabel("Normalised pBSP step consistency (mean) ")
     ax1.set_xlabel("Worker number")
     ax1.legend()
 
     #ax2.set_ylabel("Ratio of PSSP diff / SSP step consistency (std) ")
-    ax2.set_ylabel("Normalised PSSP step consistency (std) ")
+    ax2.set_ylabel("Normalised pBSP step consistency (std) ")
     ax2.set_xlabel("Worker number")
     ax2.legend()
 

@@ -29,8 +29,9 @@ def main(db_dir):
 
     #run_exp(exp_straggle_consistency, "exp_straggle_consistency")
     #run_exp(exp_scalability_consistency, "exp_scalability_consistency")
-    run_exp(exp_straggleness_consistency, "exp_straggleness_consistency")
+    #run_exp(exp_straggleness_consistency, "exp_straggleness_consistency")
 
+    run_exp(exp_consistency_t2, "exp_consistency_t2")
 
 
 main(db.default_dir)
