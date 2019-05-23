@@ -365,7 +365,7 @@ def exp_regression(result_dir):
     plt.show()
 
 
-def exp_consistency_t2(result_dir):
+def exp_seqdiff(result_dir):
     db.init_db(result_dir)
 
     barriers = [
@@ -442,6 +442,263 @@ def exp_consistency_t2(result_dir):
     ax.set_ylabel("Normalised nosiy-true sequence difference")
     plt.legend()
     plt.show()
+
+
+def exp_straggle_seqdiff(result_dir):
+    db.init_db(result_dir)
+    barriers = [
+        (asp, 'asp'), (ssp(4), 'ssp_s4'),
+        (pbsp(5), 'pbsp_p5'),
+        (pssp(4, 5), 'pssp_s4_p5'),
+        #(pbsp(10), 'pbsp_p10'),
+        #(pssp(4, 10), 'pssp_s4_p10'),
+    ]
+
+    def generate_true_seq(l, n):
+        seq = [None] * l
+        for i in range(l):
+            c = int(i / n)
+            p = i % n
+            # +1 to agree with the step in exp (starting from 1)
+            seq[i] = (p, c+1)
+        return seq
+
+    observe_points = ['sequence']
+    time = 60; size = 100
+    configs = [
+        {'stop_time':time, 'size':size, 'straggler_perc':0, 'straggleness':4,
+        'barriers':barriers, 'observe_points':observe_points,
+        'path':result_dir},
+        {'stop_time':time, 'size':size, 'straggler_perc':5, 'straggleness':4,
+        'barriers':barriers, 'observe_points':observe_points,
+        'path':result_dir},
+        {'stop_time':time, 'size':size, 'straggler_perc':10, 'straggleness':4,
+        'barriers':barriers, 'observe_points':observe_points,
+        'path':result_dir},
+        {'stop_time':time, 'size':size, 'straggler_perc':15, 'straggleness':4,
+        'barriers':barriers, 'observe_points':observe_points,
+        'path':result_dir},
+        {'stop_time':time, 'size':size, 'straggler_perc':20, 'straggleness':4,
+        'barriers':barriers, 'observe_points':observe_points,
+        'path':result_dir},
+        {'stop_time':time, 'size':size, 'straggler_perc':25, 'straggleness':4,
+        'barriers':barriers, 'observe_points':observe_points,
+        'path':result_dir},
+    ]
+
+    for c in configs: run(c)
+
+    barrier_names = [s for (_, s) in barriers]
+    dict_stragglers = {}
+
+    for barrier in barrier_names:
+        dict_single_straggler = {}
+        for c in configs:
+            n = c['size']
+            filename = utils.dbfilename(c, barrier, 'sequence')
+            with open(filename, 'r') as f:
+                reader = csv.reader(f, delimiter=',')
+                nodes = [int(s) for s in next(reader)]
+                steps = [int(s) for s in next(reader)]
+                times = [float(s) for s in next(reader)]
+                dict_single_straggler[c['straggler_perc']] = (nodes, steps, n)
+        dict_stragglers[barrier] = dict_single_straggler
+
+    def nsdiff(ns):
+        nodes, steps, n = ns
+        length = len(nodes)
+        true_seq  = generate_true_seq(length, n)
+        noisy_seq = list(zip(nodes, steps))
+        true_set = set(true_seq)
+        noisy_set = set(noisy_seq)
+        diff_a_b = true_set.difference(noisy_set)
+        diff_b_a = noisy_set.difference(true_set)
+        diff = len(diff_a_b) + len(diff_b_a)
+        return diff / length
+
+    fig, ax = plt.subplots()
+    for k, i in dict_stragglers.items():
+        sizes  = list(i.keys())   # sizes
+        nslist = list(i.values()) # (nodes, steps) list
+        diffs = list(map(nsdiff, nslist))
+        ax.plot(sizes, diffs, label=k)
+
+    ax.set_xlabel("Straggle node percentage")
+    ax.set_ylabel("Normalised nosiy-true sequence difference")
+    plt.legend()
+    plt.show()
+
+
+def exp_straggleness_seqdiff(result_dir):
+    db.init_db(result_dir)
+    barriers = [
+        (asp, 'asp'), (ssp(4), 'ssp_s4'),
+        (pbsp(5), 'pbsp_p5'),
+        (pssp(4, 5), 'pssp_s4_p5'),
+        #(pbsp(10), 'pbsp_p10'),
+        #(pssp(4, 10), 'pssp_s4_p10'),
+    ]
+
+    def generate_true_seq(l, n):
+        seq = [None] * l
+        for i in range(l):
+            c = int(i / n)
+            p = i % n
+            # +1 to agree with the step in exp (starting from 1)
+            seq[i] = (p, c+1)
+        return seq
+
+    observe_points = ['sequence']
+    time = 60; size = 100
+
+    configs = [
+        {'stop_time':time, 'size':size, 'straggler_perc':5, 'straggleness':1,
+        'barriers':barriers, 'observe_points':observe_points,
+        'path':result_dir},
+        {'stop_time':time, 'size':size, 'straggler_perc':5, 'straggleness':2,
+        'barriers':barriers, 'observe_points':observe_points,
+        'path':result_dir},
+        {'stop_time':time, 'size':size, 'straggler_perc':5, 'straggleness':4,
+        'barriers':barriers, 'observe_points':observe_points,
+        'path':result_dir},
+        {'stop_time':time, 'size':size, 'straggler_perc':5, 'straggleness':6,
+        'barriers':barriers, 'observe_points':observe_points,
+        'path':result_dir},
+        {'stop_time':time, 'size':size, 'straggler_perc':5, 'straggleness':8,
+        'barriers':barriers, 'observe_points':observe_points,
+        'path':result_dir},
+        {'stop_time':time, 'size':size, 'straggler_perc':5, 'straggleness':10,
+        'barriers':barriers, 'observe_points':observe_points,
+        'path':result_dir},
+    ]
+
+    for c in configs: run(c)
+
+    barrier_names = [s for (_, s) in barriers]
+    dict_stragglers = {}
+
+    for barrier in barrier_names:
+        dict_single_straggler = {}
+        for c in configs:
+            n = c['size']
+            filename = utils.dbfilename(c, barrier, 'sequence')
+            with open(filename, 'r') as f:
+                reader = csv.reader(f, delimiter=',')
+                nodes = [int(s) for s in next(reader)]
+                steps = [int(s) for s in next(reader)]
+                times = [float(s) for s in next(reader)]
+                dict_single_straggler[c['straggleness']] = (nodes, steps, n)
+        dict_stragglers[barrier] = dict_single_straggler
+
+    def nsdiff(ns):
+        nodes, steps, n = ns
+        length = len(nodes)
+        true_seq  = generate_true_seq(length, n)
+        noisy_seq = list(zip(nodes, steps))
+        true_set = set(true_seq)
+        noisy_set = set(noisy_seq)
+        diff_a_b = true_set.difference(noisy_set)
+        diff_b_a = noisy_set.difference(true_set)
+        diff = len(diff_a_b) + len(diff_b_a)
+        return diff / length
+
+    fig, ax = plt.subplots()
+    for k, i in dict_stragglers.items():
+        sizes  = list(i.keys())   # sizes
+        nslist = list(i.values()) # (nodes, steps) list
+        diffs = list(map(nsdiff, nslist))
+        ax.plot(sizes, diffs, label=k)
+
+    ax.set_xlabel("Straggleness")
+    ax.set_ylabel("Normalised nosiy-true sequence difference")
+    plt.legend()
+    plt.show()
+
+
+def exp_scalability_seqdiff(result_dir):
+    db.init_db(result_dir)
+    barriers = [
+        (asp, 'asp'), (ssp(4), 'ssp_s4'),
+        (pbsp(5), 'pbsp_p5'),
+        (pssp(4, 5), 'pssp_s4_p5'),
+        #(pbsp(10), 'pbsp_p10'),
+        #(pssp(4, 10), 'pssp_s4_p10'),
+    ]
+
+    def generate_true_seq(l, n):
+        seq = [None] * l
+        for i in range(l):
+            c = int(i / n)
+            p = i % n
+            # +1 to agree with the step in exp (starting from 1)
+            seq[i] = (p, c+1)
+        return seq
+
+    observe_points = ['sequence']
+    time = 60; size = 100
+    configs = [
+        {'stop_time':time, 'size':50, 'straggler_perc':0, 'straggleness':1,
+        'barriers':barriers, 'observe_points':observe_points,
+        'path':result_dir},
+        {'stop_time':time, 'size':100, 'straggler_perc':0, 'straggleness':1,
+        'barriers':barriers, 'observe_points':observe_points,
+        'path':result_dir},
+        {'stop_time':time, 'size':200, 'straggler_perc':0, 'straggleness':1,
+        'barriers':barriers, 'observe_points':observe_points,
+        'path':result_dir},
+        {'stop_time':time, 'size':300, 'straggler_perc':0, 'straggleness':1,
+        'barriers':barriers, 'observe_points':observe_points,
+        'path':result_dir},
+        {'stop_time':time, 'size':400, 'straggler_perc':0, 'straggleness':1,
+        'barriers':barriers, 'observe_points':observe_points,
+        'path':result_dir},
+        {'stop_time':time, 'size':500, 'straggler_perc':0, 'straggleness':1,
+        'barriers':barriers, 'observe_points':observe_points,
+        'path':result_dir},
+    ]
+
+    for c in configs: run(c)
+
+    barrier_names = [s for (_, s) in barriers]
+    dict_stragglers = {}
+
+    for barrier in barrier_names:
+        dict_single_straggler = {}
+        for c in configs:
+            n = c['size']
+            filename = utils.dbfilename(c, barrier, 'sequence')
+            with open(filename, 'r') as f:
+                reader = csv.reader(f, delimiter=',')
+                nodes = [int(s) for s in next(reader)]
+                steps = [int(s) for s in next(reader)]
+                times = [float(s) for s in next(reader)]
+                dict_single_straggler[c['size']] = (nodes, steps, n)
+        dict_stragglers[barrier] = dict_single_straggler
+
+    def nsdiff(ns):
+        nodes, steps, n = ns
+        length = len(nodes)
+        true_seq  = generate_true_seq(length, n)
+        noisy_seq = list(zip(nodes, steps))
+        true_set = set(true_seq)
+        noisy_set = set(noisy_seq)
+        diff_a_b = true_set.difference(noisy_set)
+        diff_b_a = noisy_set.difference(true_set)
+        diff = len(diff_a_b) + len(diff_b_a)
+        return diff / length
+
+    fig, ax = plt.subplots()
+    for k, i in dict_stragglers.items():
+        sizes  = list(i.keys())   # sizes
+        nslist = list(i.values()) # (nodes, steps) list
+        diffs = list(map(nsdiff, nslist))
+        ax.plot(sizes, diffs, label=k)
+
+    ax.set_xlabel("Network sizes")
+    ax.set_ylabel("Normalised nosiy-true sequence difference")
+    plt.legend()
+    plt.show()
+
 
 
 def exp_straggle_accuracy(result_dir):
