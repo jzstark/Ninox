@@ -31,8 +31,8 @@ def main(db_dir):
     #run_exp(exp_scalability_consistency, "exp_scalability_consistency")
     #run_exp(exp_straggleness_consistency, "exp_straggleness_consistency")
 
-    #run_exp(exp_seqdiff, "exp_seqdiff") # Type2 inconsistency
-    run_exp(exp_straggle_seqdiff,     "exp_straggle_seqdiff")
+    run_exp(exp_seqdiff, "exp_consistency_t2") # Type2 inconsistency
+    #run_exp(exp_straggle_seqdiff,     "exp_straggle_seqdiff")
     #run_exp(exp_straggleness_seqdiff, "exp_straggleness_seqdiff")
     #run_exp(exp_scalability_seqdiff,  "exp_scalability_seqdiff")
 

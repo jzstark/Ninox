@@ -434,12 +434,14 @@ def exp_seqdiff(result_dir):
 
     fig, ax = plt.subplots(figsize=(8, 5))
     barrier_names = result.keys()
+    k = 0
     for barrier in barrier_names:
         [y, t] = list(zip(*result[barrier]))
-        y = np.divide(y, t)
-        ax.plot(t, y, label=barrier)
-    ax.set_xlabel("Sequence length T")
-    ax.set_ylabel("Normalised nosiy-true sequence difference")
+        #y = np.divide(y, t) # not a good metric
+        ax.plot(t, y, label=barrier) #, linestyle=linestyles[k])
+        k = (k + 1) % len(linestyles)
+    ax.set_xlabel("Sequence length T (P=%d)" % size)
+    ax.set_ylabel("Noisy-True sequence difference")
     plt.legend()
     plt.show()
 
@@ -486,7 +488,7 @@ def exp_straggle_seqdiff(result_dir):
         'path':result_dir},
     ]
 
-    for c in configs: run(c)
+    #for c in configs: run(c)
 
     barrier_names = [s for (_, s) in barriers]
     dict_stragglers = {}
@@ -517,11 +519,13 @@ def exp_straggle_seqdiff(result_dir):
         return diff / length
 
     fig, ax = plt.subplots()
+    c = 0
     for k, i in dict_stragglers.items():
         sizes  = list(i.keys())   # sizes
         nslist = list(i.values()) # (nodes, steps) list
         diffs = list(map(nsdiff, nslist))
-        ax.plot(sizes, diffs, label=k)
+        ax.plot(sizes, diffs, label=k, marker=markers[c], linestyle=linestyles[c])
+        c = c + 1
 
     ax.set_xlabel("Straggle node percentage")
     ax.set_ylabel("Normalised nosiy-true sequence difference")
@@ -544,7 +548,6 @@ def exp_straggleness_seqdiff(result_dir):
         for i in range(l):
             c = int(i / n)
             p = i % n
-            # +1 to agree with the step in exp (starting from 1)
             seq[i] = (p, c+1)
         return seq
 
@@ -603,11 +606,13 @@ def exp_straggleness_seqdiff(result_dir):
         return diff / length
 
     fig, ax = plt.subplots()
+    c = 0
     for k, i in dict_stragglers.items():
         sizes  = list(i.keys())   # sizes
         nslist = list(i.values()) # (nodes, steps) list
         diffs = list(map(nsdiff, nslist))
-        ax.plot(sizes, diffs, label=k)
+        ax.plot(sizes, diffs, label=k, marker=markers[c], linestyle=linestyles[c])
+        c += 1
 
     ax.set_xlabel("Straggleness")
     ax.set_ylabel("Normalised nosiy-true sequence difference")
@@ -688,11 +693,13 @@ def exp_scalability_seqdiff(result_dir):
         return diff / length
 
     fig, ax = plt.subplots()
+    c = 0
     for k, i in dict_stragglers.items():
         sizes  = list(i.keys())   # sizes
         nslist = list(i.values()) # (nodes, steps) list
         diffs = list(map(nsdiff, nslist))
-        ax.plot(sizes, diffs, label=k)
+        ax.plot(sizes, diffs, label=k, marker=markers[c], linestyle=linestyles[c])
+        c += 1
 
     ax.set_xlabel("Network sizes")
     ax.set_ylabel("Normalised nosiy-true sequence difference")
