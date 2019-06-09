@@ -777,27 +777,30 @@ def exp_frontier(result_dir):
 
     barriers = [
         (asp, 'asp'),
-        #(ssp(1), 'ssp_s1'),
         (ssp(4), 'ssp_s4'),
+        (pbsp(5), 'pbsp_p5'),
+        (pssp(4, 5), 'pssp_s4_p5'),
+
+        #(ssp(1), 'ssp_s1'),
         #(ssp(10), 'ssp_s10'),
         #(ssp(20), 'ssp_s20'),
-        #(pbsp(5), 'pbsp_p5'),
+
         #(pbsp(20), 'pbsp_p20'),
         #(pbsp(50), 'pbsp_p50'),
         #(pbsp(80), 'pbsp_p80'),
         #(pbsp(95), 'pbsp_p95'),
         #(pbsp(99), 'pbsp_p99'),
 
-        (pssp(4, 5), 'pssp_s4_p5'),
-        (pssp(4, 20), 'pssp_s4_p20'),
-        (pssp(4, 50), 'pssp_s4_p50'),
-        (pssp(4, 90), 'pssp_s4_p90'),
-        (pssp(4, 95), 'pssp_s4_p95'),
-        (pssp(4, 99), 'pssp_s4_p99'),
-        (pssp(4, 100), 'pssp_s4_p100'),
+
+        #(pssp(4, 20), 'pssp_s4_p20'),
+        #(pssp(4, 50), 'pssp_s4_p50'),
+        #(pssp(4, 90), 'pssp_s4_p90'),
+        #(pssp(4, 95), 'pssp_s4_p95'),
+        #(pssp(4, 99), 'pssp_s4_p99'),
+        #(pssp(4, 100), 'pssp_s4_p100'),
     ]
     observe_points = ['frontier']
-    config = {'stop_time':50, 'size':100, 'straggler_perc':0, 'straggleness':1.,
+    config = {'stop_time':200, 'size':200, 'straggler_perc':0, 'straggleness':1.,
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir}
 
@@ -809,11 +812,11 @@ def exp_frontier(result_dir):
         filename = utils.dbfilename(config, barrier, 'frontier')
         with open(filename, 'r') as f:
             reader = csv.reader(f, delimiter=',')
-            diff_num[barrier] = [int(s) for s in next(reader)]
+            diff_num[barrier] = [float(s) for s in next(reader)]
             diff_max[barrier] = [int(s) for s in next(reader)]
             diff_min[barrier] = [int(s) for s in next(reader)]
 
-    print(diff_num)
+    #print(diff_num)
 
 
     fig, ax = plt.subplots(figsize=(10, 5))
@@ -830,7 +833,7 @@ def exp_frontier(result_dir):
     #ax.axvline(x=1, linestyle=linestyles[c], label='bsp', color='m')
     ax.legend()
     ax.set_xlim([0, 5])
-    ax.set_ylim([0, 1])
+    #ax.set_ylim([0, 1])
     ax.set_xlabel('Average step inconsistency per node')
     ax.set_ylabel('Density')
     plt.show()

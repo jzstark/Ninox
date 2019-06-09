@@ -20,7 +20,7 @@ def main(db_dir):
     #run_exp(exp_straggle_perc, "exp_straggle_perc")
     #run_exp(exp_straggleness, "exp_straggleness")
     #run_exp(exp_straggle_accuracy, "exp_straggle_accuracy")
-    #run_exp(exp_frontier, "exp_frontier")
+    run_exp(exp_frontier, "exp_frontier")
     #run_exp(exp_ratio, "exp_ratio")
     #run_exp(exp_regression, "exp_regression")
     #run_exp(exp_scalability, "exp_scalability")
@@ -31,7 +31,7 @@ def main(db_dir):
     #run_exp(exp_scalability_consistency, "exp_scalability_consistency")
     #run_exp(exp_straggleness_consistency, "exp_straggleness_consistency")
 
-    run_exp(exp_seqdiff, "exp_consistency_t2") # Type2 inconsistency
+    #run_exp(exp_seqdiff, "exp_consistency_t2") # Type2 inconsistency
     #run_exp(exp_straggle_seqdiff,     "exp_straggle_seqdiff")
     #run_exp(exp_straggleness_seqdiff, "exp_straggleness_seqdiff")
     #run_exp(exp_scalability_seqdiff,  "exp_scalability_seqdiff")

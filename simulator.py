@@ -5,7 +5,7 @@ import utils
 import csv
 import os
 import random
-import regression
+import regression_mf as regression
 import gc
 
 randomness=0.01
