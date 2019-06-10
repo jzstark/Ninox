@@ -9,9 +9,9 @@ Parameters
 """
 
 seed = 233
-batch_size = 10000
-alpha = 0.001
-beta  = 0.01
+batch_size = 2000
+alpha = 0.01
+beta  = 0.05
 
 """
 Load and pre-process Movielens-1M data
@@ -63,9 +63,12 @@ Exposed API for simulation use
 """
 
 def get_weight(model):
-    p_init = np.copy(p); q_init = np.copy(q)
-    bu_init = np.copy(bu); bd_init = np.copy(bd)
-    return (p_init, q_init, bu_init, bd_init)
+    p_copy  = np.copy(model['p'])
+    q_copy  = np.copy(model['q'])
+    bu_copy = np.copy(model['bu'])
+    bd_copy = np.copy(model['bd'])
+    return (p_copy, q_copy, bu_copy, bd_copy)
+
 
 def set_weight(model, weight):
     model['p']  = weight[0]
@@ -82,6 +85,14 @@ def build_model(opt, accuracy=True):
     bd = np.zeros(D)
     model = {"p": p, "q": q, "bu": bu, "bd": bd}
     return model
+
+
+def build_update():
+    p  = np.zeros((U, K))
+    q  = np.zeros((D, K))
+    bu = np.zeros(U)
+    bd = np.zeros(D)
+    return (p, q, bu, bd)
 
 
 def update_model(model, update):

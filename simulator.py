@@ -88,8 +88,8 @@ class Node:
         if(reg == True):
             opt = regression.make_optimiser()
             self.model = regression.build_model(opt, accuracy=False)
-        self.delta = [np.zeros(modelsize), np.zeros(10)]
-
+        self.delta = regression.build_update()
+        
         self.frontier = [] # length: nodes number
         self.frontier_info = [] # length: total step number
 

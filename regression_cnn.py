@@ -101,6 +101,10 @@ def build_model(opt, accuracy=True):
     return model
 
 
+def build_update(model):
+    return [np.zeros(28 * 28, 10), np.zeros(10)]
+
+
 def update_model(model, u):
     [w0, b0] = get_weight(model)
     w1 = w0 + u[0]
