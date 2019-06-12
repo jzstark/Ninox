@@ -302,16 +302,16 @@ def exp_regression(result_dir):
 
     barriers = [
         (asp, 'asp'),
-        (ssp(4), 'ssp_s4'),
+        (ssp(3), 'ssp_s3'),
         (bsp, 'bsp'),
-
+        
         #(ssp(10), 'ssp_s10'),
         #(pbsp(1), 'pbsp_p10'),
         #(pbsp(40), 'pbsp_p40'),
         #(pssp(4, 5), 'pssp_s4_p5'),
     ]
     observe_points = ['regression']
-    config = {'stop_time':60, 'size':30, 'straggler_perc':0, 'straggleness':1,
+    config = {'stop_time':200, 'size':30, 'straggler_perc':0, 'straggleness':1,
     #config = {'stop_time':50, 'size':99, 'straggler_perc':15, 'straggleness':4,
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir}
@@ -800,11 +800,11 @@ def exp_frontier(result_dir):
         #(pssp(4, 100), 'pssp_s4_p100'),
     ]
     observe_points = ['frontier']
-    config = {'stop_time':200, 'size':200, 'straggler_perc':0, 'straggleness':1.,
+    config = {'stop_time':100, 'size':100, 'straggler_perc':0, 'straggleness':1.,
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir}
 
-    #run(config)
+    run(config)
 
     diff_num = {}; diff_max = {}; diff_min = {}
     barrier_names = [s for (_, s) in config['barriers'] ]

@@ -22,8 +22,10 @@ Parameters
 seed=233
 num_classes = 10
 epochs=1
-batch_size=64
+batch_size=512
 iteration=5
+
+data_select_step = 100
 
 """
 Load and pre-process MNSIT data
@@ -41,8 +43,8 @@ x_test     = np.reshape(x_test, (test_len, image_size))
 #x_test     = np.reshape(x_test, (test_len, 28, 28, 1))
 y_train    = to_categorical(y_train, num_classes)
 y_test     = to_categorical(y_test, num_classes)
-x_test_small = x_test[:1000]
-y_test_small = y_test[:1000]
+x_test_small = x_test[:5000]
+y_test_small = y_test[:5000]
 
 
 """
@@ -51,20 +53,15 @@ Utilities
 
 def make_optimiser():
     # This has to be newly created for each new instance.
-    return optimizers.SGD(lr=0.005, decay=1e-4)
-    #return optimizers.Adadelta()
+    return optimizers.SGD(lr=0.01)
 
-"""
-def get_next_batch():
-    size = batch_size * iteration
-    idx = random.randint(0, train_len - size - 1)
-    return x_train[[idx,idx+size], :], y_train[[idx,idx+size], :]
-"""
 
-def get_next_batch(i, n):
+# A worker's data is limited; each has different "local" data.
+def get_next_batch(i, n, clock):
     size = batch_size * iteration
-    slice = int((train_len - size - 1) / n)
-    idx = random.randint(i * slice, i * slice + slice - 1)
+    slicelen = int((train_len - size - 1) / n)
+    idx = i * slicelen + (clock * data_select_step) % slicelen
+    #idx = random.randint(i * slicelen, i * slicelen + slicelen - 1)
     return x_train[[idx,idx+size], :], y_train[[idx,idx+size], :]
 
 
@@ -101,8 +98,8 @@ def build_model(opt, accuracy=True):
     return model
 
 
-def build_update(model):
-    return [np.zeros(28 * 28, 10), np.zeros(10)]
+def build_update():
+    return [np.zeros((28 * 28, 10)), np.zeros(10)]
 
 
 def update_model(model, u):
@@ -112,11 +109,9 @@ def update_model(model, u):
     set_weight(model, [w1, b1])
     return model
 
-
-#def compute_updates(model):
-#    x, y = get_next_batch()
-def compute_updates(model, i, n):
-    x, y = get_next_batch(i, n)
+# Model, workder id, total worker number,
+def compute_updates(model, i, n, step):
+    x, y = get_next_batch(i, n, step)
     [w0, b0] = get_weight(model)
     model.fit(x, y, epochs=epochs, batch_size=batch_size, verbose=1,
         validation_data=(x_test_small, y_test_small))

@@ -5,7 +5,7 @@ import utils
 import csv
 import os
 import random
-import regression_mf as regression
+import regression_cnn as regression
 import gc
 
 randomness=0.01
@@ -80,7 +80,8 @@ def pssp(staleness, sample_size):
 # Data strucutres: node and network
 
 class Node:
-    def __init__(self, reg):
+    def __init__(self, wid, reg):
+        self.wid = -1
         self.step   = 0
         self.t_wait = 0.
         self.t_exec = 0.
@@ -89,7 +90,7 @@ class Node:
             opt = regression.make_optimiser()
             self.model = regression.build_model(opt, accuracy=False)
         self.delta = regression.build_update()
-        
+
         self.frontier = [] # length: nodes number
         self.frontier_info = [] # length: total step number
 
@@ -114,7 +115,7 @@ class Network:
         size = config['size']
         for i in range(size):
             reg_flag = 'regression' in self.observe_points
-            node = Node(reg=reg_flag)
+            node = Node(wid=i, reg=reg_flag)
             nodes.append(node)
         # This could a problem if we allow nodes dropping in and out freely
         self.nodes = nodes
@@ -122,9 +123,17 @@ class Network:
         self.stop_time = config['stop_time']
         self.clock = 0.
 
+        # Communication delay
+        self.delay = [0] * size
+        np.random.seed(seed)
+        for i in range(size):
+            #self.delay[i] = np.random.exponential(3)
+            #self.delay[i] = random.randint(0, 4)
+            self.delay[i] = random.random() * 3
+
         if('regression' in self.observe_points):
             opt = regression.make_optimiser()
-            self.model = regression.build_model(opt)  #np.random.rand(*modelsize)
+            self.model = regression.build_model(opt)  #np.random.rand(*modelsize)s
         self.regression_info = []
 
         self.straggler_perc = config['straggler_perc']
@@ -156,8 +165,11 @@ class Network:
             # If it's time to finish the wait and go on...
 
             # Decide my next execution time; increase my step
+            # Process time
             exec_time = random_task_time(
                 self.straggler_perc, self.straggleness)
+            # Communication time
+            exec_time += self.delay[n.wid]
             n.t_wait = self.clock
             n.t_exec = n.t_wait + exec_time
             n.step += 1
@@ -207,8 +219,7 @@ class Network:
             # Pull weights from parameter server
             weights = regression.get_weight(self.model)
             regression.set_weight(n.model, weights)
-            n.delta = regression.compute_updates(n.model, i, N)
-            #n.delta = regression.compute_updates(n.model)
+            n.delta = regression.compute_updates(n.model, i, N, n.step)
 
 
     def next_event_at(self):
