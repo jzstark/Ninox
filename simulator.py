@@ -77,7 +77,7 @@ def pssp(staleness, sample_size):
     return pssp_param
 
 
-# Data strucutres: node and network
+# Data structures: node and network
 
 class Node:
     def __init__(self, wid, reg):
@@ -195,7 +195,7 @@ class Network:
 
             if('regression' in self.observe_points):
                 # Push my update to server
-                self.model = regression.update_model(self.model, n.delta)
+                regression.update_model(self.model, n.delta)
             #print("\nNode #", i)
             #print("PS frontier:", self.step_frontier)
             #print("My fronter:", n.frontier)
@@ -239,9 +239,9 @@ class Network:
             self.regression_info.append((0, 0, acc))
 
         while(self.clock < self.stop_time):
-            self.update_nodes_time()
             if ('regression' in self.observe_points):
                 self.update_nodes_delta()
+            self.update_nodes_time()
             t = self.next_event_at()
             self.clock = t
 

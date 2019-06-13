@@ -74,7 +74,7 @@ def set_weight(model, u):
     [w, b] = u
     # Notice this copy!!!!
     w1 = w.copy(); b1 = b.copy()
-    return l.set_weights([w1, b1])
+    l.set_weights([w1, b1])
 
 
 """
@@ -107,7 +107,6 @@ def update_model(model, u):
     w1 = w0 + u[0]
     b1 = b0 + u[1]
     set_weight(model, [w1, b1])
-    return model
 
 # Model, workder id, total worker number,
 def compute_updates(model, i, n, step):
