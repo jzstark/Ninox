@@ -8,7 +8,7 @@ import random
 import regression_cnn as regression
 import gc
 
-randomness=0.01
+randomness = 0.01
 seed = 666
 modelsize = (28 * 28, 10)
 # Utils
@@ -94,6 +94,8 @@ class Node:
         self.frontier = [] # length: nodes number
         self.frontier_info = [] # length: total step number
 
+        self.delta_ready = False # if this node has already calculated an update
+
 
 class Network:
 
@@ -129,7 +131,7 @@ class Network:
         for i in range(size):
             #self.delay[i] = np.random.exponential(3)
             #self.delay[i] = random.randint(0, 4)
-            self.delay[i] = random.random() * 3
+            self.delay[i] = random.random() * 5
 
         if('regression' in self.observe_points):
             opt = regression.make_optimiser()
@@ -195,7 +197,9 @@ class Network:
 
             if('regression' in self.observe_points):
                 # Push my update to server
+                # This step indeed works.
                 regression.update_model(self.model, n.delta)
+                n.delta_ready = False
             #print("\nNode #", i)
             #print("PS frontier:", self.step_frontier)
             #print("My fronter:", n.frontier)
@@ -215,11 +219,20 @@ class Network:
     def update_nodes_delta(self):
         N = len(self.nodes)
         for i, n in enumerate(self.nodes):
-            if self.clock != n.t_wait : continue
+
+            #if self.clock != n.t_wait : continue #!!!!!!
+
+            if n.delta_ready: #or (self.clock > n.t_wait) or (self.clock < n.t_exec) :
+                continue
+
             # Pull weights from parameter server
             weights = regression.get_weight(self.model)
             regression.set_weight(n.model, weights)
             n.delta = regression.compute_updates(n.model, i, N, n.step)
+
+            n.delta_ready = True
+            #print("\nFuck: worker %d!\n" % i)
+            #print(n.delta)
 
 
     def next_event_at(self):

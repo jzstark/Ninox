@@ -12,6 +12,7 @@ seed = 233
 batch_size = 2000
 alpha = 0.01
 beta  = 0.05
+data_select_step = 500
 
 """
 Load and pre-process Movielens-1M data
@@ -46,9 +47,10 @@ def make_optimiser():
 
 train_len = len(ratings)
 
-def get_next_batch(i, n):
-    slice = int((train_len - batch_size - 1) / n)
-    idx = random.randint(i * slice, i * slice + slice - 1)
+def get_next_batch(i, n, clock):
+    slicelen = int((train_len - batch_size - 1) / n)
+    idx = i * slicelen + (clock * data_select_step) % slicelen
+    #idx = random.randint(i * slicelen, i * slicelen + slicelen - 1)
     return ratings[idx : idx + batch_size - 1]
 
 
@@ -105,7 +107,7 @@ def update_model(model, update):
 
 
 # model, worker index, total number of workers
-def compute_updates(model, wid, n):
+def compute_updates(model, wid, n, step):
     p = model['p']; q = model['q']
     bu = model['bu']; bd = model['bd']
 
@@ -113,7 +115,7 @@ def compute_updates(model, wid, n):
     p_init = np.copy(p); q_init = np.copy(q)
     bu_init = np.copy(bu); bd_init = np.copy(bd)
 
-    samples = get_next_batch(wid, n)
+    samples = get_next_batch(wid, n, step)
     for i, j, r in samples:
         pred = get_rating(model, i, j) # !!! the model changed
         e = r - pred
@@ -137,7 +139,7 @@ def compute_accuracy(model):
 def test_run():
     model = build_model(None)
     for i in range(10000):
-        updates = compute_updates(model, 0, 1)
+        updates = compute_updates(model, 0, 1, i)
         model = update_model(model, updates)
         if (i % 10 == 0): # About 3s for 10 iteration.
             _,  error = compute_accuracy(model)

@@ -21,11 +21,11 @@ Parameters
 
 seed=233
 num_classes = 10
-epochs=1
+epochs=2
 batch_size=512
 iteration=5
 
-data_select_step = 100
+data_select_step = 500
 
 """
 Load and pre-process MNSIT data
@@ -53,7 +53,7 @@ Utilities
 
 def make_optimiser():
     # This has to be newly created for each new instance.
-    return optimizers.SGD(lr=0.01)
+    return optimizers.SGD(lr=0.001)
 
 
 # A worker's data is limited; each has different "local" data.
