@@ -140,7 +140,7 @@ def test_run():
     model = build_model(None)
     for i in range(10000):
         updates = compute_updates(model, 0, 1, i)
-        model = update_model(model, updates)
+        update_model(model, updates)
         if (i % 10 == 0): # About 3s for 10 iteration.
             _,  error = compute_accuracy(model)
             print("Error: %.2f" % error)

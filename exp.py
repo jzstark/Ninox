@@ -53,11 +53,11 @@ def exp_step(result_dir):
     ]
     observe_points = ['step']
     configs = [
-        {'stop_time':200, 'size':200, 'straggler_perc':0, 'straggleness':1, 'barriers':barriers, 'observe_points':observe_points,
+        {'stop_time':200, 'size':100, 'straggler_perc':0, 'straggleness':1, 'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir}
     ]
 
-    #for c in configs: run(c)
+    for c in configs: run(c)
 
     data = {}
     barrier_names = [s for (_, s) in barriers]
@@ -311,7 +311,7 @@ def exp_regression(result_dir):
         #(pssp(4, 5), 'pssp_s4_p5'),
     ]
     observe_points = ['regression']
-    config = {'stop_time':150, 'size':20, 'straggler_perc':0, 'straggleness':1,
+    config = {'stop_time':100, 'size':20, 'straggler_perc':0, 'straggleness':1,
     #config = {'stop_time':50, 'size':99, 'straggler_perc':15, 'straggleness':4,
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir}

@@ -53,7 +53,7 @@ Utilities
 
 def make_optimiser():
     # This has to be newly created for each new instance.
-    return optimizers.SGD(lr=0.001)
+    return optimizers.SGD(lr=0.01)
 
 
 # A worker's data is limited; each has different "local" data.
@@ -121,3 +121,14 @@ def compute_updates(model, i, n, step):
 def compute_accuracy(model):
     loss, accuracy = model.evaluate(x_test_small, y_test_small, batch_size=64)
     return loss, accuracy
+
+
+def test_run():
+    N = 5
+    opt = make_optimiser()
+    model = build_model(opt, accuracy=True)
+    for i in range(15):
+        updates = compute_updates(model, i % N, N, i)
+        update_model(model, updates)
+        _,  acc = compute_accuracy(model)
+        print("Accuracy %.5f" % acc)

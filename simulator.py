@@ -81,7 +81,7 @@ def pssp(staleness, sample_size):
 
 class Node:
     def __init__(self, wid, reg):
-        self.wid = -1
+        self.wid = wid
         self.step   = 0
         self.t_wait = 0.
         self.t_exec = 0.
@@ -128,10 +128,13 @@ class Network:
         # Communication delay
         self.delay = [0] * size
         np.random.seed(seed)
+        #self.delay[0] = 1
+        #self.delay[1] = 5
         for i in range(size):
             #self.delay[i] = np.random.exponential(3)
-            #self.delay[i] = random.randint(0, 4)
-            self.delay[i] = random.random() * 5
+            self.delay[i] = random.randint(1, 5)
+            #self.delay[i] = random.random()
+
 
         if('regression' in self.observe_points):
             opt = regression.make_optimiser()
@@ -162,6 +165,9 @@ class Network:
             if self.clock >= n.t_exec and self.barrier(self, n):
                 passed.append((i, n))
 
+        #foo = [x for (x, y) in passed]
+        #print("\npassed: ", foo)
+
         for i, n in passed:
             self.accepted_request += 1
             # If it's time to finish the wait and go on...
@@ -171,7 +177,8 @@ class Network:
             exec_time = random_task_time(
                 self.straggler_perc, self.straggleness)
             # Communication time
-            exec_time += self.delay[n.wid]
+            exec_time *= self.delay[n.wid]
+            #print("exec_time for worker %i: %.1f." % (n.wid, exec_time))
             n.t_wait = self.clock
             n.t_exec = n.t_wait + exec_time
             n.step += 1
@@ -195,6 +202,9 @@ class Network:
 
                 n.frontier_info.append((diff_num, diff_max, diff_min))
 
+            #loss, acc = regression.compute_accuracy(self.model)
+            #print("Acc before processing: %.5f" % acc)
+
             if('regression' in self.observe_points):
                 # Push my update to server
                 # This step indeed works.
@@ -204,9 +214,20 @@ class Network:
             #print("PS frontier:", self.step_frontier)
             #print("My fronter:", n.frontier)
 
+            #loss, acc = regression.compute_accuracy(self.model)
+            #print("Acc after processing: %.5f" % acc)
+
+
         for i, n in passed:
             # Update my progress to ps
             self.step_frontier[i] = n.step
+
+        if('regression' in self.observe_points):
+            N = len(self.nodes)
+            for i, n in passed:
+                weights = regression.get_weight(self.model)
+                regression.set_weight(n.model, weights)
+                n.delta = regression.compute_updates(n.model, i, N, n.step)
 
         for i, n in passed:
             # Get current screenshot of current progress of all nodes
@@ -247,13 +268,13 @@ class Network:
         #np.random.seed(seed)
 
         counter = 0
-        if ('regression' in self.observe_points):
-            loss, acc = regression.compute_accuracy(self.model)
-            self.regression_info.append((0, 0, acc))
+        #if ('regression' in self.observe_points):
+        #    loss, acc = regression.compute_accuracy(self.model)
+        #    self.regression_info.append((0, 0, acc))
 
         while(self.clock < self.stop_time):
-            if ('regression' in self.observe_points):
-                self.update_nodes_delta()
+            #if ('regression' in self.observe_points):
+            #    self.update_nodes_delta()
             self.update_nodes_time()
             t = self.next_event_at()
             self.clock = t
