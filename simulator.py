@@ -5,7 +5,7 @@ import utils
 import csv
 import os
 import random
-import regression_cnn as regression
+import regression_dnn as regression
 import gc
 
 randomness = 0.01
@@ -165,8 +165,8 @@ class Network:
             if self.clock >= n.t_exec and self.barrier(self, n):
                 passed.append((i, n))
 
-        #foo = [x for (x, y) in passed]
-        #print("\npassed: ", foo)
+        foo = [x for (x, y) in passed]
+        print("\npassed: ", foo)
 
         for i, n in passed:
             self.accepted_request += 1
@@ -178,7 +178,7 @@ class Network:
                 self.straggler_perc, self.straggleness)
             # Communication time
             exec_time *= self.delay[n.wid]
-            #print("exec_time for worker %i: %.1f." % (n.wid, exec_time))
+            print("exec_time for worker %i: %.1f." % (n.wid, exec_time))
             n.t_wait = self.clock
             n.t_exec = n.t_wait + exec_time
             n.step += 1
@@ -202,8 +202,8 @@ class Network:
 
                 n.frontier_info.append((diff_num, diff_max, diff_min))
 
-            #loss, acc = regression.compute_accuracy(self.model)
-            #print("Acc before processing: %.5f" % acc)
+            loss, acc = regression.compute_accuracy(self.model)
+            print("\nAcc before processing: %.5f" % acc)
 
             if('regression' in self.observe_points):
                 # Push my update to server
@@ -214,8 +214,8 @@ class Network:
             #print("PS frontier:", self.step_frontier)
             #print("My fronter:", n.frontier)
 
-            #loss, acc = regression.compute_accuracy(self.model)
-            #print("Acc after processing: %.5f" % acc)
+            loss, acc = regression.compute_accuracy(self.model)
+            print("Acc after processing: %.5f" % acc)
 
 
         for i, n in passed:
