@@ -311,7 +311,7 @@ def exp_regression(result_dir):
         #(pssp(4, 5), 'pssp_s4_p5'),
     ]
     observe_points = ['regression']
-    config = {'stop_time':100, 'size':20, 'straggler_perc':0, 'straggleness':1,
+    config = {'stop_time':50, 'size':24, 'straggler_perc':0, 'straggleness':1,
     #config = {'stop_time':50, 'size':99, 'straggler_perc':15, 'straggleness':4,
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir}

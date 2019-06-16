@@ -9,10 +9,10 @@ Parameters
 """
 
 seed = 233
-batch_size = 2000
-alpha = 0.01
-beta  = 0.05
-data_select_step = 500
+batch_size = 10000
+alpha = 0.0035
+beta  = 0.01
+data_select_step = 1000
 
 """
 Load and pre-process Movielens-1M data
@@ -137,11 +137,11 @@ def compute_accuracy(model):
 
 
 def test_run():
-    model = build_model(None)
-    for i in range(10000):
-        updates = compute_updates(model, 0, 1, i)
+    N = 1000
+    opt = make_optimiser()
+    model = build_model(opt, accuracy=True)
+    for i in range(50):
+        updates = compute_updates(model, i%N, N, i)
         update_model(model, updates)
-        if (i % 10 == 0): # About 3s for 10 iteration.
-            _,  error = compute_accuracy(model)
-            print("Error: %.2f" % error)
-    return 0
+        _,  error = compute_accuracy(model)
+        print("Error: %.2f" % error)
