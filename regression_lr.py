@@ -22,9 +22,9 @@ Parameters
 seed=233
 num_classes = 10
 epochs=2
-batch_size=128
-iteration=5
-data_select_step = 100
+batch_size=64
+iteration=100
+data_select_step = 1000
 learning_rate = 0.001
 
 """
@@ -115,12 +115,14 @@ def update_model(model, u):
     set_weight(model, [w1, b1])
 
 # Model, workder id, total worker number,
+# Make sure to reset the weight after computation
 def compute_updates(model, i, n, step):
     x, y = get_next_batch(i, n, step)
     [w0, b0] = get_weight(model)
     model.fit(x, y, epochs=epochs, batch_size=batch_size, verbose=1,
         validation_data=(x_test_small, y_test_small))
     [w1, b1] = get_weight(model)
+    set_weight(model, [w0, b0])
     return (w1 - w0, b1 - b0)
 
 

@@ -22,9 +22,9 @@ Parameters
 
 seed=233
 epochs=2
-batch_size=128
-iteration=5
-data_select_step = 100
+batch_size=64
+iteration=10
+data_select_step = 50
 learning_rate=0.001
 
 """
@@ -136,6 +136,9 @@ def compute_updates(model, i, n, step):
     model.fit(x, y, epochs=epochs, batch_size=batch_size, verbose=1,
         validation_data=(x_test_small, y_test_small))
     ws1 = get_weight(model)
+
+    set_weight(model, ws0)
+
     #print(ws1[0])
     #print(diff_weight(ws1, ws0))
     return diff_weight(ws1, ws0)

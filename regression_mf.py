@@ -10,7 +10,7 @@ Parameters
 
 seed = 233
 batch_size = 10000
-alpha = 0.001
+alpha = 0.002
 beta  = 0.01
 data_select_step = 1000
 
@@ -34,6 +34,8 @@ def read_csv(filename):
 
 ratings = read_csv("data/ratings_train.csv")
 validation_set = read_csv("data/ratings_test.csv")
+
+#random.shuffle(ratings)
 
 # global bias
 b = np.mean([r[2] for r in ratings])
@@ -103,7 +105,6 @@ def update_model(model, update):
     model['q'] = model['q'] + q0
     model['bu'] = model['bu'] + bu0
     model['bd'] = model['bd'] + bd0
-    return model
 
 
 # model, worker index, total number of workers
@@ -125,6 +126,8 @@ def compute_updates(model, wid, n, step):
         q[j, :] += alpha * (e * p[i, :] - beta * q[j,:])
 
     updates = (p - p_init, q - q_init, bu - bu_init, bd - bd_init)
+
+    set_weight(model, [p_init, q_init, bu_init, bd_init])
     return updates
 
 

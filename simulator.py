@@ -11,11 +11,13 @@ import gc
 randomness = 0.01
 seed = 666
 modelsize = (28 * 28, 10)
+obserse_timespace = 2
 # Utils
 
 def randomized_speed(base_speed, randomness):
     return base_speed
 
+# straggleness should not be on a single task time
 def random_task_time(straggler_perc, straggleness):
     #t = np.random.exponential(1)
     t = 1
@@ -87,16 +89,14 @@ class Node:
         self.step   = 0
         self.t_wait = 0.
         self.t_exec = 0.
-        # each model has its own copy of model; do not share a common model in computing gradeint.
+        # Make sure computing updates does NOT change the server model
         if(reg == True):
-            opt = regression.make_optimiser()
-            self.model = regression.build_model(opt, accuracy=False)
-        self.delta = regression.build_update()
+            #opt = regression.make_optimiser()
+            #self.model = regression.build_model(opt, accuracy=False)
+            self.delta = regression.build_update()
 
         self.frontier = [] # length: nodes number
         self.frontier_info = [] # length: total step number
-
-        self.delta_ready = False # if this node has already calculated an update
 
 
 class Network:
@@ -133,7 +133,7 @@ class Network:
         for i in range(size):
             #self.delay[i] = np.random.exponential(3)
             #self.delay[i] = np.random.rand() * 5
-            self.delay[i] = random.randint(0, 15)
+            self.delay[i] = random.randint(0, 10)
             #self.delay[i] = random.random()
         self.delay[0] = 0
         self.delay[1] = 4
@@ -141,7 +141,7 @@ class Network:
 
         if('regression' in self.observe_points):
             opt = regression.make_optimiser()
-            self.model = regression.build_model(opt)  #np.random.rand(*modelsize)s
+            self.model = regression.build_model(opt)
         self.regression_info = []
 
         self.straggler_perc = config['straggler_perc']
@@ -205,32 +205,21 @@ class Network:
 
                 n.frontier_info.append((diff_num, diff_max, diff_min))
 
-            #loss, acc = regression.compute_accuracy(self.model)
-            #print("\nAcc before processing: %.5f" % acc)
-
+            # Push my update to server
             if('regression' in self.observe_points):
-                # Push my update to server
-                # This step indeed works.
                 regression.update_model(self.model, n.delta)
-                #n.delta_ready = False
-            #print("\nNode #", i)
-            #print("PS frontier:", self.step_frontier)
-            #print("My fronter:", n.frontier)
-
-            #loss, acc = regression.compute_accuracy(self.model)
-            #print("Acc after processing: %.5f" % acc)
-
 
         for i, n in passed:
             # Update my progress to ps
             self.step_frontier[i] = n.step
 
+
         if('regression' in self.observe_points):
             N = len(self.nodes)
             for i, n in passed:
-                weights = regression.get_weight(self.model)
-                regression.set_weight(n.model, weights)
-                n.delta = regression.compute_updates(n.model, i, N, n.step)
+                #weights = regression.get_weight(self.model)
+                #regression.set_weight(n.model, weights)
+                n.delta = regression.compute_updates(self.model, i, N, n.step)
 
         for i, n in passed:
             # Get current screenshot of current progress of all nodes
@@ -282,7 +271,7 @@ class Network:
             self.clock = t
 
             if ('regression' in self.observe_points):
-                if (self.clock - counter > 1):
+                if (self.clock - counter > obserse_timespace):
                     #max_step = int(np.max(self.step_frontier))
                     total_step = np.sum(self.step_frontier)
                     loss, acc = regression.compute_accuracy(self.model)
