@@ -10,7 +10,7 @@ Parameters
 
 seed = 233
 batch_size = 10000
-alpha = 0.0035
+alpha = 0.001
 beta  = 0.01
 data_select_step = 1000
 

@@ -22,16 +22,24 @@ Parameters
 seed=233
 num_classes = 10
 epochs=2
-batch_size=512
+batch_size=128
 iteration=5
-
-data_select_step = 500
+data_select_step = 100
+learning_rate = 0.001
 
 """
 Load and pre-process MNSIT data
 """
 
 (x_train, y_train),(x_test, y_test) = load_data()
+# Sort dataset
+idx = np.argsort(y_train)
+x_train = x_train[idx]
+y_train = y_train[idx]
+idx = np.argsort(y_test)
+x_test = x_test[idx]
+y_test = y_test[idx]
+
 image_size = x_train[0].shape[0] * x_train[0].shape[1]
 x_train    = x_train.astype('float32') / 255.0
 x_test     = x_test.astype('float32') / 255.0
@@ -39,8 +47,6 @@ train_len  = len(y_train)
 test_len   = len(y_test)
 x_train    = np.reshape(x_train, (train_len, image_size))
 x_test     = np.reshape(x_test, (test_len, image_size))
-#x_train    = np.reshape(x_train, (train_len, 28, 28, 1))
-#x_test     = np.reshape(x_test, (test_len, 28, 28, 1))
 y_train    = to_categorical(y_train, num_classes)
 y_test     = to_categorical(y_test, num_classes)
 x_test_small = x_test[:5000]
@@ -53,7 +59,7 @@ Utilities
 
 def make_optimiser():
     # This has to be newly created for each new instance.
-    return optimizers.SGD(lr=0.01)
+    return optimizers.SGD(lr=learning_rate)
 
 
 # A worker's data is limited; each has different "local" data.

@@ -5,7 +5,7 @@ import utils
 import csv
 import os
 import random
-import regression_mf as regression
+import regression_lr as regression
 import gc
 
 randomness = 0.01
@@ -17,7 +17,8 @@ def randomized_speed(base_speed, randomness):
     return base_speed
 
 def random_task_time(straggler_perc, straggleness):
-    t = np.random.exponential(1)
+    #t = np.random.exponential(1)
+    t = 1
     #t = np.random.chisquare(2.)
     if np.random.uniform() < (straggler_perc / 100.):
         t = t * straggleness
@@ -129,12 +130,13 @@ class Network:
         # Communication delay
         self.delay = [0] * size
         np.random.seed(seed)
-        #self.delay[0] = 1
-        #self.delay[1] = 5
         for i in range(size):
             #self.delay[i] = np.random.exponential(3)
-            self.delay[i] = random.randint(1, 5)
+            #self.delay[i] = np.random.rand() * 5
+            self.delay[i] = random.randint(0, 15)
             #self.delay[i] = random.random()
+        self.delay[0] = 0
+        self.delay[1] = 4
 
 
         if('regression' in self.observe_points):
@@ -210,7 +212,7 @@ class Network:
                 # Push my update to server
                 # This step indeed works.
                 regression.update_model(self.model, n.delta)
-                n.delta_ready = False
+                #n.delta_ready = False
             #print("\nNode #", i)
             #print("PS frontier:", self.step_frontier)
             #print("My fronter:", n.frontier)
@@ -237,16 +239,14 @@ class Network:
             if ('sequence' in self.observe_points):
                 self.sequence.append((i, n.step, n.t_exec))
 
-
+    """
     def update_nodes_delta(self):
         N = len(self.nodes)
         for i, n in enumerate(self.nodes):
 
             #if self.clock != n.t_wait : continue #!!!!!!
-
             if n.delta_ready: #or (self.clock > n.t_wait) or (self.clock < n.t_exec) :
                 continue
-
             # Pull weights from parameter server
             weights = regression.get_weight(self.model)
             regression.set_weight(n.model, weights)
@@ -255,6 +255,7 @@ class Network:
             n.delta_ready = True
             #print("\nFuck: worker %d!\n" % i)
             #print(n.delta)
+    """
 
 
     def next_event_at(self):
@@ -269,9 +270,9 @@ class Network:
         #np.random.seed(seed)
 
         counter = 0
-        #if ('regression' in self.observe_points):
-        #    loss, acc = regression.compute_accuracy(self.model)
-        #    self.regression_info.append((0, 0, acc))
+        if ('regression' in self.observe_points):
+            loss, acc = regression.compute_accuracy(self.model)
+            self.regression_info.append((0, 0, acc))
 
         while(self.clock < self.stop_time):
             #if ('regression' in self.observe_points):
@@ -283,9 +284,9 @@ class Network:
             if ('regression' in self.observe_points):
                 if (self.clock - counter > 1):
                     #max_step = int(np.max(self.step_frontier))
-                    avg_step = np.mean(self.step_frontier)
+                    total_step = np.sum(self.step_frontier)
                     loss, acc = regression.compute_accuracy(self.model)
-                    self.regression_info.append((self.clock, avg_step, acc))
+                    self.regression_info.append((self.clock, total_step, acc))
                     counter = self.clock
 
 
