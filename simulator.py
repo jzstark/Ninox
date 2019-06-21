@@ -5,7 +5,7 @@ import utils
 import csv
 import os
 import random
-import regression_mf as regression
+import regression_dnn as regression
 import gc
 
 randomness = 0.01
@@ -25,8 +25,6 @@ def random_task_time(straggler_perc, straggleness):
     t = np.random.exponential(1)
     #t = 1
     #t = np.random.chisquare(2.)
-    if np.random.uniform() < (straggler_perc / 100.):
-        t = t * straggleness
     return t
 
 """
@@ -136,17 +134,22 @@ class Network:
         np.random.seed(seed)
         for i in range(size):
             #self.delay[i] = np.random.rand() * 5
-            self.delay[i] = random.randint(0, 15)
-        self.delay[0] = 0
-        self.delay[1] = 4
+            self.delay[i] = random.randint(0, 5)
+        #self.delay[0] = 0
+        #self.delay[1] = 4
 
-        if('regression' in self.observe_points):
+        straggler_perc = config['straggler_perc']
+        straggleness = config['straggleness']
+        self.straggleness = [1] * size
+        sub_idx = random.sample(list(range(0, size)), int(straggler_perc * size))
+        for i in sub_idx:
+            self.straggleness[i] = straggleness
+
+        if ('regression' in self.observe_points):
             opt = regression.make_optimiser()
             self.model = regression.build_model(opt)
-
         self.regression_info = []
-        self.straggler_perc = config['straggler_perc']
-        self.straggleness = config['straggleness']
+
         self.step_frontier = [0] * size
         self.calc_time = [0] * size # total calc time
         # a potentially very large list; millions of elements
@@ -177,9 +180,9 @@ class Network:
             self.accepted_request += 1
             # Decide my next execution time; increase my step
             # Process time
-            exec_time = random_task_time(
-                self.straggler_perc, self.straggleness)
+            exec_time = random_task_time()
             exec_time += self.delay[n.wid]
+            exec_time *= self.straggleness[n.wid]
             print("exec_time for worker %i: %.1f." % (n.wid, exec_time))
             n.t_wait = self.clock
             n.t_exec = n.t_wait + exec_time
@@ -191,7 +194,7 @@ class Network:
             for i, n in passed:
                 self.sequence.append((i, n.step, n.t_exec))
 
-        if('regression' in self.observe_points):
+        if ('regression' in self.observe_points):
             N = len(self.nodes)
             # Push all pending updates to server
             for i, n in passed:
