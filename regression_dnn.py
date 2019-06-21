@@ -23,7 +23,7 @@ Parameters
 seed=233
 epochs=2
 batch_size=64
-iteration=10
+iteration=5
 data_select_step = 50
 learning_rate=0.001
 

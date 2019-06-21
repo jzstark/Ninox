@@ -17,15 +17,12 @@ obserse_timespace = 2
 Utils
 """
 
-def randomized_speed(base_speed, randomness):
-    return base_speed
-
-# straggleness should not be on a single task time
-def random_task_time(straggler_perc, straggleness):
+def random_task_time():
     t = np.random.exponential(1)
     #t = 1
     #t = np.random.chisquare(2.)
     return t
+
 
 """
 Barriers, deciding if `node` should just go ahead
@@ -138,7 +135,7 @@ class Network:
         #self.delay[0] = 0
         #self.delay[1] = 4
 
-        straggler_perc = config['straggler_perc']
+        straggler_perc = config['straggler_perc'] / 100.
         straggleness = config['straggleness']
         self.straggleness = [1] * size
         sub_idx = random.sample(list(range(0, size)), int(straggler_perc * size))
