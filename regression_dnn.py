@@ -128,19 +128,15 @@ def update_model(model, us):
     set_weight(model, w_new)
 
 
-# Model, workder id, total worker number,
+# Model, workder id, total worker number, step counter.
+# Make sure the computation does not change model weight.
 def compute_updates(model, i, n, step):
     x, y = get_next_batch(i, n, step)
     ws0 = get_weight(model)
-    #rint(ws0[0])
     model.fit(x, y, epochs=epochs, batch_size=batch_size, verbose=1,
         validation_data=(x_test_small, y_test_small))
     ws1 = get_weight(model)
-
     set_weight(model, ws0)
-
-    #print(ws1[0])
-    #print(diff_weight(ws1, ws0))
     return diff_weight(ws1, ws0)
 
 

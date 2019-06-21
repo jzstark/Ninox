@@ -301,7 +301,7 @@ def exp_regression(result_dir):
     db.init_db(result_dir)
 
     barriers = [
-        (asp, 'asp'),
+        #(asp, 'asp'),
         (bsp, 'bsp'),
         #(ssp(4), 'ssp_s4'),
 
@@ -312,7 +312,7 @@ def exp_regression(result_dir):
 
     ]
     observe_points = ['regression']
-    config = {'stop_time':5000, 'size':2, 'straggler_perc':0, 'straggleness':1,
+    config = {'stop_time':30, 'size':100, 'straggler_perc':0, 'straggleness':1,
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir}
 

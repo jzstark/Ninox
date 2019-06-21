@@ -23,8 +23,8 @@ seed=233
 num_classes = 10
 epochs=2
 batch_size=64
-iteration=100
-data_select_step = 1000
+iteration=10
+data_select_step = 50
 learning_rate = 0.001
 
 """
@@ -33,12 +33,14 @@ Load and pre-process MNSIT data
 
 (x_train, y_train),(x_test, y_test) = load_data()
 # Sort dataset
+"""
 idx = np.argsort(y_train)
 x_train = x_train[idx]
 y_train = y_train[idx]
 idx = np.argsort(y_test)
 x_test = x_test[idx]
 y_test = y_test[idx]
+"""
 
 image_size = x_train[0].shape[0] * x_train[0].shape[1]
 x_train    = x_train.astype('float32') / 255.0
@@ -67,7 +69,9 @@ def get_next_batch(i, n, clock):
     size = batch_size * iteration
     slicelen = int((train_len - size - 1) / n)
     idx = i * slicelen + (clock * data_select_step) % slicelen
+
     #idx = random.randint(i * slicelen, i * slicelen + slicelen - 1)
+
     return x_train[[idx,idx+size], :], y_train[[idx,idx+size], :]
 
 

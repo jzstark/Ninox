@@ -5,28 +5,33 @@ import utils
 import csv
 import os
 import random
-import regression_lr as regression
+import regression_mf as regression
 import gc
 
 randomness = 0.01
 seed = 666
 modelsize = (28 * 28, 10)
 obserse_timespace = 2
-# Utils
+
+"""
+Utils
+"""
 
 def randomized_speed(base_speed, randomness):
     return base_speed
 
 # straggleness should not be on a single task time
 def random_task_time(straggler_perc, straggleness):
-    #t = np.random.exponential(1)
-    t = 1
+    t = np.random.exponential(1)
+    #t = 1
     #t = np.random.chisquare(2.)
     if np.random.uniform() < (straggler_perc / 100.):
         t = t * straggleness
     return t
 
-# Barriers, deciding if `node` should just go ahead
+"""
+Barriers, deciding if `node` should just go ahead
+"""
 
 def asp(net, node):
     return True
@@ -81,7 +86,9 @@ def pssp(staleness, sample_size):
     return pssp_param
 
 
-# Data structures: node and network
+"""
+Data structures: node and network
+"""
 
 class Node:
     def __init__(self, wid, reg):
@@ -89,12 +96,9 @@ class Node:
         self.step   = 0
         self.t_wait = 0.
         self.t_exec = 0.
-        # Make sure computing updates does NOT change the server model
+        # no need to make local copy of model, but make sure computing updates does NOT change the server model
         if(reg == True):
-            #opt = regression.make_optimiser()
-            #self.model = regression.build_model(opt, accuracy=False)
             self.delta = regression.build_update()
-
         self.frontier = [] # length: nodes number
         self.frontier_info = [] # length: total step number
 
@@ -131,19 +135,16 @@ class Network:
         self.delay = [0] * size
         np.random.seed(seed)
         for i in range(size):
-            #self.delay[i] = np.random.exponential(3)
             #self.delay[i] = np.random.rand() * 5
-            self.delay[i] = random.randint(0, 10)
-            #self.delay[i] = random.random()
+            self.delay[i] = random.randint(0, 15)
         self.delay[0] = 0
         self.delay[1] = 4
-
 
         if('regression' in self.observe_points):
             opt = regression.make_optimiser()
             self.model = regression.build_model(opt)
-        self.regression_info = []
 
+        self.regression_info = []
         self.straggler_perc = config['straggler_perc']
         self.straggleness = config['straggleness']
         self.step_frontier = [0] * size
@@ -171,15 +172,13 @@ class Network:
         foo = [x for (x, y) in passed]
         print("\npassed: ", foo)
 
+        # It's time to finish the wait and go on...
         for i, n in passed:
             self.accepted_request += 1
-            # If it's time to finish the wait and go on...
-
             # Decide my next execution time; increase my step
             # Process time
             exec_time = random_task_time(
                 self.straggler_perc, self.straggleness)
-            # Communication time
             exec_time += self.delay[n.wid]
             print("exec_time for worker %i: %.1f." % (n.wid, exec_time))
             n.t_wait = self.clock
@@ -188,8 +187,22 @@ class Network:
 
             self.calc_time[i] += exec_time
 
-            # The mismatch everytime before I push the the updates
-            if ('frontier' in self.observe_points):
+        if ('sequence' in self.observe_points):
+            for i, n in passed:
+                self.sequence.append((i, n.step, n.t_exec))
+
+        if('regression' in self.observe_points):
+            N = len(self.nodes)
+            # Push all pending updates to server
+            for i, n in passed:
+                regression.update_model(self.model, n.delta)
+            # Compute next updates based on ONE single model
+            for i, n in passed:
+                n.delta = regression.compute_updates(self.model, i, N, n.step)
+
+        # The mismatch everytime before I push the the updates
+        if ('frontier' in self.observe_points):
+            for i, n in passed:
                 # The noisy update from my point of view.
                 # All the updates that are missing from node n
                 if n.frontier == []:
@@ -199,52 +212,17 @@ class Network:
                 diff_num = np.sum(diff)
                 diff_max = np.max(diff)
                 diff_min = np.min(diff)
-                # print(diff_num)
                 # Node n's one update that is missed by other nodes
-                diff_num += 1
-
+                # diff_num += 1
                 n.frontier_info.append((diff_num, diff_max, diff_min))
 
-            # Push my update to server
-            if('regression' in self.observe_points):
-                regression.update_model(self.model, n.delta)
-
+        # Update my progress to ps
         for i, n in passed:
-            # Update my progress to ps
             self.step_frontier[i] = n.step
 
-
-        if('regression' in self.observe_points):
-            N = len(self.nodes)
-            for i, n in passed:
-                #weights = regression.get_weight(self.model)
-                #regression.set_weight(n.model, weights)
-                n.delta = regression.compute_updates(self.model, i, N, n.step)
-
+        # Get current screenshot of current progress of all nodes
         for i, n in passed:
-            # Get current screenshot of current progress of all nodes
             n.frontier = list.copy(self.step_frontier)
-
-            if ('sequence' in self.observe_points):
-                self.sequence.append((i, n.step, n.t_exec))
-
-    """
-    def update_nodes_delta(self):
-        N = len(self.nodes)
-        for i, n in enumerate(self.nodes):
-
-            #if self.clock != n.t_wait : continue #!!!!!!
-            if n.delta_ready: #or (self.clock > n.t_wait) or (self.clock < n.t_exec) :
-                continue
-            # Pull weights from parameter server
-            weights = regression.get_weight(self.model)
-            regression.set_weight(n.model, weights)
-            n.delta = regression.compute_updates(n.model, i, N, n.step)
-
-            n.delta_ready = True
-            #print("\nFuck: worker %d!\n" % i)
-            #print(n.delta)
-    """
 
 
     def next_event_at(self):
@@ -256,28 +234,22 @@ class Network:
 
 
     def execute(self):
-        #np.random.seed(seed)
-
         counter = 0
         if ('regression' in self.observe_points):
             loss, acc = regression.compute_accuracy(self.model)
             self.regression_info.append((0, 0, acc))
 
         while(self.clock < self.stop_time):
-            #if ('regression' in self.observe_points):
-            #    self.update_nodes_delta()
             self.update_nodes_time()
             t = self.next_event_at()
             self.clock = t
 
-            if ('regression' in self.observe_points):
-                if (self.clock - counter > obserse_timespace):
-                    #max_step = int(np.max(self.step_frontier))
-                    total_step = np.sum(self.step_frontier)
-                    loss, acc = regression.compute_accuracy(self.model)
-                    self.regression_info.append((self.clock, total_step, acc))
-                    counter = self.clock
-
+            if ('regression' in self.observe_points) and \
+                (self.clock - counter > obserse_timespace):
+                total_step = np.sum(self.step_frontier)
+                loss, acc = regression.compute_accuracy(self.model)
+                self.regression_info.append((self.clock, total_step, acc))
+                counter = self.clock
 
         if ('regression' in self.observe_points):
             print('Processing step: ' + self.dbfilename_regression)
@@ -348,17 +320,14 @@ class Network:
             writer.writerow(total_diff)
             writer.writerow(total_diff_max)
             writer.writerow(total_diff_min)
-        # print(np.mean(total_diff), np.std(total_diff))
-        #n = self.nodes[0]
-        #diff_sum, diff_max = zip(*(n.frontier_info))
-        #print(diff_sum)
-        #print(np.mean(diff_sum), np.std(diff_sum))
+
 
     def collect_ratio_data(self):
         filename = self.dbfilename_ratio
         with open(filename, 'w+', newline='') as csvfile:
             writer = csv.writer(csvfile, delimiter=',')
             writer.writerow(self.calc_time)
+
 
 # Entry point
 def run(config):
