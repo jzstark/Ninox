@@ -319,9 +319,9 @@ def exp_regression(result_dir):
     barriers = [
         (asp, 'asp'),
         (bsp, 'bsp'),
-        #(ssp(4), 'ssp_s4'),
+        (ssp(4), 'ssp_s4'),
         #(pbsp(4), 'pbsp_p4'),
-        #(pssp(3, 4), 'pssp_s3_p4'),
+        #(pssp(4, 4), 'pssp_s4_p4'),
         #(ssp(10), 'ssp_s10'),
         #(pbsp(40), 'pbsp_p40'),
 
