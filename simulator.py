@@ -137,11 +137,8 @@ class Network:
         # Communication delay
         self.delay = [0] * size
         np.random.seed(seed)
-        for i in range(size):
-            #self.delay[i] = np.random.rand() * 5
-            self.delay[i] = random.randint(0, 5)
-        #self.delay[0] = 0
-        #self.delay[1] = 4
+        #for i in range(size):
+        #    self.delay[i] = random.randint(0, 5)
 
         straggler_perc = config['straggler_perc'] / 100.
         straggleness = config['straggleness']
@@ -186,7 +183,7 @@ class Network:
             # Decide my next execution time; increase my step
             # Process time
             exec_time = random_task_time()
-            exec_time += self.delay[n.wid]
+            #exec_time += self.delay[n.wid]
             exec_time *= self.straggleness[n.wid]
             print("exec_time for worker %i: %.1f." % (n.wid, exec_time))
             n.t_wait = self.clock

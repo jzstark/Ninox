@@ -21,11 +21,11 @@ Parameters
 """
 
 seed=233
-epochs=2
+epochs=1
 batch_size=64
 iteration=5
 data_select_step = 50
-learning_rate=0.001
+learning_rate = 0.001
 
 """
 Load and pre-process MNSIT data
@@ -51,8 +51,10 @@ x_train    = np.reshape(x_train, (train_len, img_rows, img_cols, 1))
 x_test     = np.reshape(x_test, (test_len, img_rows, img_cols, 1))
 y_train    = to_categorical(y_train, num_classes)
 y_test     = to_categorical(y_test, num_classes)
-x_test_small = x_test[:5000]
-y_test_small = y_test[:5000]
+
+test_idx = np.random.randint(test_len, size=1000)
+x_test_small = x_test[test_idx]
+y_test_small = y_test[test_idx]
 
 
 """
@@ -141,7 +143,7 @@ def compute_updates(model, i, n, step):
 
 
 def compute_accuracy(model):
-    loss, accuracy = model.evaluate(x_test_small, y_test_small)
+    loss, accuracy = model.evaluate(x_test, y_test)
     return loss, accuracy
 
 
