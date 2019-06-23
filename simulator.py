@@ -18,7 +18,7 @@ Utils
 """
 
 def random_task_time():
-    t = np.random.exponential(1)
+    t = np.random.exponential(1) + 1
     #t = 1
     #t = np.random.chisquare(2.)
     return t
@@ -58,7 +58,11 @@ def pbsp(sample_size):
     def pbsp_param(net, node):
         # Do NOOOOT use `numpy.random.choice`!!!!
         # It permutes the array each time we call it.
-        sampled_nodes = random.sample(net.nodes, sample_size)
+        if sample_size >= len(net.nodes):
+            sampled_nodes = net.nodes
+        else:
+            sampled_nodes = random.sample(net.nodes, sample_size)
+
         def f(m):
             return (m.step > node.step) or \
                 (m.step == node.step and net.clock >= m.t_exec)
@@ -70,7 +74,11 @@ def pbsp(sample_size):
 
 def pssp(staleness, sample_size):
     def pssp_param(net, node):
-        sampled_nodes = random.sample(net.nodes, sample_size)
+        if sample_size >= len(net.nodes):
+            sampled_nodes = net.nodes
+        else:
+            sampled_nodes = random.sample(net.nodes, sample_size)
+
         def f(m):
             return (m.step > node.step) or \
                 (node.step - m.step < staleness) or \
@@ -332,6 +340,7 @@ class Network:
 # Entry point
 def run(config):
     for b in config['barriers']:
+        # np.random.seed(seed)
         network = Network(config, b)
         network.execute()
         network.print_info()

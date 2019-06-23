@@ -548,7 +548,7 @@ def exp_seqdiff(result_dir):
     # Observe N different points in the whole updates sequence
     N = int(size/3) # a random step
     observe_points = ['sequence']
-    config = {'stop_time':50, 'size':size, 'straggler_perc':0, 'straggleness':1,
+    config = {'stop_time':100, 'size':size, 'straggler_perc':0, 'straggleness':1,
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir}
 
@@ -609,7 +609,7 @@ def exp_seqdiff(result_dir):
         ax.plot(t, y, label=barrier) #, linestyle=linestyles[k])
         k = (k + 1) % len(linestyles)
     ax.set_xlabel("Sequence length T (P=%d)" % size)
-    ax.set_ylabel("Noisy-True sequence difference")
+    ax.set_ylabel("Normalised Noisy-True sequence difference")
     plt.legend()
     plt.show()
 
@@ -808,7 +808,7 @@ def exp_scalability_seqdiff(result_dir):
         return seq
 
     observe_points = ['sequence']
-    time = 60; size = 100
+    time = 100; size = 100
     configs = [
         {'stop_time':time, 'size':50, 'straggler_perc':0, 'straggleness':1,
         'barriers':barriers, 'observe_points':observe_points,
@@ -830,7 +830,7 @@ def exp_scalability_seqdiff(result_dir):
         'path':result_dir},
     ]
 
-    for c in configs: run(c)
+    # for c in configs: run(c)
 
     barrier_names = [s for (_, s) in barriers]
     dict_stragglers = {}
@@ -848,9 +848,14 @@ def exp_scalability_seqdiff(result_dir):
                 dict_single_straggler[c['size']] = (nodes, steps, n)
         dict_stragglers[barrier] = dict_single_straggler
 
-    def nsdiff(ns):
+    def nsdiff(ns, tail=0):
         nodes, steps, n = ns
         length = len(nodes)
+        if (tail > 0):
+            nodes  = nodes[0:-tail]
+            steps  = steps[0:-tail]
+            length = length - tail
+
         true_seq  = generate_true_seq(length, n)
         noisy_seq = list(zip(nodes, steps))
         true_set = set(true_seq)
@@ -858,16 +863,45 @@ def exp_scalability_seqdiff(result_dir):
         diff_a_b = true_set.difference(noisy_set)
         diff_b_a = noisy_set.difference(true_set)
         diff = len(diff_a_b) + len(diff_b_a)
-        return diff / length
-
+        # return diff / length
+        return diff
+    """
     fig, ax = plt.subplots()
     c = 0
     for k, i in dict_stragglers.items():
         sizes  = list(i.keys())   # sizes
         nslist = list(i.values()) # (nodes, steps) list
         diffs = list(map(nsdiff, nslist))
+        diffs = np.divide(diffs, sizes)
         ax.plot(sizes, diffs, label=k, marker=markers[c], linestyle=linestyles[c])
         c += 1
+    """
+
+    """ --> the error bar using last 100 observations is really not obvious; if anything, we need the error bar between multiple runs
+
+    tail = 100
+    counter = 0
+    fig, ax = plt.subplots()
+    c = 0
+    for k, i in dict_stragglers.items():
+        sizes  = list(i.keys())   # sizes
+        nslist = list(i.values()) # (nodes, steps) list
+
+        diffs = []
+        for l, ns in enumerate(nslist):
+            tail_diffs = []
+            for j in range(0, tail):
+                tail_diffs.append(nsdiff(ns, tail=j) / sizes[l])
+            mu = np.mean(tail_diffs)
+            std = np.std(tail_diffs)
+            diffs.append((mu, std))
+        print(diffs)
+
+        result = list(zip(*diffs))
+        mus = result[0]; stds = result[1]
+        ax.errorbar(sizes, mus, yerr=stds, label=k, marker=markers[c], linestyle=linestyles[c])
+        c += 1
+    """
 
     ax.set_xlabel("Network sizes")
     ax.set_ylabel("Normalised nosiy-true sequence difference")
@@ -886,30 +920,37 @@ def exp_frontier(result_dir):
 
     barriers = [
         (asp, 'asp'),
-        (ssp(4), 'ssp_s4'),
-        (pbsp(5), 'pbsp_p5'),
-        (pssp(4, 5), 'pssp_s4_p5'),
+        #(ssp(4), 'ssp_s4'),
+        #(pbsp(5), 'pbsp_p5'),
+        #(pssp(4, 5), 'pssp_s4_p5'),
 
         #(ssp(1), 'ssp_s1'),
+        #(ssp(5), 'ssp_s5'),
         #(ssp(10), 'ssp_s10'),
         #(ssp(20), 'ssp_s20'),
 
+        #(pbsp(1),  'pbsp_p1'),
+        #(pbsp(5),  'pbsp_p5'),
+        #(pbsp(10), 'pbsp_p10'),
         #(pbsp(20), 'pbsp_p20'),
         #(pbsp(50), 'pbsp_p50'),
         #(pbsp(80), 'pbsp_p80'),
         #(pbsp(95), 'pbsp_p95'),
         #(pbsp(99), 'pbsp_p99'),
 
-
+        #(pssp(4, 1), 'pssp_s4_p1'),
+        #(pssp(4, 5), 'pssp_s4_p5'),
+        #(pssp(4, 10), 'pssp_s4_p10'),
         #(pssp(4, 20), 'pssp_s4_p20'),
         #(pssp(4, 50), 'pssp_s4_p50'),
         #(pssp(4, 90), 'pssp_s4_p90'),
         #(pssp(4, 95), 'pssp_s4_p95'),
         #(pssp(4, 99), 'pssp_s4_p99'),
-        #(pssp(4, 100), 'pssp_s4_p100'),
+        #(ssp(4), 'ssp_s4'),
+
     ]
     observe_points = ['frontier']
-    config = {'stop_time':100, 'size':100, 'straggler_perc':0, 'straggleness':1.,
+    config = {'stop_time':10, 'size':2, 'straggler_perc':0, 'straggleness':1.,
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir}
 
@@ -942,7 +983,7 @@ def exp_frontier(result_dir):
     #ax.axvline(x=1, linestyle=linestyles[c], label='bsp', color='m')
     ax.legend()
     ax.set_xlim([0, 5])
-    #ax.set_ylim([0, 1])
+    #ax.set_ylim([0, 2])
     ax.set_xlabel('Average step inconsistency per node')
     ax.set_ylabel('Density')
     plt.show()
@@ -976,9 +1017,10 @@ def exp_straggle_consistency(result_dir):
         {'stop_time':t, 'size':s, 'straggler_perc':15, 'straggleness':4, 'barriers':barriers, 'observe_points':ob, 'path':result_dir},
         {'stop_time':t, 'size':s, 'straggler_perc':20, 'straggleness':4, 'barriers':barriers, 'observe_points':ob, 'path':result_dir},
         {'stop_time':t, 'size':s, 'straggler_perc':25, 'straggleness':4, 'barriers':barriers, 'observe_points':ob, 'path':result_dir},
+        {'stop_time':t, 'size':s, 'straggler_perc':30, 'straggleness':4, 'barriers':barriers, 'observe_points':ob, 'path':result_dir},
     ]
 
-    #for c in configs: run(c)
+    for c in configs: run(c)
 
     dict_stragglers = {}
     for b in barriers:
@@ -995,7 +1037,7 @@ def exp_straggle_consistency(result_dir):
                 dict_single_straggler[c['straggler_perc']] = (mu, std)
         dict_stragglers[b[1]] = dict_single_straggler
 
-    print(dict_stragglers)
+    # print(dict_stragglers)
 
     f, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 12)) #figsize=(12, 5))
     c = 0
@@ -1003,18 +1045,18 @@ def exp_straggle_consistency(result_dir):
         x = list(i.keys())
         ys = list(i.values())
         mu, std = zip(*ys)
-        mu = np.divide(mu, mu[0])
-        std = np.divide(std, std[0])
+        #mu = np.divide(mu, mu[0])
+        #std = np.divide(std, std[0])
         ax1.plot(x, mu, marker=markers[c], label=k)
         ax2.plot(x, std, marker=markers[c], label=k)
         c = (c + 1) % (len(markers))
 
     ax1.set_xlabel("Straggle node percentage")
-    ax1.set_ylabel("Normalised step difference (mean)")
+    ax1.set_ylabel("Step difference (mean)")
     ax1.legend()
 
     ax2.set_xlabel("Straggle node percentage")
-    ax2.set_ylabel("Normalised step difference (stddev)")
+    ax2.set_ylabel("Step difference (stddev)")
     ax2.legend()
     plt.show()
 
@@ -1031,15 +1073,18 @@ def exp_straggleness_consistency(result_dir):
     t = 100
     s = 100
     configs = [
-        {'stop_time':t, 'size':s, 'straggler_perc':5, 'straggleness':1, 'barriers':barriers, 'observe_points':ob, 'path':result_dir},
-        {'stop_time':t, 'size':s, 'straggler_perc':5, 'straggleness':2, 'barriers':barriers, 'observe_points':ob, 'path':result_dir},
-        {'stop_time':t, 'size':s, 'straggler_perc':5, 'straggleness':4, 'barriers':barriers, 'observe_points':ob, 'path':result_dir},
-        {'stop_time':t, 'size':s, 'straggler_perc':5, 'straggleness':6, 'barriers':barriers, 'observe_points':ob, 'path':result_dir},
-        {'stop_time':t, 'size':s, 'straggler_perc':5, 'straggleness':8, 'barriers':barriers, 'observe_points':ob, 'path':result_dir},
-        {'stop_time':t, 'size':s, 'straggler_perc':5, 'straggleness':10, 'barriers':barriers, 'observe_points':ob, 'path':result_dir},
+        {'stop_time':t, 'size':s, 'straggler_perc':10, 'straggleness':1, 'barriers':barriers, 'observe_points':ob, 'path':result_dir},
+        {'stop_time':t, 'size':s, 'straggler_perc':10, 'straggleness':2, 'barriers':barriers, 'observe_points':ob, 'path':result_dir},
+        {'stop_time':t, 'size':s, 'straggler_perc':10, 'straggleness':4, 'barriers':barriers, 'observe_points':ob, 'path':result_dir},
+        {'stop_time':t, 'size':s, 'straggler_perc':10, 'straggleness':6, 'barriers':barriers, 'observe_points':ob, 'path':result_dir},
+        {'stop_time':t, 'size':s, 'straggler_perc':10, 'straggleness':8, 'barriers':barriers, 'observe_points':ob, 'path':result_dir},
+        {'stop_time':t, 'size':s, 'straggler_perc':10, 'straggleness':10, 'barriers':barriers, 'observe_points':ob, 'path':result_dir},
+        {'stop_time':t, 'size':s, 'straggler_perc':10, 'straggleness':12, 'barriers':barriers, 'observe_points':ob, 'path':result_dir},
+        {'stop_time':t, 'size':s, 'straggler_perc':10, 'straggleness':14, 'barriers':barriers, 'observe_points':ob, 'path':result_dir},
+        {'stop_time':t, 'size':s, 'straggler_perc':10, 'straggleness':16, 'barriers':barriers, 'observe_points':ob, 'path':result_dir},
     ]
 
-    #for c in configs: run(c)
+    for c in configs: run(c)
 
     dict_stragglers = {}
     for b in barriers:
@@ -1056,7 +1101,7 @@ def exp_straggleness_consistency(result_dir):
                 dict_single_straggler[c['straggleness']] = (mu, std)
         dict_stragglers[b[1]] = dict_single_straggler
 
-    print(dict_stragglers)
+    # print(dict_stragglers)
 
     f, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 12)) #figsize=(12, 5))
     c = 0
@@ -1070,11 +1115,11 @@ def exp_straggleness_consistency(result_dir):
         ax2.plot(x, std, marker=markers[c], label=k)
         c = (c + 1) % (len(markers))
 
-    ax1.set_xlabel("Straggle node percentage")
+    ax1.set_xlabel("Straggleness")
     ax1.set_ylabel("Mean of step difference")
     ax1.legend()
 
-    ax2.set_xlabel("Straggle node percentage")
+    ax2.set_xlabel("Straggleness")
     ax2.set_ylabel("Stddev of step difference")
     ax2.legend()
     plt.show()
@@ -1093,6 +1138,7 @@ def exp_scalability_consistency(result_dir):
         (pssp(4, 20), 'pssp_s4_p20'),
         (pssp(4, 30), 'pssp_s4_p30'),
         (pssp(4, 40), 'pssp_s4_p40'),
+        (pssp(4, 50), 'pssp_s4_p50'),
     ]
     barriers = [
         (asp, 'asp'),
@@ -1102,6 +1148,9 @@ def exp_scalability_consistency(result_dir):
         (pbsp(20), 'pbsp_p20'),
         (pbsp(30), 'pbsp_p30'),
         (pbsp(40), 'pbsp_p40'),
+        (pbsp(50), 'pbsp_p50'),
+        (pbsp(100), 'pbsp_p100'),
+        (pbsp(200), 'pbsp_p200'),
     ]
     observe_points = ['frontier']
     configs = [
@@ -1109,6 +1158,9 @@ def exp_scalability_consistency(result_dir):
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir},
         {'stop_time':100, 'size':100, 'straggler_perc':0, 'straggleness':1,
+        'barriers':barriers, 'observe_points':observe_points,
+        'path':result_dir},
+        {'stop_time':100, 'size':150, 'straggler_perc':0, 'straggleness':1,
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir},
         {'stop_time':100, 'size':200, 'straggler_perc':0, 'straggleness':1,
@@ -1133,7 +1185,7 @@ def exp_scalability_consistency(result_dir):
         'path':result_dir},
     ]
 
-    #for c in configs: run(c)
+    for c in configs: run(c)
 
     diffs = []
     for c in configs:
@@ -1153,7 +1205,7 @@ def exp_scalability_consistency(result_dir):
 
     print(diffs)
 
-    f, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 12)) #figsize=(12, 5))
+    f, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5)) #figsize=(12, 5))
     barrier_names = [s for (_, s) in barriers] #if s != ssp_name]
     sizes = [c['size'] for c in configs]
 
