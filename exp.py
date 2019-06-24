@@ -420,7 +420,7 @@ def exp_straggle_accuracy(result_dir):
         #'path':result_dir},
     ]
 
-    for c in configs: run(c)
+    #for c in configs: run(c)
 
     dict_stragglers = {}
     for b in barriers:
@@ -429,11 +429,14 @@ def exp_straggle_accuracy(result_dir):
             filename = utils.dbfilename(c, b[1], observe_points[0])
             with open(filename, 'r') as f:
                 reader = csv.reader(f, delimiter=',')
-                clock = [int(s) for s in next(reader)]
+                clock = [float(s) for s in next(reader)]
                 iteration = [int(s) for s in next(reader)]
                 loss = [float(s) for s in next(reader)]
-                accuracy = loss[-1]
-                dict_single_straggler[c['straggler_perc']] = accuracy
+                #accuracy = loss[-1]
+                #dict_single_straggler[c['straggler_perc']] = accuracy
+                accuracy = loss[-20:-1]
+                dict_single_straggler[c['straggler_perc']] = \
+                    (np.mean(accuracy), np.std(accuracy))
         dict_stragglers[b[1]] = dict_single_straggler
 
     print(dict_stragglers)
@@ -443,12 +446,13 @@ def exp_straggle_accuracy(result_dir):
     for k, i in dict_stragglers.items():
         x = list(i.keys())
         y = list(i.values())
-        y = (np.divide(y, y[0]) - 1) * 100
-        ax.plot(x, y, marker=markers[c], label=k)
+        y1, y2 = zip(*y)
+        #y = (np.divide(y, y[0]) - 1) * 100
+        ax.errorbar(x, y1, yerr=y2, marker=markers[c], label=barrier_to_label(k))
         c += 1
     plt.legend()
     plt.xlabel("Percentage of slow nodes")
-    plt.ylabel("Accuracy decrease percentage")
+    plt.ylabel("Model accuracy ")
     plt.show()
 
 
@@ -631,8 +635,8 @@ def exp_straggle_seqdiff(result_dir):
         (asp, 'asp'), (ssp(4), 'ssp_s4'),
         (pbsp(5), 'pbsp_p5'),
         (pssp(4, 5), 'pssp_s4_p5'),
-        #(pbsp(10), 'pbsp_p10'),
-        #(pssp(4, 10), 'pssp_s4_p10'),
+        (pbsp(10), 'pbsp_p10'),
+        (pssp(4, 10), 'pssp_s4_p10'),
     ]
 
     def generate_true_seq(l, n):
@@ -645,7 +649,7 @@ def exp_straggle_seqdiff(result_dir):
         return seq
 
     observe_points = ['sequence']
-    time = 60; size = 100
+    time = 100; size = 100
     configs = [
         {'stop_time':time, 'size':size, 'straggler_perc':0, 'straggleness':4,
         'barriers':barriers, 'observe_points':observe_points,
@@ -663,6 +667,9 @@ def exp_straggle_seqdiff(result_dir):
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir},
         {'stop_time':time, 'size':size, 'straggler_perc':25, 'straggleness':4,
+        'barriers':barriers, 'observe_points':observe_points,
+        'path':result_dir},
+        {'stop_time':time, 'size':size, 'straggler_perc':30, 'straggleness':4,
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir},
     ]
@@ -695,7 +702,8 @@ def exp_straggle_seqdiff(result_dir):
         diff_a_b = true_set.difference(noisy_set)
         diff_b_a = noisy_set.difference(true_set)
         diff = len(diff_a_b) + len(diff_b_a)
-        return diff / length
+        #return diff / length
+        return diff
 
     fig, ax = plt.subplots()
     c = 0
@@ -703,7 +711,8 @@ def exp_straggle_seqdiff(result_dir):
         sizes  = list(i.keys())   # sizes
         nslist = list(i.values()) # (nodes, steps) list
         diffs = list(map(nsdiff, nslist))
-        ax.plot(sizes, diffs, label=k, marker=markers[c], linestyle=linestyles[c])
+        diffs = np.divide(diffs, size)
+        ax.plot(sizes, diffs, label=barrier_to_label(k), marker=markers[c%len(markers)])
         c = c + 1
 
     ax.set_xlabel("Straggle node percentage")
@@ -718,8 +727,8 @@ def exp_straggleness_seqdiff(result_dir):
         (asp, 'asp'), (ssp(4), 'ssp_s4'),
         (pbsp(5), 'pbsp_p5'),
         (pssp(4, 5), 'pssp_s4_p5'),
-        #(pbsp(10), 'pbsp_p10'),
-        #(pssp(4, 10), 'pssp_s4_p10'),
+        (pbsp(10), 'pbsp_p10'),
+        (pssp(4, 10), 'pssp_s4_p10'),
     ]
 
     def generate_true_seq(l, n):
@@ -731,25 +740,34 @@ def exp_straggleness_seqdiff(result_dir):
         return seq
 
     observe_points = ['sequence']
-    time = 60; size = 100
+    time = 100; size = 100
 
     configs = [
-        {'stop_time':time, 'size':size, 'straggler_perc':5, 'straggleness':1,
+        {'stop_time':time, 'size':size, 'straggler_perc':10, 'straggleness':1,
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir},
-        {'stop_time':time, 'size':size, 'straggler_perc':5, 'straggleness':2,
+        {'stop_time':time, 'size':size, 'straggler_perc':10, 'straggleness':2,
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir},
-        {'stop_time':time, 'size':size, 'straggler_perc':5, 'straggleness':4,
+        {'stop_time':time, 'size':size, 'straggler_perc':10, 'straggleness':4,
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir},
-        {'stop_time':time, 'size':size, 'straggler_perc':5, 'straggleness':6,
+        {'stop_time':time, 'size':size, 'straggler_perc':10, 'straggleness':6,
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir},
-        {'stop_time':time, 'size':size, 'straggler_perc':5, 'straggleness':8,
+        {'stop_time':time, 'size':size, 'straggler_perc':10, 'straggleness':8,
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir},
-        {'stop_time':time, 'size':size, 'straggler_perc':5, 'straggleness':10,
+        {'stop_time':time, 'size':size, 'straggler_perc':10, 'straggleness':10,
+        'barriers':barriers, 'observe_points':observe_points,
+        'path':result_dir},
+        {'stop_time':time, 'size':size, 'straggler_perc':10, 'straggleness':12,
+        'barriers':barriers, 'observe_points':observe_points,
+        'path':result_dir},
+        {'stop_time':time, 'size':size, 'straggler_perc':10, 'straggleness':14,
+        'barriers':barriers, 'observe_points':observe_points,
+        'path':result_dir},
+        {'stop_time':time, 'size':size, 'straggler_perc':10, 'straggleness':16,
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir},
     ]
@@ -782,7 +800,7 @@ def exp_straggleness_seqdiff(result_dir):
         diff_a_b = true_set.difference(noisy_set)
         diff_b_a = noisy_set.difference(true_set)
         diff = len(diff_a_b) + len(diff_b_a)
-        return diff / length
+        return diff
 
     fig, ax = plt.subplots()
     c = 0
@@ -790,7 +808,8 @@ def exp_straggleness_seqdiff(result_dir):
         sizes  = list(i.keys())   # sizes
         nslist = list(i.values()) # (nodes, steps) list
         diffs = list(map(nsdiff, nslist))
-        ax.plot(sizes, diffs, label=k, marker=markers[c], linestyle=linestyles[c])
+        diffs = np.divide(diffs, size)
+        ax.plot(sizes, diffs, label=barrier_to_label(k), marker=markers[c%len(markers)])
         c += 1
 
     ax.set_xlabel("Straggleness")

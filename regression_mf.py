@@ -9,8 +9,8 @@ Parameters
 """
 
 seed = 233
-batch_size = 5000
-alpha = 0.001
+batch_size = 10000
+alpha = 0.005
 beta  = 0.005
 data_select_step = 1000
 
@@ -35,7 +35,7 @@ def read_csv(filename):
 ratings = read_csv("data/ratings_train.csv")
 validation_set = read_csv("data/ratings_test.csv")
 
-#random.shuffle(ratings)
+random.shuffle(ratings)
 
 # global bias
 b = np.mean([r[2] for r in ratings])
@@ -51,8 +51,8 @@ train_len = len(ratings)
 
 def get_next_batch(i, n, clock):
     slicelen = int((train_len - batch_size - 1) / n)
-    idx = i * slicelen + (clock * data_select_step) % slicelen
-    #idx = random.randint(i * slicelen, i * slicelen + slicelen - 1)
+    #idx = i * slicelen + (clock * data_select_step) % slicelen
+    idx = random.randint(i * slicelen, i * slicelen + slicelen - 1)
     return ratings[idx : idx + batch_size - 1]
 
 
