@@ -319,7 +319,7 @@ def exp_regression(result_dir):
     barriers = [
         (asp, 'asp'),
         (bsp, 'bsp'),
-        (ssp(4), 'ssp_s4'),
+        #(ssp(4), 'ssp_s4'),
         #(pbsp(4), 'pbsp_p4'),
         #(pssp(4, 4), 'pssp_s4_p4'),
         #(ssp(10), 'ssp_s10'),
@@ -327,7 +327,7 @@ def exp_regression(result_dir):
 
     ]
     observe_points = ['regression']
-    config = {'stop_time':50, 'size':100, 'straggler_perc':0, 'straggleness':1,
+    config = {'stop_time':300, 'size':100, 'straggler_perc':0, 'straggleness':1,
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir}
 
@@ -537,7 +537,8 @@ def exp_seqdiff(result_dir):
 
     barriers = [
         # (bsp, 'bsp'), --> should be all 0 or very close to it at least
-        (asp, 'asp'), (ssp(4), 'ssp_s4'),
+        (asp, 'asp'),
+        (ssp(4), 'ssp_s4'),
         (pbsp(5), 'pbsp_p5'),
         (pbsp(10), 'pbsp_p10'),
         (pssp(4, 5), 'pssp_s4_p5'),
@@ -552,7 +553,7 @@ def exp_seqdiff(result_dir):
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir}
 
-    #run(config)
+    # run(config)
 
     nodes = {}; steps = {}; times = {}
     barrier_names = [s for (_, s) in config['barriers']]
@@ -604,12 +605,12 @@ def exp_seqdiff(result_dir):
     k = 0
     for barrier in barrier_names:
         [y, t] = list(zip(*result[barrier]))
-        #y = np.divide(y, t) # not a good metric
-        y = np.divide(y, size)
-        ax.plot(t, y, label=barrier) #, linestyle=linestyles[k])
+        y = np.divide(y, t) # not a good metric
+        #y = np.divide(y, size)
+        ax.plot(t, y, label=barrier_to_label(barrier)) #, linestyle=linestyles[k])
         k = (k + 1) % len(linestyles)
     ax.set_xlabel("Sequence length T (P=%d)" % size)
-    ax.set_ylabel("Normalised Noisy-True sequence difference")
+    ax.set_ylabel("Noisy-True sequence difference / T")
     plt.legend()
     plt.show()
 
@@ -794,8 +795,8 @@ def exp_scalability_seqdiff(result_dir):
         (asp, 'asp'), (ssp(4), 'ssp_s4'),
         (pbsp(5), 'pbsp_p5'),
         (pssp(4, 5), 'pssp_s4_p5'),
-        #(pbsp(10), 'pbsp_p10'),
-        #(pssp(4, 10), 'pssp_s4_p10'),
+        (pbsp(10), 'pbsp_p10'),
+        (pssp(4, 10), 'pssp_s4_p10'),
     ]
 
     def generate_true_seq(l, n):
@@ -816,13 +817,25 @@ def exp_scalability_seqdiff(result_dir):
         {'stop_time':time, 'size':100, 'straggler_perc':0, 'straggleness':1,
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir},
+        {'stop_time':time, 'size':150, 'straggler_perc':0, 'straggleness':1,
+        'barriers':barriers, 'observe_points':observe_points,
+        'path':result_dir},
         {'stop_time':time, 'size':200, 'straggler_perc':0, 'straggleness':1,
+        'barriers':barriers, 'observe_points':observe_points,
+        'path':result_dir},
+        {'stop_time':time, 'size':250, 'straggler_perc':0, 'straggleness':1,
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir},
         {'stop_time':time, 'size':300, 'straggler_perc':0, 'straggleness':1,
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir},
+        {'stop_time':time, 'size':350, 'straggler_perc':0, 'straggleness':1,
+        'barriers':barriers, 'observe_points':observe_points,
+        'path':result_dir},
         {'stop_time':time, 'size':400, 'straggler_perc':0, 'straggleness':1,
+        'barriers':barriers, 'observe_points':observe_points,
+        'path':result_dir},
+        {'stop_time':time, 'size':450, 'straggler_perc':0, 'straggleness':1,
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir},
         {'stop_time':time, 'size':500, 'straggler_perc':0, 'straggleness':1,
@@ -865,17 +878,19 @@ def exp_scalability_seqdiff(result_dir):
         diff = len(diff_a_b) + len(diff_b_a)
         # return diff / length
         return diff
-    """
+
     fig, ax = plt.subplots()
     c = 0
     for k, i in dict_stragglers.items():
         sizes  = list(i.keys())   # sizes
+        print(sizes)
         nslist = list(i.values()) # (nodes, steps) list
         diffs = list(map(nsdiff, nslist))
         diffs = np.divide(diffs, sizes)
-        ax.plot(sizes, diffs, label=k, marker=markers[c], linestyle=linestyles[c])
+        ax.plot(sizes, diffs, label=barrier_to_label(k), marker=markers[c%len(markers)],
+        #linestyle=linestyles[c])
+        )
         c += 1
-    """
 
     """ --> the error bar using last 100 observations is really not obvious; if anything, we need the error bar between multiple runs
 

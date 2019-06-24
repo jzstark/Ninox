@@ -9,9 +9,9 @@ Parameters
 """
 
 seed = 233
-batch_size = 10000
+batch_size = 5000
 alpha = 0.001
-beta  = 0.01
+beta  = 0.005
 data_select_step = 1000
 
 """
@@ -35,7 +35,7 @@ def read_csv(filename):
 ratings = read_csv("data/ratings_train.csv")
 validation_set = read_csv("data/ratings_test.csv")
 
-random.shuffle(ratings)
+#random.shuffle(ratings)
 
 # global bias
 b = np.mean([r[2] for r in ratings])
