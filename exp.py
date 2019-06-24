@@ -229,46 +229,50 @@ def exp_scalability_step(result_dir):
 
     ssp_name = 'ssp_s4'
     barriers = [
-        (ssp(4), ssp_name),
+        #(asp, 'asp'),
         (pssp(4, 2), 'pssp_s4_p2'),
         (pssp(4, 5), 'pssp_s4_p5'),
         (pssp(4, 10), 'pssp_s4_p10'),
         (pssp(4, 20), 'pssp_s4_p20'),
         (pssp(4, 30), 'pssp_s4_p30'),
         (pssp(4, 40), 'pssp_s4_p40'),
-    ]
-    observe_points = ['step']
-    configs = [
-        #{'size':50, 'straggler_perc':0, 'straggleness':1,
-        #'barriers':barriers, 'observe_points':observe_points,
-        #'path':result_dir},
-        {'stop_time':200, 'size':100, 'straggler_perc':0, 'straggleness':1,
-        'barriers':barriers, 'observe_points':observe_points,
-        'path':result_dir},
-        #{'size':150, 'straggler_perc':0, 'straggleness':1,
-        #'barriers':barriers, 'observe_points':observe_points,
-        #'path':result_dir},
-        {'stop_time':200, 'size':200, 'straggler_perc':0, 'straggleness':1,
-        'barriers':barriers, 'observe_points':observe_points,
-        'path':result_dir},
-        #{'size':250, 'straggler_perc':0, 'straggleness':1,
-        #'barriers':barriers, 'observe_points':observe_points,
-        #'path':result_dir},
-        {'stop_time':200, 'size':300, 'straggler_perc':0, 'straggleness':1,
-        'barriers':barriers, 'observe_points':observe_points,
-        'path':result_dir},
-        {'stop_time':200, 'size':400, 'straggler_perc':0, 'straggleness':1,
-        'barriers':barriers, 'observe_points':observe_points,
-        'path':result_dir},
-        {'stop_time':200, 'size':500, 'straggler_perc':0, 'straggleness':1,
-        'barriers':barriers, 'observe_points':observe_points,
-        'path':result_dir},
-        {'stop_time':200, 'size':600, 'straggler_perc':0, 'straggleness':1,
-        'barriers':barriers, 'observe_points':observe_points,
-        'path':result_dir},
+        (ssp(4), ssp_name),
     ]
 
-    # for c in configs: run(c)
+    barriers_bsp = [
+        (asp, 'asp'),
+        (pbsp(2),  'pbsp_p2'),
+        (pbsp(5),  'pbsp_p5'),
+        (pbsp(10), 'pbsp_p10'),
+        (pbsp(20), 'pbsp_p20'),
+        (pbsp(30), 'pbsp_p30'),
+        (pbsp(40), 'pbsp_p40'),
+        (bsp, 'bsp'),
+    ]
+
+    observe_points = ['step']
+    configs = [
+        {'stop_time':100, 'size':100, 'straggler_perc':0, 'straggleness':1,
+        'barriers':barriers, 'observe_points':observe_points,
+        'path':result_dir},
+        {'stop_time':100, 'size':200, 'straggler_perc':0, 'straggleness':1,
+        'barriers':barriers, 'observe_points':observe_points,
+        'path':result_dir},
+        {'stop_time':100, 'size':300, 'straggler_perc':0, 'straggleness':1,
+        'barriers':barriers, 'observe_points':observe_points,
+        'path':result_dir},
+        {'stop_time':100, 'size':400, 'straggler_perc':0, 'straggleness':1,
+        'barriers':barriers, 'observe_points':observe_points,
+        'path':result_dir},
+        {'stop_time':100, 'size':500, 'straggler_perc':0, 'straggleness':1,
+        'barriers':barriers, 'observe_points':observe_points,
+        'path':result_dir},
+        #{'stop_time':100, 'size':600, 'straggler_perc':0, 'straggleness':1,
+        #'barriers':barriers, 'observe_points':observe_points,
+        #'path':result_dir},
+    ]
+
+    #for c in configs: run(c)
 
     steps = []
     for c in configs:
@@ -278,23 +282,29 @@ def exp_scalability_step(result_dir):
             filename = utils.dbfilename(c, barrier, 'step')
             with open(filename, 'r') as f:
                 reader = csv.reader(f, delimiter=',')
-                step[barrier] = np.mean([int(s) for s in next(reader)])
+                s = [int(s) for s in next(reader)]
+                step[barrier] = (np.mean(s), np.std(s))
         steps.append(step)
 
     #print(steps)
 
     fig, ax = plt.subplots()
-    barrier_names = [s for (_, s) in barriers if s != ssp_name]
+    #barrier_names = [s for (_, s) in barriers if s != ssp_name]
+    barrier_names = [s for (_, s) in barriers]
     sizes = [c['size'] for c in configs]
     for k, barrier in enumerate(barrier_names):
         label = barrier_to_label(barrier)
-        y = []
+        y = []; y_err = []
         for i, c in enumerate(configs):
-            ratio = np.divide(steps[i][barrier], steps[i][ssp_name])
-            y.append(ratio)
-        ax.plot(sizes, y, marker=markers[k % len(markers)],
+            #ratio = np.divide(steps[i][barrier][0], steps[i][ssp_name][0])
+            mu = steps[i][barrier][0]
+            std = steps[i][barrier][1]
+            y.append(mu)
+            y_err.append(std)
+        ax.errorbar(sizes, y, yerr=y_err, marker=markers[k % len(markers)],
             linestyle=linestyles[k % len(markers)], label=label)
-    ax.set_ylabel("Ratio of PSSP step / SSP step progress")
+    #ax.set_ylabel("Ratio of PSSP step / SSP step progress")
+    ax.set_ylabel("Step progress")
     ax.set_xlabel("Worker number")
     plt.grid(linestyle='--', linewidth=1)
 
@@ -317,7 +327,7 @@ def exp_regression(result_dir):
     db.init_db(result_dir)
 
     barriers = [
-        (asp, 'asp'),
+        #(asp, 'asp'),
         (bsp, 'bsp'),
         #(ssp(4), 'ssp_s4'),
         #(pbsp(4), 'pbsp_p4'),
@@ -327,7 +337,7 @@ def exp_regression(result_dir):
 
     ]
     observe_points = ['regression']
-    config = {'stop_time':300, 'size':100, 'straggler_perc':0, 'straggleness':1,
+    config = {'stop_time':600, 'size':100, 'straggler_perc':0, 'straggleness':1,
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir}
 
@@ -1218,7 +1228,7 @@ def exp_scalability_consistency(result_dir):
                 diff[barrier] = (mu, std)
         diffs.append(diff)
 
-    print(diffs)
+    # print(diffs)
 
     f, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5)) #figsize=(12, 5))
     barrier_names = [s for (_, s) in barriers] #if s != ssp_name]
