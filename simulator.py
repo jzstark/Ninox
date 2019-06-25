@@ -337,7 +337,7 @@ class Network:
 # Entry point
 def run(config):
     for b in config['barriers']:
-        # np.random.seed(seed)
+        np.random.seed(seed)
         network = Network(config, b)
         network.execute()
         network.print_info()

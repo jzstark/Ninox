@@ -24,7 +24,7 @@ def main(db_dir):
     #run_exp(exp_ratio, "exp_ratio")
     #run_exp(exp_regression, "exp_regression")
     #run_exp(exp_scalability, "exp_scalability")
-    #run_exp(exp_scalability_step, "exp_scalability_step")
+    run_exp(exp_scalability_step, "exp_scalability_step")
     #run_exp(exp_dummy, "exp_dummy")
 
     #run_exp(exp_straggle_consistency, "exp_straggle_consistency")

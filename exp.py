@@ -229,13 +229,16 @@ def exp_scalability_step(result_dir):
 
     ssp_name = 'ssp_s4'
     barriers = [
-        #(asp, 'asp'),
+        (asp, 'asp'),
         (pssp(4, 2), 'pssp_s4_p2'),
         (pssp(4, 5), 'pssp_s4_p5'),
         (pssp(4, 10), 'pssp_s4_p10'),
         (pssp(4, 20), 'pssp_s4_p20'),
         (pssp(4, 30), 'pssp_s4_p30'),
         (pssp(4, 40), 'pssp_s4_p40'),
+        (pssp(4, 50), 'pssp_s4_p50'),
+        (pssp(4, 100), 'pssp_s4_p100'),
+        #(pssp(4, 200), 'pssp_s4_p200'),
         (ssp(4), ssp_name),
     ]
 
@@ -247,6 +250,8 @@ def exp_scalability_step(result_dir):
         (pbsp(20), 'pbsp_p20'),
         (pbsp(30), 'pbsp_p30'),
         (pbsp(40), 'pbsp_p40'),
+        (pbsp(50), 'pbsp_p50'),
+        (pbsp(100), 'pbsp_p100'),
         (bsp, 'bsp'),
     ]
 
@@ -267,12 +272,9 @@ def exp_scalability_step(result_dir):
         {'stop_time':100, 'size':500, 'straggler_perc':0, 'straggleness':1,
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir},
-        #{'stop_time':100, 'size':600, 'straggler_perc':0, 'straggleness':1,
-        #'barriers':barriers, 'observe_points':observe_points,
-        #'path':result_dir},
     ]
 
-    #for c in configs: run(c)
+    # for c in configs: run(c)
 
     steps = []
     for c in configs:
@@ -308,7 +310,7 @@ def exp_scalability_step(result_dir):
     ax.set_xlabel("Worker number")
     plt.grid(linestyle='--', linewidth=1)
 
-    plt.legend()
+    plt.legend(loc='lower right')
     plt.show()
 
 
