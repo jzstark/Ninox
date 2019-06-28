@@ -331,7 +331,7 @@ def exp_regression(result_dir):
     barriers = [
         (asp, 'asp'),
         (bsp, 'bsp'),
-        (ssp(4), 'ssp_s4'),
+        #(ssp(4), 'ssp_s4'),
         #(pbsp(4), 'pbsp_p4'),
         #(pssp(4, 4), 'pssp_s4_p4'),
         #(ssp(10), 'ssp_s10'),
@@ -339,7 +339,7 @@ def exp_regression(result_dir):
 
     ]
     observe_points = ['regression']
-    config = {'stop_time':50, 'size':100, 'straggler_perc':0, 'straggleness':1,
+    config = {'stop_time':50, 'size':64, 'straggler_perc':0, 'straggleness':1,
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir}
 

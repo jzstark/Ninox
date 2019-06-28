@@ -9,17 +9,25 @@ Parameters
 """
 
 seed = 233
-batch_size = 10000
-alpha = 0.005
-beta  = 0.005
-data_select_step = 1000
+batch_size = 50000
+alpha = 0.0001
+beta  = 0.05
+#data_select_step = 10000
 
 """
 Load and pre-process Movielens-1M data
 """
 
+""" Dataset: 1M
 U = 6040 # Number of users
 D = 3952 # Number of items
+"""
+
+"""
+Dataset: 10M
+"""
+U = 71567 # Number of users
+D = 10681 # Number of items
 K = 100  # Number of features
 
 def read_csv(filename):

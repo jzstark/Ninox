@@ -5,7 +5,7 @@ import utils
 import csv
 import os
 import random
-import regression_simple as regression
+import regression_mf2 as regression
 import gc
 
 randomness = 0.01
@@ -201,7 +201,7 @@ class Network:
             # Push all pending updates to server
             for i, n in passed:
                 # !!!! Only need to return for regression_simple  !!!!
-                self.model = regression.update_model(self.model, n.delta)
+                regression.update_model(self.model, n.delta)
             # Compute next updates based on ONE single model
             for i, n in passed:
                 n.delta = regression.compute_updates(self.model, i, N, n.step)
