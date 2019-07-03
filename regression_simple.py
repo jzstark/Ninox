@@ -3,10 +3,10 @@ import random
 
 np.random.seed(9528)
 
-N = 100
+N = 1000
 
 step_sz = 0.00001
-batch = 5
+batch = 1
 
 data_sz, model_sz = 1000 * N, 100
 true_model = np.random.uniform(size=[model_sz, 1])
@@ -20,8 +20,9 @@ def make_optimiser():
 
 def get_next_batch(i, n, clock):
     slicelen = int((data_sz - batch - 1) / n)
-    #idx = random.randint(i * slicelen, i * slicelen + slicelen - 1)
-    idx = i * slicelen + clock % slicelen
+    idx = random.randint(i * slicelen, i * slicelen + slicelen - 1)
+    #idx = i * slicelen + clock % slicelen
+    #idx = i * slicelen
     return data[idx:idx + batch, :], pred[idx:idx + batch]
 
 

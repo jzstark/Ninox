@@ -5,13 +5,13 @@ import utils
 import csv
 import os
 import random
-import regression_mf2 as regression
+import regression_mf as regression
 import gc
 
 randomness = 0.01
 seed = 666
 modelsize = (28 * 28, 10)
-obserse_timespace = 2
+obserse_timespace = 5
 
 """
 Utils
@@ -185,7 +185,16 @@ class Network:
             exec_time = random_task_time()
             #exec_time += self.delay[n.wid]
             exec_time *= self.straggleness[n.wid]
-            print("exec_time for worker %i: %.1f." % (n.wid, exec_time))
+            #print("exec_time for worker %i: %.1f." % (n.wid, exec_time))
+
+            if n.frontier == []:
+                diff = self.step_frontier
+            else:
+                diff = np.abs(np.subtract(self.step_frontier, n.frontier))
+            diff_num = np.sum(diff)
+            print("diff number for worker %i: %d." % (n.wid, diff_num))
+
+
             n.t_wait = self.clock
             n.t_exec = n.t_wait + exec_time
             n.step += 1
@@ -201,7 +210,8 @@ class Network:
             # Push all pending updates to server
             for i, n in passed:
                 # !!!! Only need to return for regression_simple  !!!!
-                regression.update_model(self.model, n.delta)
+                self.model = regression.update_model(self.model, n.delta)
+                #regression.update_model(self.model, n.delta)
             # Compute next updates based on ONE single model
             for i, n in passed:
                 n.delta = regression.compute_updates(self.model, i, N, n.step)
@@ -254,6 +264,9 @@ class Network:
                 (self.clock - counter > obserse_timespace):
                 total_step = np.sum(self.step_frontier)
                 loss, acc = regression.compute_accuracy(self.model)
+
+                print("Accuracy: %.3f at step %d\n" % (acc, total_step))
+
                 self.regression_info.append((self.clock, total_step, acc))
                 counter = self.clock
 

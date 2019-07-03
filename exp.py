@@ -1,9 +1,14 @@
 from simulator import *
 from utils import *
 import database as db
+import itertools
+import seaborn as sns
 
 import matplotlib.pyplot as plt
 import matplotlib.pylab as pylab
+import matplotlib.ticker as mtick
+
+sns.set_palette(sns.color_palette("hls", 12))
 
 font = 16 #'x-large'
 params = {'legend.fontsize': font-2,
@@ -16,6 +21,10 @@ pylab.rcParams.update(params)
 
 markers = ['.', '^', 'o', '*', '+']
 linestyles = ['-', '--', '-.', ':', '-']
+
+x = list(itertools.product(linestyles, markers))
+random.shuffle(x)
+linestyles, markers = tuple(zip(*x))
 
 """
 observation point (for each barriers&size&straggler config):
@@ -330,20 +339,23 @@ def exp_regression(result_dir):
 
     barriers = [
         (asp, 'asp'),
+        (pbsp(4), 'pbsp_p4'),
+        (pbsp(8), 'pbsp_p8'),
+        (pbsp(16), 'pbsp_p16'),
+        (pbsp(32), 'pbsp_p32'),
+        (pbsp(48), 'pbsp_p48'),
         (bsp, 'bsp'),
-        #(ssp(4), 'ssp_s4'),
-        #(pbsp(4), 'pbsp_p4'),
         #(pssp(4, 4), 'pssp_s4_p4'),
         #(ssp(10), 'ssp_s10'),
         #(pbsp(40), 'pbsp_p40'),
 
     ]
     observe_points = ['regression']
-    config = {'stop_time':50, 'size':64, 'straggler_perc':0, 'straggleness':1,
+    config = {'stop_time':80, 'size':64, 'straggler_perc':0, 'straggleness':1,
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir}
 
-    run(config)
+    #run(config)
 
     clock = {}; iteration = {}; loss = {}
     barrier_names = [s for (_, s) in config['barriers']]
@@ -372,6 +384,7 @@ def exp_regression(result_dir):
     plt.show()
     """
 
+    """
     f, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 12)) #figsize=(12, 5))
 
     for barrier in barrier_names:
@@ -390,6 +403,21 @@ def exp_regression(result_dir):
     ax2.legend()
 
     plt.show()
+    """
+    c = 0
+    fig, ax = plt.subplots(figsize=(8, 4))
+    for barrier in barrier_names:
+        ax.plot(clock[barrier], loss[barrier], label=barrier_to_label(barrier),
+            linestyle=linestyles[c], marker=markers[c])
+        c += 1
+    ax.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
+
+    plt.xlim([10,80])
+    plt.ylim([72500, 86000])
+    ax.set_xlabel("Time")
+    ax.set_ylabel("Square loss")
+    plt.legend()
+    plt.show()
 
 
 def exp_straggle_accuracy(result_dir):
@@ -399,12 +427,12 @@ def exp_straggle_accuracy(result_dir):
         (asp, 'asp'),
         (bsp, 'bsp'),
         (ssp(4), 'ssp_s4'),
-        (pbsp(5), 'pbsp_p5'),
-        (pssp(4, 5), 'pssp_s4_p5')
+        (pbsp(10), 'pbsp_p10'),
+        (pssp(4, 10), 'pssp_s4_p10')
     ]
     observe_points = ['regression']
-    t = 100
-    s = 60
+    t = 40
+    s = 1000
     configs = [
         {'stop_time':t, 'size':s, 'straggler_perc':0, 'straggleness':4, 'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir},
@@ -416,8 +444,8 @@ def exp_straggle_accuracy(result_dir):
         'path':result_dir},
         {'stop_time':t, 'size':s, 'straggler_perc':20, 'straggleness':4, 'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir},
-        #{'stop_time':200, 'size':100, 'straggler_perc':25, 'straggleness':4, 'barriers':barriers, 'observe_points':observe_points,
-        #'path':result_dir},
+        {'stop_time':t, 'size':s, 'straggler_perc':25, 'straggleness':4, 'barriers':barriers, 'observe_points':observe_points,
+        'path':result_dir},
         #{'stop_time':200, 'size':100, 'straggler_perc':30, 'straggleness':4, 'barriers':barriers, 'observe_points':observe_points,
         #'path':result_dir},
     ]
@@ -436,7 +464,7 @@ def exp_straggle_accuracy(result_dir):
                 loss = [float(s) for s in next(reader)]
                 #accuracy = loss[-1]
                 #dict_single_straggler[c['straggler_perc']] = accuracy
-                accuracy = loss[-20:-1]
+                accuracy = loss[-5:-1]
                 dict_single_straggler[c['straggler_perc']] = \
                     (np.mean(accuracy), np.std(accuracy))
         dict_stragglers[b[1]] = dict_single_straggler
@@ -449,12 +477,14 @@ def exp_straggle_accuracy(result_dir):
         x = list(i.keys())
         y = list(i.values())
         y1, y2 = zip(*y)
-        #y = (np.divide(y, y[0]) - 1) * 100
-        ax.errorbar(x, y1, yerr=y2, marker=markers[c], label=barrier_to_label(k))
+        y = (np.divide(y1, y1[0]) - 1) * 100
+        #ax.errorbar(x, y1, yerr=y2, marker=markers[c], label=barrier_to_label(k))
+        ax.plot(x, y, marker=markers[c], label=barrier_to_label(k))
         c += 1
     plt.legend()
     plt.xlabel("Percentage of slow nodes")
-    plt.ylabel("Model accuracy ")
+    plt.ylabel("Percentage of increased error")
+    #plt.ylabel("Model accuracy ")
     plt.show()
 
 
