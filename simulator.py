@@ -7,6 +7,7 @@ import os
 import random
 import regression_mf as regression
 import gc
+import sys
 
 randomness = 0.01
 seed = 666
@@ -53,6 +54,16 @@ def ssp(staleness):
         return True
     return ssp_param
 
+
+"""
+def ssp(staleness):
+    def ssp_param(net, node):
+        slowest = sys.maxsize
+        for m in net.nodes:
+            if m.step < slowest : slowest = m.step
+        return (node.step - slowest <= staleness and net.clock >= node.t_exec)
+    return ssp_param
+"""
 
 def pbsp(sample_size):
     def pbsp_param(net, node):
@@ -133,12 +144,6 @@ class Network:
         self.size = size
         self.stop_time = config['stop_time']
         self.clock = 0.
-
-        # Communication delay
-        self.delay = [0] * size
-        # np.random.seed(seed)
-        #for i in range(size):
-        #    self.delay[i] = random.randint(0, 5)
 
         straggler_perc = config['straggler_perc'] / 100.
         straggleness = config['straggleness']
@@ -351,7 +356,7 @@ class Network:
 # Entry point
 def run(config):
     for b in config['barriers']:
-        np.random.seed(seed)
+        #np.random.seed(seed)
         network = Network(config, b)
         network.execute()
         network.print_info()
