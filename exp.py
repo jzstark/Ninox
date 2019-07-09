@@ -3,6 +3,7 @@ from utils import *
 import database as db
 import itertools
 import seaborn as sns
+import scipy
 
 import matplotlib.pyplot as plt
 import matplotlib.pylab as pylab
@@ -338,25 +339,25 @@ def exp_regression(result_dir):
     db.init_db(result_dir)
 
     barriers = [
-        #(asp, 'asp'),
+        (asp, 'asp'),
         #(pbsp(4), 'pbsp_p4'),
         #(pbsp(8), 'pbsp_p8'),
         #(pbsp(16), 'pbsp_p16'),
         #(pbsp(32), 'pbsp_p32'),
         #(pbsp(48), 'pbsp_p48'),
-        #(bsp, 'bsp'),
+        (bsp, 'bsp'),
 
         #(asp, 'asp'),
-        (pssp(3, 4),  'pssp_s3_p4'),
-        (pssp(3, 8),  'pssp_s3_p8'),
-        (pssp(3, 16), 'pssp_s3_p16'),
-        (pssp(3, 32), 'pssp_s3_p32'),
-        (pssp(3, 48), 'pssp_s3_p48'),
-        (ssp(3), 'ssp_s3'),
+        #(pssp(3, 4),  'pssp_s3_p4'),
+        #(pssp(3, 8),  'pssp_s3_p8'),
+        #(pssp(3, 16), 'pssp_s3_p16'),
+        #(pssp(3, 32), 'pssp_s3_p32'),
+        #(pssp(3, 48), 'pssp_s3_p48'),
+        #(ssp(3), 'ssp_s3'),
 
     ]
     observe_points = ['regression']
-    config = {'stop_time':80, 'size':64, 'straggler_perc':0, 'straggleness':1,
+    config = {'stop_time':40, 'size':64, 'straggler_perc':0, 'straggleness':1,
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir}
 
@@ -389,7 +390,7 @@ def exp_regression(result_dir):
     plt.show()
     """
 
-    """
+
     f, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 12)) #figsize=(12, 5))
 
     for barrier in barrier_names:
@@ -417,12 +418,13 @@ def exp_regression(result_dir):
         c += 1
     ax.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
 
-    plt.xlim([10,80])
-    plt.ylim([72500, 86000])
+    #plt.xlim([10,80])
+    #plt.ylim([72500, 86000])
     ax.set_xlabel("Time")
     ax.set_ylabel("Square loss")
     plt.legend()
     plt.show()
+    """
 
 
 def exp_straggle_accuracy(result_dir):
@@ -1167,33 +1169,45 @@ def exp_frontier(result_dir):
 
 def exp_straggle_consistency(result_dir):
     db.init_db(result_dir)
+    sns.set_palette(sns.color_palette("hls", 15))
 
     barriers = [
-        #(asp, 'asp'), (bsp, 'bsp'), (ssp(4), 'ssp_s4'),
+        #(asp, 'asp'),
+        #(pbsp(2), 'pbsp_p2'),
+        #(pbsp(5), 'pbsp_p5'),
         #(pbsp(10), 'pbsp_p10'),
-        #(pssp(4, 10), 'pssp_s4_p10')
-
+        #(pbsp(20), 'pbsp_p20'),
+        #(pbsp(30), 'pbsp_p30'),
+        #(pbsp(40), 'pbsp_p40'),
+        #(pbsp(50), 'pbsp_p50'),
+        #(pbsp(60), 'pbsp_p60'),
+        #(pbsp(70), 'pbsp_p70'),
         #(pbsp(80), 'pbsp_p80'),
+        #(pbsp(90), 'pbsp_p90'),
+        #(pbsp(95), 'pbsp_p95'),
+        #(pbsp(100), 'pbsp_p100'),
+        #(bsp, 'bsp'),
 
-        (ssp(1), 'ssp_s1'),
-        (ssp(2), 'ssp_s2'),
-        (ssp(3), 'ssp_s3'),
+        #(ssp(1), 'ssp_s1'),
+        #(ssp(2), 'ssp_s2'),
+        #(ssp(3), 'ssp_s3'),
+
+        (asp, 'asp'),
+        (pssp(4, 5), 'pssp_s4_p5'),
+        (pssp(4, 10), 'pssp_s4_p10'),
+        (pssp(4, 20), 'pssp_s4_p20'),
+        (pssp(4, 40), 'pssp_s4_p40'),
+        (pssp(4, 60), 'pssp_s4_p60'),
+        (pssp(4, 80), 'pssp_s4_p80'),
+        (pssp(4, 90), 'pssp_s4_p90'),
+        (pssp(4, 95), 'pssp_s4_p95'),
+        (pssp(4, 99), 'pssp_s4_p99'),
         (ssp(4), 'ssp_s4'),
-        #(pssp(4, 10), 'pssp_s4_p10'),
-        #(pssp(4, 20), 'pssp_s4_p20'),
-        #(pssp(4, 40), 'pssp_s4_p40'),
-        #(pssp(4, 60), 'pssp_s4_p60'),
-        #(pssp(4, 80), 'pssp_s4_p80'),
-        #(pssp(4, 90), 'pssp_s4_p90'),
-        #(pssp(4, 92), 'pssp_s4_p92'),
-        #(pssp(4, 94), 'pssp_s4_p94'),
-
-        #(pssp(4, 96), 'pssp_s4_p96'),
-        #(pssp(4, 97), 'pssp_s4_p97'),
-        #(pssp(4, 98), 'pssp_s4_p98'),
-        #(pssp(4, 99), 'pssp_s4_p99'),
-        #(pssp(4, 100), 'pssp_s4_p100'),
     ]
+    #barriers = [
+    #    (pssp(4, 5), 'pssp_s4_p5'),
+    #    (pssp(4, 20), 'pssp_s4_p20'),
+    #]
     ob = ['frontier']
     t = 100
     s = 100
@@ -1206,18 +1220,6 @@ def exp_straggle_consistency(result_dir):
         {'stop_time':t, 'size':s, 'straggler_perc':25, 'straggleness':4, 'barriers':barriers, 'observe_points':ob, 'path':result_dir},
         {'stop_time':t, 'size':s, 'straggler_perc':30, 'straggleness':4, 'barriers':barriers, 'observe_points':ob, 'path':result_dir},
     ]
-
-    """
-    configs = [
-        {'stop_time':t, 'size':s, 'straggler_perc':0, 'straggleness':4, 'barriers':barriers, 'observe_points':ob, 'path':result_dir},
-        {'stop_time':t, 'size':s, 'straggler_perc':1, 'straggleness':4, 'barriers':barriers, 'observe_points':ob, 'path':result_dir},
-        {'stop_time':t, 'size':s, 'straggler_perc':2, 'straggleness':4, 'barriers':barriers, 'observe_points':ob, 'path':result_dir},
-        {'stop_time':t, 'size':s, 'straggler_perc':4, 'straggleness':4, 'barriers':barriers, 'observe_points':ob, 'path':result_dir},
-        {'stop_time':t, 'size':s, 'straggler_perc':6, 'straggleness':4, 'barriers':barriers, 'observe_points':ob, 'path':result_dir},
-        {'stop_time':t, 'size':s, 'straggler_perc':8, 'straggleness':4, 'barriers':barriers, 'observe_points':ob, 'path':result_dir},
-        {'stop_time':t, 'size':s, 'straggler_perc':10, 'straggleness':4, 'barriers':barriers, 'observe_points':ob, 'path':result_dir},
-    ]
-    """
 
     #for c in configs: run(c)
 
@@ -1233,29 +1235,53 @@ def exp_straggle_consistency(result_dir):
                 diff_min = [int(s) for s in next(reader)]
                 mu = np.mean(diff_num)
                 std = np.std(diff_num)
-                dict_single_straggler[c['straggler_perc']] = (mu, std)
+                skew = scipy.stats.skew(diff_num)
+                kurt = scipy.stats.kurtosis (diff_num)
+                dict_single_straggler[c['straggler_perc']] = (mu, std, skew, kurt)
         dict_stragglers[b[1]] = dict_single_straggler
 
     # print(dict_stragglers)
+
+    """
+    # Mean and Std
+    f, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 12)) #figsize=(12, 5))
+    c = 0
+    for k, i in dict_stragglers.items():
+        x = list(i.keys())
+        ys = list(i.values())
+        mu, std, _, _  = zip(*ys)
+        #mu = np.divide(mu, mu[0])
+        #std = np.divide(std, std[0])
+        ax1.plot(x, mu, marker=markers[c], linestyle=linestyles[c], label=barrier_to_label(k))
+        ax2.plot(x, std, marker=markers[c], linestyle=linestyles[c], label=barrier_to_label(k))
+        c = (c + 1) % (len(markers))
+
+    ax1.set_xlabel("Straggle node percentage")
+    ax1.set_ylabel("Progress inconsistency (mean)")
+    #ax1.legend()
+
+    ax2.set_xlabel("Straggle node percentage")
+    ax2.set_ylabel("Progress inconsistency (stddev)")
+    ax2.legend()
+    plt.show()
+    """
 
     f, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 12)) #figsize=(12, 5))
     c = 0
     for k, i in dict_stragglers.items():
         x = list(i.keys())
         ys = list(i.values())
-        mu, std = zip(*ys)
-        #mu = np.divide(mu, mu[0])
-        #std = np.divide(std, std[0])
-        ax1.plot(x, mu, marker=markers[c], label=barrier_to_label(k))
-        ax2.plot(x, std, marker=markers[c], label=barrier_to_label(k))
+        _, _, skew, kurt  = zip(*ys)
+        ax1.plot(x, skew, marker=markers[c], linestyle=linestyles[c], label=barrier_to_label(k))
+        ax2.plot(x, kurt, marker=markers[c], linestyle=linestyles[c], label=barrier_to_label(k))
         c = (c + 1) % (len(markers))
 
     ax1.set_xlabel("Straggle node percentage")
-    ax1.set_ylabel("Progress inconsistency (mean)")
-    ax1.legend()
+    ax1.set_ylabel("Progress inconsistency (Skewness)")
+    #ax1.legend(loc='upper right')
 
     ax2.set_xlabel("Straggle node percentage")
-    ax2.set_ylabel("Progress inconsistency (stddev)")
+    ax2.set_ylabel("Progress inconsistency (Kurtosis)")
     ax2.legend()
     plt.show()
 
@@ -1264,9 +1290,33 @@ def exp_straggleness_consistency(result_dir):
     db.init_db(result_dir)
 
     barriers = [
-        (asp, 'asp'), (bsp, 'bsp'), (ssp(4), 'ssp_s4'),
+        (asp, 'asp'),
+        (pbsp(2), 'pbsp_p2'),
+        (pbsp(5), 'pbsp_p5'),
         (pbsp(10), 'pbsp_p10'),
-        (pssp(4, 10), 'pssp_s4_p10')
+        (pbsp(20), 'pbsp_p20'),
+        (pbsp(30), 'pbsp_p30'),
+        (pbsp(40), 'pbsp_p40'),
+        (pbsp(50), 'pbsp_p50'),
+        (pbsp(60), 'pbsp_p60'),
+        (pbsp(70), 'pbsp_p70'),
+        (pbsp(80), 'pbsp_p80'),
+        (pbsp(90), 'pbsp_p90'),
+        #(pbsp(95), 'pbsp_p95'),
+        #(pbsp(100), 'pbsp_p100'),
+        (bsp, 'bsp'),
+
+        #(asp, 'asp'),
+        #(pssp(4, 5), 'pssp_s4_p5'),
+        #(pssp(4, 10), 'pssp_s4_p10'),
+        #(pssp(4, 20), 'pssp_s4_p20'),
+        #(pssp(4, 40), 'pssp_s4_p40'),
+        #(pssp(4, 60), 'pssp_s4_p60'),
+        #(pssp(4, 80), 'pssp_s4_p80'),
+        #(pssp(4, 90), 'pssp_s4_p90'),
+        #(pssp(4, 95), 'pssp_s4_p95'),
+        #(pssp(4, 99), 'pssp_s4_p99'),
+        #(ssp(4), 'ssp_s4'),
     ]
     ob = ['frontier']
     t = 100
@@ -1283,7 +1333,7 @@ def exp_straggleness_consistency(result_dir):
         {'stop_time':t, 'size':s, 'straggler_perc':10, 'straggleness':16, 'barriers':barriers, 'observe_points':ob, 'path':result_dir},
     ]
 
-    for c in configs: run(c)
+    #for c in configs: run(c)
 
     dict_stragglers = {}
     for b in barriers:
@@ -1297,31 +1347,54 @@ def exp_straggleness_consistency(result_dir):
                 diff_min = [int(s) for s in next(reader)]
                 mu = np.mean(diff_num)
                 std = np.std(diff_num)
-                dict_single_straggler[c['straggleness']] = (mu, std)
+                skew = scipy.stats.skew(diff_num)
+                kurt = scipy.stats.kurtosis (diff_num)
+                dict_single_straggler[c['straggleness']] = (mu, std, skew, kurt)
         dict_stragglers[b[1]] = dict_single_straggler
 
     # print(dict_stragglers)
 
-    f, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 12)) #figsize=(12, 5))
+    # Mean/Std
+    f, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 12))
     c = 0
     for k, i in dict_stragglers.items():
         x = list(i.keys())
         ys = list(i.values())
-        mu, std = zip(*ys)
-        #mu = np.divide(mu, mu[0])
-        #std = np.divide(std, std[0])
-        ax1.plot(x, mu, marker=markers[c], label=k)
-        ax2.plot(x, std, marker=markers[c], label=k)
+        mu, std, _, _ = zip(*ys)
+        ax1.plot(x, mu, marker=markers[c], linestyle=linestyles[c], label=barrier_to_label(k))
+        ax2.plot(x, std, marker=markers[c], linestyle=linestyles[c], label=barrier_to_label(k))
         c = (c + 1) % (len(markers))
 
     ax1.set_xlabel("Straggleness")
-    ax1.set_ylabel("Mean of step difference")
-    ax1.legend()
+    ax1.set_ylabel("Progress inconsistency (Mean)")
+    #ax1.legend()
 
     ax2.set_xlabel("Straggleness")
-    ax2.set_ylabel("Stddev of step difference")
+    ax2.set_ylabel("Progress inconsistency (Stddev)")
+    ax2.legend(loc='lower right')
+    plt.show()
+
+    """
+    # Skewness / Kurtosis
+    f, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 12))
+    c = 0
+    for k, i in dict_stragglers.items():
+        x = list(i.keys())
+        ys = list(i.values())
+        _, _, skew, kurt = zip(*ys)
+        ax1.plot(x, skew, marker=markers[c], linestyle=linestyles[c], label=barrier_to_label(k))
+        ax2.plot(x, kurt, marker=markers[c], linestyle=linestyles[c], label=barrier_to_label(k))
+        c = (c + 1) % (len(markers))
+
+    ax1.set_xlabel("Straggleness")
+    ax1.set_ylabel("Progress inconsistency (Skewness)")
+    #ax1.legend()
+
+    ax2.set_xlabel("Straggleness")
+    ax2.set_ylabel("Progress inconsistency (Kurtosis)")
     ax2.legend()
     plt.show()
+    """
 
 
 def exp_scalability_consistency(result_dir):
@@ -1384,7 +1457,7 @@ def exp_scalability_consistency(result_dir):
         'path':result_dir},
     ]
 
-    for c in configs: run(c)
+    #for c in configs: run(c)
 
     diffs = []
     for c in configs:
@@ -1399,11 +1472,14 @@ def exp_scalability_consistency(result_dir):
                 diff_min = [int(s) for s in next(reader)]
                 mu  = np.mean(diff_num)
                 std = np.std(diff_num)
-                diff[barrier] = (mu, std)
+                skew = scipy.stats.skew(diff_num)
+                kurt = scipy.stats.kurtosis (diff_num)
+                diff[barrier] = (mu, std, skew, kurt)
         diffs.append(diff)
 
     # print(diffs)
 
+    """ Mean/Std
     f, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5)) #figsize=(12, 5))
     barrier_names = [s for (_, s) in barriers] #if s != ssp_name]
     sizes = [c['size'] for c in configs]
@@ -1435,6 +1511,41 @@ def exp_scalability_consistency(result_dir):
 
     #ax2.set_ylabel("Ratio of PSSP diff / SSP step consistency (std) ")
     ax2.set_ylabel("Normalised pBSP step consistency (std) ")
+    ax2.set_xlabel("Worker number")
+    ax2.legend()
+
+    plt.grid(linestyle='--', linewidth=1)
+    plt.show()
+    """
+
+    # Skewness and Kurtosis
+    f, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
+    barrier_names = [s for (_, s) in barriers] #if s != ssp_name]
+    sizes = [c['size'] for c in configs]
+
+    for k, barrier in enumerate(barrier_names):
+        label = barrier_to_label(barrier)
+        y = []
+        for i, c in enumerate(configs):
+            ratio = np.divide(diffs[i][barrier][2], c['size'])
+            y.append(ratio)
+        ax1.plot(sizes, y, marker=markers[k % len(markers)],
+            linestyle=linestyles[k % len(markers)], label=label)
+
+    for k, barrier in enumerate(barrier_names):
+        label = barrier_to_label(barrier)
+        y = []
+        for i, c in enumerate(configs):
+            ratio = np.divide(diffs[i][barrier][3], c['size'])
+            y.append(ratio)
+        ax2.plot(sizes, y, marker=markers[k % len(markers)],
+            linestyle=linestyles[k % len(markers)], label=label)
+
+    ax1.set_ylabel("Normalised pBSP step consistency (skewness) ")
+    ax1.set_xlabel("Worker number")
+    ax1.legend()
+
+    ax2.set_ylabel("Normalised pBSP step consistency (kurtosis) ")
     ax2.set_xlabel("Worker number")
     ax2.legend()
 
