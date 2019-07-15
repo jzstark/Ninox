@@ -7,6 +7,7 @@ from keras import optimizers
 
 import numpy as np
 import random
+import functools
 import platform
 import os
 
@@ -23,9 +24,10 @@ Parameters
 seed=233
 epochs=1
 batch_size=64
-iteration=5
+iteration=25
 data_select_step = 50
 learning_rate = 0.001
+decay=1e-4
 
 """
 Load and pre-process MNSIT data
@@ -64,7 +66,8 @@ Utilities
 def get_next_batch(i, n, clock):
     size = batch_size * iteration
     slicelen = int((train_len - size - 1) / n)
-    idx = i * slicelen + (clock * data_select_step) % slicelen
+    #idx = i * slicelen + (clock * data_select_step) % slicelen
+    idx = i * slicelen
     return x_train[[idx,idx+size], :], y_train[[idx,idx+size], :]
 
 def dnn():
@@ -91,7 +94,7 @@ Exposed API for simulation use
 
 def make_optimiser():
     # This has to be newly created for each new instance.
-    return optimizers.SGD(lr=learning_rate)
+    return optimizers.SGD(lr=learning_rate, decay=decay)
     #return optimizers.Adadelta()
 
 def get_weight(model):
@@ -140,6 +143,17 @@ def compute_updates(model, i, n, step):
     ws1 = get_weight(model)
     set_weight(model, ws0)
     return diff_weight(ws1, ws0)
+
+
+def add_weight(ws, us):
+    w_new = []
+    for w, u in zip(ws, us):
+        w_new.append(w + u)
+    return w_new
+
+
+def average_update(us):
+    return list(functools.reduce(add_weight, us))
 
 
 def compute_accuracy(model):
