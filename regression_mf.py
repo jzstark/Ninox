@@ -3,6 +3,7 @@ import random
 import platform
 import os
 import csv
+import functools
 
 """
 Parameters
@@ -10,7 +11,7 @@ Parameters
 
 seed = 233
 batch_size = 10000 #3125 #20000
-alpha = 0.001
+alpha = 0.0003
 beta  = 0.02
 data_select_step = 1000
 
@@ -153,7 +154,8 @@ def add_weight(ws, us):
 
 
 def average_update(us):
-    return list(functools.reduce(add_weight, us))
+    ws = list(functools.reduce(add_weight, us))
+    return tuple([np.divide(w, len(us)) for w in ws])
 
 
 def compute_accuracy(model):

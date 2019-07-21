@@ -153,8 +153,8 @@ def add_weight(ws, us):
 
 
 def average_update(us):
-    return list(functools.reduce(add_weight, us))
-
+    ws = list(functools.reduce(add_weight, us))
+    return [np.divide(w, len(us)) for w in ws]
 
 def compute_accuracy(model):
     loss, accuracy = model.evaluate(x_test, y_test)

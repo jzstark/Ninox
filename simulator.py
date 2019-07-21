@@ -5,7 +5,7 @@ import utils
 import csv
 import os
 import random
-import regression_dnn as regression
+import regression_mf as regression
 import gc
 import sys
 
@@ -217,13 +217,15 @@ class Network:
         if ('regression' in self.observe_points and len(passed) > 0):
             N = len(self.nodes)
             # Push all pending updates to server
-            #for i, n in passed:
-            #    # !!!! Only need to return for regression_simple  !!!!
-            #    self.model = regression.update_model(self.model, n.delta)
-            #    #regression.update_model(self.model, n.delta)
-            ds = [n.delta for _, n in passed]
-            delta = regression.average_update(ds)
-            regression.update_model(self.model, delta)
+            for i, n in passed:
+                # !!!! Only need to return for regression_simple  !!!!
+                self.model = regression.update_model(self.model, n.delta)
+                #regression.update_model(self.model, n.delta)
+
+            #ds = [n.delta for _, n in passed]
+            #delta = regression.average_update(ds)
+            #self.model = regression.update_model(self.model, delta)
+
             # Compute next updates based on ONE single model
             for i, n in passed:
                 n.delta = regression.compute_updates(self.model, i, N, n.step)

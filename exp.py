@@ -340,12 +340,15 @@ def exp_regression(result_dir):
 
     barriers = [
         (asp, 'asp'),
-        #(pbsp(4), 'pbsp_p4'),
+        (bsp, 'bsp'),
+        #(asp, 'seq'),
+
+        (pbsp(4), 'pbsp_p4'),
         #(pbsp(8), 'pbsp_p8'),
         #(pbsp(16), 'pbsp_p16'),
         #(pbsp(32), 'pbsp_p32'),
         #(pbsp(48), 'pbsp_p48'),
-        (bsp, 'bsp'),
+        #(bsp, 'bsp'),
 
         #(asp, 'asp'),
         #(pssp(3, 4),  'pssp_s3_p4'),
@@ -353,11 +356,11 @@ def exp_regression(result_dir):
         #(pssp(3, 16), 'pssp_s3_p16'),
         #(pssp(3, 32), 'pssp_s3_p32'),
         #(pssp(3, 48), 'pssp_s3_p48'),
-        #(ssp(3), 'ssp_s3'),
+        (ssp(3), 'ssp_s3'),
 
     ]
     observe_points = ['regression']
-    config = {'stop_time':40, 'size':64, 'straggler_perc':0, 'straggleness':1,
+    config = {'stop_time':200, 'size': 32, 'straggler_perc':0, 'straggleness':1,
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir}
 
@@ -407,7 +410,7 @@ def exp_regression(result_dir):
     #ax2.set_xlim([0,50])
     #ax2.set_ylim([0.6,0.9])
     ax2.legend()
-
+    plt.grid()
     plt.show()
     """
     c = 0
@@ -1266,6 +1269,7 @@ def exp_straggle_consistency(result_dir):
     plt.show()
     """
 
+    """
     f, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 12)) #figsize=(12, 5))
     c = 0
     for k, i in dict_stragglers.items():
@@ -1283,6 +1287,22 @@ def exp_straggle_consistency(result_dir):
     ax2.set_xlabel("Straggle node percentage")
     ax2.set_ylabel("Progress inconsistency (Kurtosis)")
     ax2.legend()
+    plt.show()
+    """
+
+    f, ax1 = plt.subplots(1, 1, figsize=(6, 12)) #figsize=(12, 5))
+    c = 0
+    for k, i in dict_stragglers.items():
+        x = list(i.keys())
+        ys = list(i.values())
+        _, _, skew, kurt  = zip(*ys)
+        ax1.plot(x, skew, marker=markers[c], linestyle=linestyles[c], label=barrier_to_label(k))
+        c = (c + 1) % (len(markers))
+
+    ax1.set_xlabel("Straggle node percentage")
+    ax1.set_ylabel("Progress inconsistency (Skewness)")
+    ax1.legend(loc='upper left')
+    ax1.legend()
     plt.show()
 
 
@@ -1401,7 +1421,7 @@ def exp_scalability_consistency(result_dir):
     db.init_db(result_dir)
 
     ssp_name = 'ssp_s4'
-    barriers_ssp = [
+    barriers = [
         (asp, 'asp'),
         (ssp(4), ssp_name),
         (pssp(4, 2), 'pssp_s4_p2'),
@@ -1412,7 +1432,7 @@ def exp_scalability_consistency(result_dir):
         (pssp(4, 40), 'pssp_s4_p40'),
         (pssp(4, 50), 'pssp_s4_p50'),
     ]
-    barriers = [
+    barriers_bsp = [
         (asp, 'asp'),
         (pbsp(2),  'pbsp_p2'),
         (pbsp(5),  'pbsp_p5'),
@@ -1457,7 +1477,7 @@ def exp_scalability_consistency(result_dir):
         'path':result_dir},
     ]
 
-    #for c in configs: run(c)
+    for c in configs: run(c)
 
     diffs = []
     for c in configs:
@@ -1519,7 +1539,7 @@ def exp_scalability_consistency(result_dir):
     """
 
     # Skewness and Kurtosis
-    f, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
+    f, ax1 = plt.subplots(1, 1, figsize=(6,10))
     barrier_names = [s for (_, s) in barriers] #if s != ssp_name]
     sizes = [c['size'] for c in configs]
 
@@ -1527,11 +1547,12 @@ def exp_scalability_consistency(result_dir):
         label = barrier_to_label(barrier)
         y = []
         for i, c in enumerate(configs):
-            ratio = np.divide(diffs[i][barrier][2], c['size'])
+            #ratio = np.divide(diffs[i][barrier][2], c['size'])
+            ratio = diffs[i][barrier][2]
             y.append(ratio)
         ax1.plot(sizes, y, marker=markers[k % len(markers)],
             linestyle=linestyles[k % len(markers)], label=label)
-
+    """
     for k, barrier in enumerate(barrier_names):
         label = barrier_to_label(barrier)
         y = []
@@ -1540,14 +1561,10 @@ def exp_scalability_consistency(result_dir):
             y.append(ratio)
         ax2.plot(sizes, y, marker=markers[k % len(markers)],
             linestyle=linestyles[k % len(markers)], label=label)
-
-    ax1.set_ylabel("Normalised pBSP step consistency (skewness) ")
+    """
+    ax1.set_ylabel("pBSP step consistency (skewness) ")
     ax1.set_xlabel("Worker number")
     ax1.legend()
-
-    ax2.set_ylabel("Normalised pBSP step consistency (kurtosis) ")
-    ax2.set_xlabel("Worker number")
-    ax2.legend()
 
     plt.grid(linestyle='--', linewidth=1)
     plt.show()
