@@ -5,6 +5,7 @@
 
 import numpy as np
 import random
+import time
 
 """
 Configuration
@@ -108,6 +109,7 @@ def build_model(opt, accuracy=True):
     for i in range(D): nd[i] = t_init.copy()
     for i in range(W): nw[i] = t_init.copy()
     for i in range(D): z[i]  = []
+    nwsum = [0 for x in range(K)]
 
     for d in range(D):
         l = len(docs[d])
@@ -118,56 +120,57 @@ def build_model(opt, accuracy=True):
             tok_i = docs[d][i]
             nw[tok_i][topic] += 1
             nd[d][topic] += 1
+            nwsum[topic] += 1
 
-    return z, nd, nw
+    return z, nd, nw, nwsum
 
 
 def build_update():
-    return {}, {}, {}
+    return {}, {}, {}, [0] * K
 
 
 def update_model(model, u):
-    (z0, nd0, nw0) = model
-    (z1, nd1, nw1) = u
+    (z0, nd0, nw0, nws0) = model
+    (z1, nd1, nw1, nws1) = u
     for k, v in z1.items():
         z0[k] = np.add(z0[k], v)
     for k, v in nd1.items():
         nd0[k] = np.add(nd0[k], v)
     for k, v in nw1.items():
         nw0[k] = np.add(nw0[k], v)
-    return (z0, nd0, nw0)
+    nws0 = np.add(nws0, nws1)
+    return (z0, nd0, nw0, nws0)
 
 
 def compute_updates(model, i, n, step):
-    z, nd, nw = model
-    local_z, local_nd, local_nw = z.copy(), nd.copy(), nw.copy()
+    z, nd, nw, nwsum = model
+    local_z, local_nd, local_nw, local_nwsum = z.copy(), nd.copy(), nw.copy(), nwsum.copy()
 
     docs_index = get_next_batch(i, n, step)
     for m in docs_index:
+        ndsum_m = len(docs[m])
         for n in range(len(docs[m])):
             topic = local_z[m][n]
             w = docs[m][n]
-            p = [0.0 for _ in range(K)]
 
             local_nw[w][topic] -= 1
             local_nd[m][topic] -= 1
+            local_nwsum[topic] -= 1
 
-            nwsum = [0] * K
-            for i in nw.values():
-                nwsum = np.add(nwsum, i)
-            ndsum_m = len(docs[m])
-
+            p = [0.0 for _ in range(K)]
             for k in range(K):
                 p[k] = (local_nw[w][k] + beta) / (nwsum[k] + v_beta) * \
                     (local_nd[m][k] + alpha) / (ndsum_m + k_alpha)
-
             t = np.random.multinomial(1, np.divide(p, np.sum(p))).argmax()
 
             local_nw[w][t] += 1
             local_nd[m][t] += 1
+            local_nwsum[t] += 1
             local_z[m][n] = t
 
     diff_z = {}; diff_nd = {}; diff_nw = {}
+    diff_nwsum = np.subtract(local_nwsum, nwsum)
+
     for m in docs_index:
         diff_z[m]  = np.subtract(local_z[m], z[m])
         diff_nd[m] = np.subtract(local_nd[m], nd[m])
@@ -175,20 +178,17 @@ def compute_updates(model, i, n, step):
             w = docs[m][n]
             diff_nw[w] = np.subtract(local_nw[w], nw[w])
 
-    return diff_z, diff_nd, diff_nw
+    return diff_z, diff_nd, diff_nw, diff_nwsum
 
 
 def compute_accuracy(model):
-    local_z, local_nd, local_nw = model
+    local_z, local_nd, local_nw, local_nwsum = model
     ll = 0.0
-    nwsum = [0] * K
-    for i in local_nw.values():
-        nwsum = np.add(nwsum, i)
 
     for d, doc in enumerate(docs):
         ndsum_d = len(doc)
         for w in doc:
-            l = np.divide(local_nw[w], nwsum) * \
+            l = np.divide(local_nw[w], local_nwsum) * \
                 np.divide(local_nd[d], ndsum_d)
             ll = ll + np.log(np.sum(l))
     return None, ll
@@ -199,7 +199,10 @@ def test_run():
     opt = make_optimiser()
     model = build_model(opt, accuracy=True)
     for i in range(10):
+        start = time.time()
         updates = compute_updates(model, i%N, N, i)
         model = update_model(model, updates)
         _, ll = compute_accuracy(model)
+        end = time.time()
+        print(end - start)
         print("Loglikelihood: %.2f" % ll)
