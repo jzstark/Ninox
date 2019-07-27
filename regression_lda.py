@@ -6,15 +6,14 @@
 import numpy as np
 import random
 import time
+from joblib import Parallel, delayed
 
 """
 Configuration
 """
 
 K = 10
-alpha = 0.5
-beta = 0.1
-batch_size = 1000
+
 
 class LDADictionary:
     def __init__(self):
@@ -49,6 +48,8 @@ class LDADictionary:
 """
 Preprocess Data
 """
+#====================
+# Dataset 1
 
 dictionary = LDADictionary()
 raw_docs = []
@@ -76,6 +77,46 @@ for idx, raw_doc in enumerate(raw_docs):
 
 W = dictionary.num_words()
 
+#====================
+
+
+#====================
+# Dataset 2
+# Src: https://towardsdatascience.com/topic-modeling-for-the-new-york-times-news-dataset-1f643e15caac
+
+"""
+docs = []
+with open('data/lda_nyt_small.txt', 'r') as f:
+    for l in f.readlines():
+        line = [int(x.split(':')[0]) - 1 for x in l.split(',')]
+        docs.append(line)
+D = 8447
+W = 3012
+"""
+
+#====================
+
+#====================
+# Dataset 3: Blei
+# Src: http://www.cs.columbia.edu/~blei/lda-c/
+
+"""
+docs = []
+with open('data/lda_ap.txt', 'r') as f:
+    for l in f.readlines():
+        line = [int(x.split(':')[0]) for x in l.split(' ')[1:]]
+        docs.append(line)
+D = 2246
+W = 10473
+"""
+
+#====================
+
+batch_size = int(D / 32)
+alpha = 50. / K
+beta = 200. / W
+# Reference: https://blog.csdn.net/pipisorry/article/details/42129099
+
 v_beta = float(W * beta)
 k_alpha = float(K * alpha)
 
@@ -88,7 +129,8 @@ def get_next_batch(i, n, clock):
     size = batch_size
     slicelen = int((train_len - size - 1) / n)
     #idx = i * slicelen + (clock * data_select_step) % slicelen
-    idx = random.randint(i * slicelen, i * slicelen + slicelen - 1)
+    #idx = random.randint(i * slicelen, i * slicelen + slicelen - 1)
+    idx = i * slicelen
     return list(range(idx, idx+size+1))
 
 
@@ -121,7 +163,6 @@ def build_model(opt, accuracy=True):
             nw[tok_i][topic] += 1
             nd[d][topic] += 1
             nwsum[topic] += 1
-
     return z, nd, nw, nwsum
 
 
@@ -159,7 +200,8 @@ def compute_updates(model, i, n, step):
 
             p = [0.0 for _ in range(K)]
             for k in range(K):
-                p[k] = (local_nw[w][k] + beta) / (nwsum[k] + v_beta) * \
+                #p[k] = (local_nw[w][k] + beta) / (nwsum[k] + v_beta) * \
+                p[k] = (local_nw[w][k] + beta) / (local_nwsum[k] + v_beta) * \
                     (local_nd[m][k] + alpha) / (ndsum_m + k_alpha)
             t = np.random.multinomial(1, np.divide(p, np.sum(p))).argmax()
 
@@ -184,12 +226,11 @@ def compute_updates(model, i, n, step):
 def compute_accuracy(model):
     local_z, local_nd, local_nw, local_nwsum = model
     ll = 0.0
-
     for d, doc in enumerate(docs):
         ndsum_d = len(doc)
+        div_nd = np.divide(local_nd[d], ndsum_d)
         for w in doc:
-            l = np.divide(local_nw[w], local_nwsum) * \
-                np.divide(local_nd[d], ndsum_d)
+            l = np.divide(local_nw[w], local_nwsum) * div_nd
             ll = ll + np.log(np.sum(l))
     return None, ll
 
@@ -201,8 +242,11 @@ def test_run():
     for i in range(10):
         start = time.time()
         updates = compute_updates(model, i%N, N, i)
+        end1 = time.time()
         model = update_model(model, updates)
+        end2 = time.time()
         _, ll = compute_accuracy(model)
-        end = time.time()
-        print(end - start)
+        end3 = time.time()
+        print(end1 - start, end2 - start, end3 - start)
+        # (2s, 2s, 14s) --> compute_accuracy is slow, but nothing we could do.
         print("Loglikelihood: %.2f" % ll)
