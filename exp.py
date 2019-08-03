@@ -351,7 +351,7 @@ def exp_regression(result_dir):
         #(bsp, 'bsp'),
 
         #(asp, 'asp'),
-        #(pssp(3, 4),  'pssp_s3_p4'),
+        (pssp(3, 4),  'pssp_s3_p4'),
         #(pssp(3, 8),  'pssp_s3_p8'),
         #(pssp(3, 16), 'pssp_s3_p16'),
         #(pssp(3, 32), 'pssp_s3_p32'),
@@ -360,11 +360,11 @@ def exp_regression(result_dir):
 
     ]
     observe_points = ['regression']
-    config = {'stop_time':200, 'size': 32, 'straggler_perc':0, 'straggleness':1,
+    config = {'stop_time':100, 'size': 32, 'straggler_perc':0, 'straggleness':1,
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir}
 
-    run(config)
+    #run(config)
 
     clock = {}; iteration = {}; loss = {}
     barrier_names = [s for (_, s) in config['barriers']]
@@ -401,14 +401,18 @@ def exp_regression(result_dir):
         ax2.plot(iteration[barrier], loss[barrier],
             label=barrier_to_label(barrier))
 
+    ax1.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
+    ax2.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
+
     ax1.set_xlabel("Time")
-    ax1.set_ylabel("Accuracy")
+    ax1.set_ylabel("Loglikelihood")
     ax1.legend()
 
-    ax2.set_xlabel("Iterations")
-    ax2.set_ylabel("Accuracy")
+    ax2.set_xlabel("Update numbers")
+    #ax2.set_ylabel("Accuracy")
     #ax2.set_xlim([0,50])
-    #ax2.set_ylim([0.6,0.9])
+    #ax1.set_ylim([-2520000,-2480000])
+    #ax2.set_ylim([-2520000,-2480000])
     ax2.legend()
     plt.grid()
     plt.show()
