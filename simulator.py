@@ -5,14 +5,14 @@ import utils
 import csv
 import os
 import random
-import regression_mf as regression
+import regression_lda as regression
 import gc
 import sys
 
 randomness = 0.01
 seed = 666
 modelsize = (28 * 28, 10)
-obserse_timespace = 5
+obserse_timespace = 3
 
 """
 Utils
@@ -218,7 +218,7 @@ class Network:
             N = len(self.nodes)
             # Push all pending updates to server
             for i, n in passed:
-                # !!!! Only need to return for regression_simple  !!!!
+                # !!!! Only need to return for regression_simple/lda  !!!!
                 self.model = regression.update_model(self.model, n.delta)
                 #regression.update_model(self.model, n.delta)
 

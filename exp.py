@@ -411,8 +411,11 @@ def exp_regression(result_dir):
     ax2.set_xlabel("Update numbers")
     #ax2.set_ylabel("Accuracy")
     #ax2.set_xlim([0,50])
-    #ax1.set_ylim([-2520000,-2480000])
-    #ax2.set_ylim([-2520000,-2480000])
+    ax1.set_ylim([-2530000,-2480000])
+    ax2.set_ylim([-2530000,-2480000])
+    ax1.set_xlim([50,200])
+    ax2.set_xlim([500,3000])
+
     ax2.legend()
     plt.grid()
     plt.show()
