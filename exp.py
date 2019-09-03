@@ -14,7 +14,7 @@ import matplotlib.ticker as mtick
 font = 16 #'x-large'
 params = {'legend.fontsize': font-2,
           #'figure.figsize': (9.5, 6),
-         'axes.labelsize': font-4,
+         'axes.labelsize': font-2,
          'axes.titlesize': font,
          'xtick.labelsize':font,
          'ytick.labelsize':font}
@@ -68,7 +68,7 @@ def exp_step(result_dir):
         'path':result_dir}
     ]
 
-    for c in configs: run(c)
+    #for c in configs: run(c)
 
     data = {}
     barrier_names = [s for (_, s) in barriers]
@@ -78,11 +78,12 @@ def exp_step(result_dir):
             reader = csv.reader(f, delimiter=',')
             data[name] = [int(s) for s in next(reader)]
 
-    fig, ax = plt.subplots(figsize=(10, 4))
+    fig, ax = plt.subplots(figsize=(10, 5))
     for name in barrier_names:
-        ax.hist(data[name], 20, label=name, rwidth=20)
+        ax.hist(data[name], 20, label=barrier_to_label(name), rwidth=50)
     ax.set_ylim([0, 60])
-    plt.xlabel("Simulated time")
+    plt.xlabel("Number of steps")
+    plt.ylabel("Perentage of nodes that run certain steps (%)")
     plt.legend()
     plt.show()
 
@@ -98,7 +99,7 @@ def exp_samplesize(result_dir):
     ]
     observe_points = ['step']
     configs = [
-        {'stop_time':200, 'size':200, 'straggler_perc':0, 'straggleness':1, 'barriers':barriers, 'observe_points':['step'],
+        {'stop_time':200, 'size':100, 'straggler_perc':0, 'straggleness':1, 'barriers':barriers, 'observe_points':['step'],
         'path':result_dir}
     ]
 
@@ -115,11 +116,11 @@ def exp_samplesize(result_dir):
 
     fig, ax = plt.subplots(figsize=(12, 5))
     for name in barrier_names:
-        n, bins, patches = ax.hist(data[name], 500, cumulative=True, histtype='step', label=name)
+        n, bins, patches = ax.hist(data[name], 500, cumulative=True, histtype='step', label=barrier_to_label(name))
         patches[0].set_xy(patches[0].get_xy()[:-1])
-    ax.set_ylim([0, 200])
-    plt.ylabel("CDF")
-    plt.xlabel("Simulated time")
+    ax.set_ylim([0, 100])
+    plt.xlabel("Number of steps")
+    plt.ylabel("CDF of nodes that run certain steps (%)")
     plt.legend(loc="lower right")
     plt.show()
 
