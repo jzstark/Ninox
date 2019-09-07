@@ -9,12 +9,14 @@ import matplotlib.pyplot as plt
 import matplotlib.pylab as pylab
 import matplotlib.ticker as mtick
 
+from scipy.stats import norm
+
 #sns.set_palette(sns.color_palette("hls", 12))
 
 font = 16 #'x-large'
 params = {'legend.fontsize': font-2,
           #'figure.figsize': (9.5, 6),
-         'axes.labelsize': font-2,
+         'axes.labelsize': font,
          'axes.titlesize': font,
          'xtick.labelsize':font,
          'ytick.labelsize':font}
@@ -78,12 +80,24 @@ def exp_step(result_dir):
             reader = csv.reader(f, delimiter=',')
             data[name] = [int(s) for s in next(reader)]
 
+    dashList = [(1,1), (3,2), (1,0), (3,3), (2, 4), (4,2,10,2), (2,1), (1,2)]
+    patterns = [ "/" , "", "\\" , "-", "|", "x", "o", "O",  "+",  "*", "." ]
     fig, ax = plt.subplots(figsize=(10, 5))
+    k = 0
     for name in barrier_names:
-        ax.hist(data[name], 20, label=barrier_to_label(name), rwidth=50)
-    ax.set_ylim([0, 60])
+        x = data[name]
+        ax.hist(x, 15, label=barrier_to_label(name),
+            rwidth=50, hatch=patterns[k])
+        #d = sorted(data[name])
+        #x, counts = np.unique(d, return_counts=True)
+        #y = np.multiply(x, counts) / sum(d)
+        #print(y)
+        #ax.plot(x, y, label=barrier_to_label(name), linewidth=2.5,
+        #    linestyle='--', dashes=dashList[k])
+        k += 1
+    ax.set_ylim([0, 100])
     plt.xlabel("Number of steps")
-    plt.ylabel("Perentage of nodes that run certain steps (%)")
+    plt.ylabel("Percentage of nodes (%)")
     plt.legend()
     plt.show()
 
@@ -114,13 +128,21 @@ def exp_samplesize(result_dir):
             data[name] = [int(s) for s in next(reader)]
     print(data)
 
+    dashList = [(1,1), (3,2), (1,0), (3,3), (2, 4), (4,2,10,2), (2,1), (1,2)]
     fig, ax = plt.subplots(figsize=(12, 5))
+    k = 0
     for name in barrier_names:
-        n, bins, patches = ax.hist(data[name], 500, cumulative=True, histtype='step', label=barrier_to_label(name))
-        patches[0].set_xy(patches[0].get_xy()[:-1])
-    ax.set_ylim([0, 100])
+        #n, bins, patches = ax.hist(data[name], 500, cumulative=True, histtype='step', label=barrier_to_label(name))
+        #patches[0].set_xy(patches[0].get_xy()[:-1])
+        x = sorted(data[name])
+        y = np.cumsum(x)
+        y = y / y[-1]
+        ax.plot(x, y, label=barrier_to_label(name), linewidth=2.5,
+            linestyle='--', dashes=dashList[k])
+        k += 1
+    ax.set_ylim([0, 1])
     plt.xlabel("Number of steps")
-    plt.ylabel("CDF of nodes that run certain steps (%)")
+    plt.ylabel("CDF of nodes that run certain steps")
     plt.legend(loc="lower right")
     plt.show()
 
@@ -397,10 +419,17 @@ def exp_regression(result_dir):
 
     f, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 12)) #figsize=(12, 5))
 
+    c = 0
     for barrier in barrier_names:
-        ax1.plot(clock[barrier], loss[barrier], label=barrier_to_label(barrier))
-        ax2.plot(iteration[barrier], loss[barrier],
+        ax1.plot(clock[barrier], loss[barrier],
+            linewidth=2,
+            linestyle=linestyles[c],
             label=barrier_to_label(barrier))
+        ax2.plot(iteration[barrier], loss[barrier],
+            linewidth=2,
+            linestyle=linestyles[c],
+            label=barrier_to_label(barrier))
+        c += 1
 
     ax1.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
     ax2.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
@@ -418,7 +447,7 @@ def exp_regression(result_dir):
     ax2.set_xlim([500,3000])
 
     ax2.legend()
-    plt.grid()
+    #plt.grid()
     plt.show()
     """
     c = 0
@@ -489,7 +518,10 @@ def exp_straggle_accuracy(result_dir):
 
     print(dict_stragglers)
 
-    fig, ax = plt.subplots()
+    markers = ['.', '^', 'o', '*', '+']
+    linestyles = ['-', '--', '-.', ':', '-']
+
+    fig, ax = plt.subplots(figsize=(6.6, 5.5))
     c = 0
     for k, i in dict_stragglers.items():
         x = list(i.keys())
@@ -497,7 +529,8 @@ def exp_straggle_accuracy(result_dir):
         y1, y2 = zip(*y)
         y = (np.divide(y1, y1[0]) - 1) * 100
         #ax.errorbar(x, y1, yerr=y2, marker=markers[c], label=barrier_to_label(k))
-        ax.plot(x, y, marker=markers[c], label=barrier_to_label(k))
+        ax.plot(x, y, marker=markers[c], linestyle=linestyles[c],
+        label=barrier_to_label(k))
         c += 1
     plt.legend()
     plt.xlabel("Percentage of slow nodes")
@@ -678,17 +711,22 @@ def exp_seqdiff(result_dir):
         result[barrier] = diffs
     #print(result)
 
-    fig, ax = plt.subplots(figsize=(8, 5))
+    fig, ax = plt.subplots(figsize=(7, 6))
+    dashList = [(1,1),(2,1),(2,2),(1,0),(3,3,2,2),(5,2,20,2)]
     barrier_names = result.keys()
     k = 0
     for barrier in barrier_names:
         [y, t] = list(zip(*result[barrier]))
-        y = np.divide(y, t) # not a good metric
-        #y = np.divide(y, size)
-        ax.plot(t, y, label=barrier_to_label(barrier)) #, linestyle=linestyles[k])
-        k = (k + 1) % len(linestyles)
+        #y = np.divide(y, t) # not a good metric
+        y = np.divide(y, size)
+        ax.plot(t, y, label=barrier_to_label(barrier),
+            linewidth=2,
+            linestyle='--', dashes=dashList[k])
+            #linestyle=linestyles[k])
+        #k = (k + 1) % len(linestyles)
+        k = (k + 1) % len(dashList)
     ax.set_xlabel("Sequence length T (P=%d)" % size)
-    ax.set_ylabel("Noisy-True sequence difference / T")
+    ax.set_ylabel("Normalised sequence difference")
     plt.legend()
     plt.show()
 
@@ -1098,9 +1136,14 @@ def exp_frontier(result_dir):
 
     barriers = [
         (asp, 'asp'),
-        (pbsp(10), 'pbsp_p10'),
-        (ssp(2), 'ssp_s2'),
-        (pssp(2, 10), 'pssp_s2_p10'),
+        #(pbsp(10), 'pbsp_p10'),
+        #(ssp(2), 'ssp_s2'),
+        #(pssp(2, 10), 'pssp_s2_p10'),
+        (pbsp(4),  'pbsp_p4'),
+        (pbsp(16),  'pbsp_p16'),
+        (pbsp(32),  'pbsp_p32'),
+        (pbsp(64),  'pbsp_p64'),
+        (pbsp(99),  'pbsp_p99'),
 
         #(ssp(1), 'ssp_s1'),
         #(ssp(5), 'ssp_s5'),
@@ -1132,7 +1175,7 @@ def exp_frontier(result_dir):
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir}
 
-    run(config)
+    #run(config)
 
     diff_num = {}; diff_max = {}; diff_min = {}
     barrier_names = [s for (_, s) in config['barriers'] ]
@@ -1146,7 +1189,7 @@ def exp_frontier(result_dir):
 
     print(diff_num)
 
-    linestyles = ['-', '--', '-.', ':', '-']
+    dashList = [(1,1), (3,2), (1,0), (3,3), (2, 4), (4,2,10,2), (2,1), (1,2)]
     fig, ax = plt.subplots(figsize=(8, 4))
     c = 0
     barriers = [(k, v) for (k, v) in diff_num.items() if k != "bsp"]
@@ -1157,13 +1200,16 @@ def exp_frontier(result_dir):
         x = np.linspace(0, 5, 250)
         #n, x, _ = ax.hist(v, 200, histtype='step', cumulative=False, label=k)
         ax.plot(x, density(x),
-            linestyle=linestyles[c % len(linestyles)],
+            #linestyle=linestyles[c % len(linestyles)],
+            linestyle='--',
+            dashes=dashList[c],
             label=barrier_to_label(k))
         c += 1
     #ax.axvline(x=1, linestyle=linestyles[c], label='bsp', color='m')
     ax.legend()
-    ax.set_xlim([0, 5])
-    ax.set_xlabel('Average step inconsistency per node')
+    ax.set_xlim([0, 4])
+    ax.set_ylim([0, 2])
+    ax.set_xlabel('Normalised progress inconsistency per node')
     ax.set_ylabel('Density')
     plt.show()
 
@@ -1272,7 +1318,7 @@ def exp_straggle_consistency(result_dir):
     #ax1.legend()
 
     ax2.set_xlabel("Straggle node percentage")
-    ax2.set_ylabel("Progress inconsistency (stddev)")
+    ax2.set_ylabel("Progress inconsistency (stdev)")
     ax2.legend()
     plt.show()
     """
@@ -1394,11 +1440,11 @@ def exp_straggleness_consistency(result_dir):
         c = (c + 1) % (len(markers))
 
     ax1.set_xlabel("Straggleness")
-    ax1.set_ylabel("Progress inconsistency (Mean)")
+    ax1.set_ylabel("Average of progress inconsistency")
     #ax1.legend()
 
     ax2.set_xlabel("Straggleness")
-    ax2.set_ylabel("Progress inconsistency (Stddev)")
+    ax2.set_ylabel("Stdev of progress inconsistency")
     ax2.legend(loc='lower right')
     plt.show()
 
@@ -1429,28 +1475,28 @@ def exp_scalability_consistency(result_dir):
     db.init_db(result_dir)
 
     ssp_name = 'ssp_s4'
-    barriers = [
+    barriers_ssp = [
         (asp, 'asp'),
         (ssp(4), ssp_name),
         (pssp(4, 2), 'pssp_s4_p2'),
         (pssp(4, 5), 'pssp_s4_p5'),
         (pssp(4, 10), 'pssp_s4_p10'),
         (pssp(4, 20), 'pssp_s4_p20'),
-        (pssp(4, 30), 'pssp_s4_p30'),
+        #(pssp(4, 30), 'pssp_s4_p30'),
         (pssp(4, 40), 'pssp_s4_p40'),
-        (pssp(4, 50), 'pssp_s4_p50'),
+        #(pssp(4, 50), 'pssp_s4_p50'),
     ]
-    barriers_bsp = [
+    barriers = [
         (asp, 'asp'),
         (pbsp(2),  'pbsp_p2'),
         (pbsp(5),  'pbsp_p5'),
         (pbsp(10), 'pbsp_p10'),
         (pbsp(20), 'pbsp_p20'),
-        (pbsp(30), 'pbsp_p30'),
+        #(pbsp(30), 'pbsp_p30'),
         (pbsp(40), 'pbsp_p40'),
-        (pbsp(50), 'pbsp_p50'),
-        (pbsp(100), 'pbsp_p100'),
-        (pbsp(200), 'pbsp_p200'),
+        #(pbsp(50), 'pbsp_p50'),
+        #(pbsp(100), 'pbsp_p100'),
+        #(pbsp(200), 'pbsp_p200'),
     ]
     observe_points = ['frontier']
     configs = [
@@ -1485,7 +1531,7 @@ def exp_scalability_consistency(result_dir):
         'path':result_dir},
     ]
 
-    for c in configs: run(c)
+    #for c in configs: run(c)
 
     diffs = []
     for c in configs:
@@ -1507,8 +1553,8 @@ def exp_scalability_consistency(result_dir):
 
     # print(diffs)
 
-    """ Mean/Std
-    f, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5)) #figsize=(12, 5))
+    # Mean/Std
+    f, (ax1, ax2) = plt.subplots(1, 2, figsize=(13, 6)) #figsize=(12, 5))
     barrier_names = [s for (_, s) in barriers] #if s != ssp_name]
     sizes = [c['size'] for c in configs]
 
@@ -1520,6 +1566,7 @@ def exp_scalability_consistency(result_dir):
             ratio = np.divide(diffs[i][barrier][0], c['size'])
             y.append(ratio)
         ax1.plot(sizes, y, marker=markers[k % len(markers)],
+            linewidth=2,
             linestyle=linestyles[k % len(markers)], label=label)
 
     for k, barrier in enumerate(barrier_names):
@@ -1530,22 +1577,25 @@ def exp_scalability_consistency(result_dir):
             ratio = np.divide(diffs[i][barrier][1], c['size'])
             y.append(ratio)
         ax2.plot(sizes, y, marker=markers[k % len(markers)],
+            linewidth=2,
             linestyle=linestyles[k % len(markers)], label=label)
 
     #ax1.set_ylabel("Ratio of PSSP diff / SSP step consistency (mean) ")
-    ax1.set_ylabel("Normalised pBSP step consistency (mean) ")
+    #ax1.set_ylabel("Normalised progress inconsistency (mean) ")
+    ax1.set_ylabel("Average of progress inconsistency")
     ax1.set_xlabel("Worker number")
     ax1.legend()
 
     #ax2.set_ylabel("Ratio of PSSP diff / SSP step consistency (std) ")
-    ax2.set_ylabel("Normalised pBSP step consistency (std) ")
+    #ax2.set_ylabel("Normalised progress inconsistency (stdev) ")
+    ax2.set_ylabel("Stdev of progress inconsistency")
     ax2.set_xlabel("Worker number")
     ax2.legend()
 
-    plt.grid(linestyle='--', linewidth=1)
+    #plt.grid(linestyle='--', linewidth=1)
     plt.show()
-    """
 
+    """
     # Skewness and Kurtosis
     f, ax1 = plt.subplots(1, 1, figsize=(6,10))
     barrier_names = [s for (_, s) in barriers] #if s != ssp_name]
@@ -1560,7 +1610,7 @@ def exp_scalability_consistency(result_dir):
             y.append(ratio)
         ax1.plot(sizes, y, marker=markers[k % len(markers)],
             linestyle=linestyles[k % len(markers)], label=label)
-    """
+
     for k, barrier in enumerate(barrier_names):
         label = barrier_to_label(barrier)
         y = []
@@ -1569,13 +1619,13 @@ def exp_scalability_consistency(result_dir):
             y.append(ratio)
         ax2.plot(sizes, y, marker=markers[k % len(markers)],
             linestyle=linestyles[k % len(markers)], label=label)
-    """
     ax1.set_ylabel("pBSP step consistency (skewness) ")
     ax1.set_xlabel("Worker number")
     ax1.legend()
 
     plt.grid(linestyle='--', linewidth=1)
     plt.show()
+    """
 
 
 """

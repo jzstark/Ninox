@@ -25,16 +25,20 @@ def full_path(path):
     path = os.path.abspath(path)
     return path
 
+def to_upper(s):
+    if s == 'pbsp' : return 'pBSP'
+    if s == 'pssp' : return 'pSSP'
+    return str.upper(s)
 
 def barrier_to_label(name):
     name = name.split("_")
     assert(len(name) <= 3)
     if len(name) == 1:
-        return name[0]
+        return to_upper(name[0])
     if len(name) == 2:
         param = name[1][0] + '=' + name[1][1:]
-        return "%s(%s)" % (name[0], param)
+        return "%s(%s)" % (to_upper(name[0]), param)
     if len(name) == 3:
         param1 = name[1][0] + '=' + name[1][1:]
         param2 = name[2][0] + '=' + name[2][1:]
-        return "%s(%s,%s)" % (name[0], param1, param2)
+        return "%s(%s,%s)" % (to_upper(name[0]), param1, param2)
