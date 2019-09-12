@@ -36,9 +36,11 @@ def barrier_to_label(name):
     if len(name) == 1:
         return to_upper(name[0])
     if len(name) == 2:
-        param = name[1][0] + '=' + name[1][1:]
+        label = '$\\beta$' if name[1][0] == 'p' else name[1][0]
+        param = label + '=' + name[1][1:]
         return "%s(%s)" % (to_upper(name[0]), param)
     if len(name) == 3:
+        label = '$\\beta$' if name[2][0] == 'p' else name[2][0]
         param1 = name[1][0] + '=' + name[1][1:]
-        param2 = name[2][0] + '=' + name[2][1:]
-        return "%s(%s,%s)" % (to_upper(name[0]), param1, param2)
+        param2 = label + '=' + name[2][1:]
+        return r'%s(%s,%s)' % (to_upper(name[0]), param1, param2)

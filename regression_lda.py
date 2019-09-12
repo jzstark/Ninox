@@ -77,6 +77,8 @@ for idx, raw_doc in enumerate(raw_docs):
 
 W = dictionary.num_words()
 
+# W = 8211, D = 10768
+
 #====================
 
 

@@ -66,7 +66,7 @@ def exp_step(result_dir):
     ]
     observe_points = ['step']
     configs = [
-        {'stop_time':200, 'size':100, 'straggler_perc':0, 'straggleness':1, 'barriers':barriers, 'observe_points':observe_points,
+        {'stop_time':200, 'size':200, 'straggler_perc':0, 'straggleness':1, 'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir}
     ]
 
@@ -80,14 +80,28 @@ def exp_step(result_dir):
             reader = csv.reader(f, delimiter=',')
             data[name] = [int(s) for s in next(reader)]
 
+    font = 20 #'x-large'
+    params = {'legend.fontsize': font-2,
+              #'figure.figsize': (9.5, 6),
+             'axes.labelsize': font,
+             'axes.titlesize': font,
+             'xtick.labelsize':font,
+             'ytick.labelsize':font}
+    pylab.rcParams.update(params)
+
     dashList = [(1,1), (3,2), (1,0), (3,3), (2, 4), (4,2,10,2), (2,1), (1,2)]
-    patterns = [ "/" , "", "\\" , "-", "|", "x", "o", "O",  "+",  "*", "." ]
-    fig, ax = plt.subplots(figsize=(10, 5))
+    patterns = [ "/" , ".", "\\" , "-", "|", "x", "o", "O",  "+",  "*", "." ]
+    fig, ax = plt.subplots(figsize=(12, 4))
     k = 0
+
+    bin = {'asp':24, 'bsp':1, 'ssp_s4':4, 'pbsp_p10':2, 'pssp_s4_p10':16}
     for name in barrier_names:
         x = data[name]
-        ax.hist(x, 15, label=barrier_to_label(name),
-            rwidth=50, hatch=patterns[k])
+        counts, bins, bars = ax.hist(x, bins=bin[name],
+            label=barrier_to_label(name), alpha=0.8,
+            #rwidth=1.,
+            hatch=patterns[k])
+        print(name, bins)
         #d = sorted(data[name])
         #x, counts = np.unique(d, return_counts=True)
         #y = np.multiply(x, counts) / sum(d)
@@ -95,10 +109,11 @@ def exp_step(result_dir):
         #ax.plot(x, y, label=barrier_to_label(name), linewidth=2.5,
         #    linestyle='--', dashes=dashList[k])
         k += 1
-    ax.set_ylim([0, 100])
-    plt.xlabel("Number of steps")
-    plt.ylabel("Percentage of nodes (%)")
+    ax.set_ylim([0, 200])
+    plt.xlabel("Steps")
+    plt.ylabel("Number of nodes")
     plt.legend()
+    plt.tight_layout()
     plt.show()
 
 
@@ -113,7 +128,7 @@ def exp_samplesize(result_dir):
     ]
     observe_points = ['step']
     configs = [
-        {'stop_time':200, 'size':100, 'straggler_perc':0, 'straggleness':1, 'barriers':barriers, 'observe_points':['step'],
+        {'stop_time':200, 'size':200, 'straggler_perc':0, 'straggleness':1, 'barriers':barriers, 'observe_points':['step'],
         'path':result_dir}
     ]
 
@@ -128,6 +143,15 @@ def exp_samplesize(result_dir):
             data[name] = [int(s) for s in next(reader)]
     print(data)
 
+    font = 20 #'x-large'
+    params = {'legend.fontsize': font-2,
+              #'figure.figsize': (9.5, 6),
+             'axes.labelsize': font,
+             'axes.titlesize': font,
+             'xtick.labelsize':font,
+             'ytick.labelsize':font}
+    pylab.rcParams.update(params)
+
     dashList = [(1,1), (3,2), (1,0), (3,3), (2, 4), (4,2,10,2), (2,1), (1,2)]
     fig, ax = plt.subplots(figsize=(12, 5))
     k = 0
@@ -137,13 +161,14 @@ def exp_samplesize(result_dir):
         x = sorted(data[name])
         y = np.cumsum(x)
         y = y / y[-1]
-        ax.plot(x, y, label=barrier_to_label(name), linewidth=2.5,
+        ax.plot(x, y, label=barrier_to_label(name), linewidth=3,
             linestyle='--', dashes=dashList[k])
         k += 1
     ax.set_ylim([0, 1])
-    plt.xlabel("Number of steps")
-    plt.ylabel("CDF of nodes that run certain steps")
+    plt.xlabel("Steps")
+    plt.ylabel("CDF of nodes")
     plt.legend(loc="lower right")
+    plt.tight_layout()
     plt.show()
 
 
@@ -340,7 +365,7 @@ def exp_scalability_step(result_dir):
             linestyle=linestyles[k % len(markers)], label=label)
     #ax.set_ylabel("Ratio of PSSP step / SSP step progress")
     ax.set_ylabel("Step progress")
-    ax.set_xlabel("Worker number")
+    ax.set_xlabel("Number of workers")
     plt.grid(linestyle='--', linewidth=1)
 
     plt.legend(loc='lower right')
@@ -359,31 +384,24 @@ Experiment 2: SGD Accuracy
 
 #
 def exp_regression(result_dir):
+    #exp_regression_lda(result_dir)
+    #exp_regression_mnist(result_dir)
+    exp_regression_mf(result_dir)
+
+
+def exp_regression_mnist(result_dir):
     db.init_db(result_dir)
 
     barriers = [
         (asp, 'asp'),
-        (bsp, 'bsp'),
-        #(asp, 'seq'),
-
         (pbsp(4), 'pbsp_p4'),
-        #(pbsp(8), 'pbsp_p8'),
-        #(pbsp(16), 'pbsp_p16'),
-        #(pbsp(32), 'pbsp_p32'),
-        #(pbsp(48), 'pbsp_p48'),
-        #(bsp, 'bsp'),
-
-        #(asp, 'asp'),
-        (pssp(3, 4),  'pssp_s3_p4'),
-        #(pssp(3, 8),  'pssp_s3_p8'),
-        #(pssp(3, 16), 'pssp_s3_p16'),
-        #(pssp(3, 32), 'pssp_s3_p32'),
-        #(pssp(3, 48), 'pssp_s3_p48'),
-        (ssp(3), 'ssp_s3'),
-
+        (pbsp(8), 'pbsp_p8'),
+        (pbsp(16), 'pbsp_p16'),
+        (pbsp(32), 'pbsp_p32'),
+        (bsp, 'bsp'),
     ]
     observe_points = ['regression']
-    config = {'stop_time':100, 'size': 32, 'straggler_perc':0, 'straggleness':1,
+    config = {'stop_time':100, 'size': 64, 'straggler_perc':0, 'straggleness':1,
         'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir}
 
@@ -399,46 +417,78 @@ def exp_regression(result_dir):
             iteration[barrier] = [float(s) for s in next(reader)]
             loss[barrier] = [float(s) for s in next(reader)]
 
-    """
-    fig, ax = plt.subplots(figsize=(8, 4))
+    c = 0
+    fig, ax = plt.subplots(figsize=(7, 6))
     for barrier in barrier_names:
-        ax.plot(clock[barrier], loss[barrier], label=barrier)
+        ax.plot(clock[barrier], loss[barrier], label=barrier_to_label(barrier),
+            linewidth=2, markersize=10,
+            linestyle=linestyles[c], marker=markers[c])
+        c += 1
+    #ax.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
 
-    fig, ax = plt.subplots(figsize=(8, 4))
-    for barrier in barrier_names:
-        ax.plot(iteration[barrier], loss[barrier], label=barrier)
+    plt.xlim([10,80])
+    plt.ylim([0.05, 0.65])
+    ax.set_xlabel("Number of updates")
+    ax.set_ylabel("Accuracy")
 
-    #plt.xlim([0,100])
-    #plt.ylim([19.25,20.75])
-    ax.set_xlabel("Iterations")
-    ax.set_ylabel("Loss")
     plt.legend()
     plt.show()
-    """
 
 
+def exp_regression_lda(result_dir):
+    db.init_db(result_dir)
+
+    barriers = [
+        (asp, 'asp'),
+        (bsp, 'bsp'),
+        (ssp(3), 'ssp_s3'),
+        (pbsp(4), 'pbsp_p4'),
+        (pssp(3, 4),  'pssp_s3_p4'),
+    ]
+    observe_points = ['regression']
+    config = {'stop_time':100, 'size': 32, 'straggler_perc':0, 'straggleness':1,
+        'barriers':barriers, 'observe_points':observe_points,
+        'path':result_dir}
+
+    #run(config)
+
+
+    clock = {}; iteration = {}; loss = {}
+    barrier_names = [s for (_, s) in config['barriers']]
+    for barrier in barrier_names:
+        filename = utils.dbfilename(config, barrier, 'regression')
+        with open(filename, 'r') as f:
+            reader = csv.reader(f, delimiter=',')
+            clock[barrier] = [float(s) for s in next(reader)]
+            iteration[barrier] = [float(s) for s in next(reader)]
+            loss[barrier] = [float(s) for s in next(reader)]
+
+
+    # For the LDA exp #
+    dashList = [(1,1),(2,1), (1,0),(3,3,2,2),(5,2,10,2)]
     f, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 12)) #figsize=(12, 5))
-
     c = 0
     for barrier in barrier_names:
         ax1.plot(clock[barrier], loss[barrier],
-            linewidth=2,
-            linestyle=linestyles[c],
+            linewidth=3,
+            #linestyle=linestyles[c],
+            linestyle='--', dashes=dashList[c],
             label=barrier_to_label(barrier))
         ax2.plot(iteration[barrier], loss[barrier],
-            linewidth=2,
-            linestyle=linestyles[c],
+            linewidth=3,
+            #linestyle=linestyles[c],
+            linestyle='--', dashes=dashList[c],
             label=barrier_to_label(barrier))
         c += 1
 
     ax1.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
     ax2.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
 
-    ax1.set_xlabel("Time")
+    ax1.set_xlabel("Simulated time")
     ax1.set_ylabel("Loglikelihood")
     ax1.legend()
 
-    ax2.set_xlabel("Update numbers")
+    ax2.set_xlabel("Number of updates")
     #ax2.set_ylabel("Accuracy")
     #ax2.set_xlim([0,50])
     ax1.set_ylim([-2530000,-2480000])
@@ -449,22 +499,55 @@ def exp_regression(result_dir):
     ax2.legend()
     #plt.grid()
     plt.show()
-    """
-    c = 0
-    fig, ax = plt.subplots(figsize=(8, 4))
+
+
+def exp_regression_mf(result_dir):
+    db.init_db(result_dir)
+
+    barriers = [
+        (asp, 'asp'),
+        (pbsp(4), 'pbsp_p4'),
+        (pbsp(8), 'pbsp_p8'),
+        (pbsp(16), 'pbsp_p16'),
+        (pbsp(32), 'pbsp_p32'),
+        (pbsp(48), 'pbsp_p48'),
+        (bsp, 'bsp'),
+    ]
+    observe_points = ['regression']
+    config = {'stop_time':100, 'size': 63,
+        'straggler_perc':0, 'straggleness':1,
+        'barriers':barriers, 'observe_points':observe_points,
+        'path':result_dir}
+
+    #run(config)
+
+    clock = {}; iteration = {}; loss = {}
+    barrier_names = [s for (_, s) in config['barriers']]
     for barrier in barrier_names:
-        ax.plot(clock[barrier], loss[barrier], label=barrier_to_label(barrier),
+        filename = utils.dbfilename(config, barrier, 'regression')
+        with open(filename, 'r') as f:
+            reader = csv.reader(f, delimiter=',')
+            clock[barrier] = [float(s) for s in next(reader)]
+            iteration[barrier] = [float(s) for s in next(reader)]
+            loss[barrier] = [float(s) for s in next(reader)]
+
+    c = 0
+    fig, ax = plt.subplots(figsize=(8, 5))
+    for barrier in barrier_names:
+        ax.plot(clock[barrier][1::2], loss[barrier][1::2], label=barrier_to_label(barrier),
+            linewidth=2, markersize=10,
             linestyle=linestyles[c], marker=markers[c])
         c += 1
+
     ax.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
 
-    #plt.xlim([10,80])
-    #plt.ylim([72500, 86000])
-    ax.set_xlabel("Time")
+    plt.xlim([10,80])
+    plt.ylim([73000, 89500])
+    ax.set_xlabel("Simulated time")
     ax.set_ylabel("Square loss")
+    plt.tight_layout()
     plt.legend()
     plt.show()
-    """
 
 
 def exp_straggle_accuracy(result_dir):
@@ -474,12 +557,14 @@ def exp_straggle_accuracy(result_dir):
         (asp, 'asp'),
         (bsp, 'bsp'),
         (ssp(4), 'ssp_s4'),
-        (pbsp(10), 'pbsp_p10'),
-        (pssp(4, 10), 'pssp_s4_p10')
+        #(pbsp(10), 'pbsp_p10'),
+        #(pssp(4, 10), 'pssp_s4_p10')
+        (pbsp(5), 'pbsp_p5'),
+        (pssp(4, 5), 'pssp_s4_p5')
     ]
     observe_points = ['regression']
     t = 40
-    s = 1000
+    s = 60 #1000
     configs = [
         {'stop_time':t, 'size':s, 'straggler_perc':0, 'straggleness':4, 'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir},
@@ -491,8 +576,8 @@ def exp_straggle_accuracy(result_dir):
         'path':result_dir},
         {'stop_time':t, 'size':s, 'straggler_perc':20, 'straggleness':4, 'barriers':barriers, 'observe_points':observe_points,
         'path':result_dir},
-        {'stop_time':t, 'size':s, 'straggler_perc':25, 'straggleness':4, 'barriers':barriers, 'observe_points':observe_points,
-        'path':result_dir},
+        #{'stop_time':t, 'size':s, 'straggler_perc':25, 'straggleness':4, 'barriers':barriers, 'observe_points':observe_points,
+        #'path':result_dir},
         #{'stop_time':200, 'size':100, 'straggler_perc':30, 'straggleness':4, 'barriers':barriers, 'observe_points':observe_points,
         #'path':result_dir},
     ]
@@ -507,7 +592,7 @@ def exp_straggle_accuracy(result_dir):
             with open(filename, 'r') as f:
                 reader = csv.reader(f, delimiter=',')
                 clock = [float(s) for s in next(reader)]
-                iteration = [int(s) for s in next(reader)]
+                iteration = [float(s) for s in next(reader)]
                 loss = [float(s) for s in next(reader)]
                 #accuracy = loss[-1]
                 #dict_single_straggler[c['straggler_perc']] = accuracy
@@ -530,11 +615,12 @@ def exp_straggle_accuracy(result_dir):
         y = (np.divide(y1, y1[0]) - 1) * 100
         #ax.errorbar(x, y1, yerr=y2, marker=markers[c], label=barrier_to_label(k))
         ax.plot(x, y, marker=markers[c], linestyle=linestyles[c],
-        label=barrier_to_label(k))
+            markersize=10, linewidth=2,
+            label=barrier_to_label(k))
         c += 1
     plt.legend()
     plt.xlabel("Percentage of slow nodes")
-    plt.ylabel("Percentage of increased error")
+    plt.ylabel("Percentage of accuracy decrease")
     #plt.ylabel("Model accuracy ")
     plt.show()
 
@@ -719,7 +805,7 @@ def exp_seqdiff(result_dir):
         [y, t] = list(zip(*result[barrier]))
         #y = np.divide(y, t) # not a good metric
         y = np.divide(y, size)
-        ax.plot(t, y, label=barrier_to_label(barrier),
+        ax.plot(t[0::2], y[0::2], label=barrier_to_label(barrier),
             linewidth=2,
             linestyle='--', dashes=dashList[k])
             #linestyle=linestyles[k])
@@ -1136,13 +1222,11 @@ def exp_frontier(result_dir):
 
     barriers = [
         (asp, 'asp'),
-        #(pbsp(10), 'pbsp_p10'),
-        #(ssp(2), 'ssp_s2'),
-        #(pssp(2, 10), 'pssp_s2_p10'),
         (pbsp(4),  'pbsp_p4'),
         (pbsp(16),  'pbsp_p16'),
         (pbsp(32),  'pbsp_p32'),
         (pbsp(64),  'pbsp_p64'),
+        (pbsp(95), 'pbsp_p95'),
         (pbsp(99),  'pbsp_p99'),
 
         #(ssp(1), 'ssp_s1'),
@@ -1184,13 +1268,14 @@ def exp_frontier(result_dir):
         with open(filename, 'r') as f:
             reader = csv.reader(f, delimiter=',')
             diff_num[barrier] = [float(s) for s in next(reader)]
-            diff_max[barrier] = [int(s) for s in next(reader)]
-            diff_min[barrier] = [int(s) for s in next(reader)]
+            diff_max[barrier] = [float(s) for s in next(reader)]
+            if (barrier != 'pbsp_p95'): # TEMP Hack!!!!
+                diff_min[barrier] = [float(s) for s in next(reader)]
 
     print(diff_num)
 
-    dashList = [(1,1), (3,2), (1,0), (3,3), (2, 4), (4,2,10,2), (2,1), (1,2)]
-    fig, ax = plt.subplots(figsize=(8, 4))
+    dashList = [(1,1), (3,2), (3,3), (2, 4),(1,0), (4,2,10,2), (2,1), (1,2)]
+    fig, ax = plt.subplots(figsize=(8, 3))
     c = 0
     barriers = [(k, v) for (k, v) in diff_num.items() if k != "bsp"]
     for k, v in barriers:
@@ -1201,7 +1286,7 @@ def exp_frontier(result_dir):
         #n, x, _ = ax.hist(v, 200, histtype='step', cumulative=False, label=k)
         ax.plot(x, density(x),
             #linestyle=linestyles[c % len(linestyles)],
-            linestyle='--',
+            linestyle='--', linewidth=2,
             dashes=dashList[c],
             label=barrier_to_label(k))
         c += 1
@@ -1209,8 +1294,9 @@ def exp_frontier(result_dir):
     ax.legend()
     ax.set_xlim([0, 4])
     ax.set_ylim([0, 2])
-    ax.set_xlabel('Normalised progress inconsistency per node')
+    ax.set_xlabel('Normalised progress inconsistency')
     ax.set_ylabel('Density')
+    plt.tight_layout()
     plt.show()
 
     """
@@ -1566,7 +1652,7 @@ def exp_scalability_consistency(result_dir):
             ratio = np.divide(diffs[i][barrier][0], c['size'])
             y.append(ratio)
         ax1.plot(sizes, y, marker=markers[k % len(markers)],
-            linewidth=2,
+            linewidth=2,  markersize=10,
             linestyle=linestyles[k % len(markers)], label=label)
 
     for k, barrier in enumerate(barrier_names):
@@ -1577,19 +1663,19 @@ def exp_scalability_consistency(result_dir):
             ratio = np.divide(diffs[i][barrier][1], c['size'])
             y.append(ratio)
         ax2.plot(sizes, y, marker=markers[k % len(markers)],
-            linewidth=2,
+            linewidth=2, markersize=10,
             linestyle=linestyles[k % len(markers)], label=label)
 
     #ax1.set_ylabel("Ratio of PSSP diff / SSP step consistency (mean) ")
     #ax1.set_ylabel("Normalised progress inconsistency (mean) ")
     ax1.set_ylabel("Average of progress inconsistency")
-    ax1.set_xlabel("Worker number")
+    ax1.set_xlabel("Number of workers")
     ax1.legend()
 
     #ax2.set_ylabel("Ratio of PSSP diff / SSP step consistency (std) ")
     #ax2.set_ylabel("Normalised progress inconsistency (stdev) ")
     ax2.set_ylabel("Stdev of progress inconsistency")
-    ax2.set_xlabel("Worker number")
+    ax2.set_xlabel("Number of workers")
     ax2.legend()
 
     #plt.grid(linestyle='--', linewidth=1)
@@ -1620,7 +1706,7 @@ def exp_scalability_consistency(result_dir):
         ax2.plot(sizes, y, marker=markers[k % len(markers)],
             linestyle=linestyles[k % len(markers)], label=label)
     ax1.set_ylabel("pBSP step consistency (skewness) ")
-    ax1.set_xlabel("Worker number")
+    ax1.set_xlabel("Number of workers")
     ax1.legend()
 
     plt.grid(linestyle='--', linewidth=1)
